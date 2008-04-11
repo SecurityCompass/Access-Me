@@ -2,7 +2,7 @@
 
 <RDF:RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:em="http://www.mozilla.org/2004/em-rdf#">
-  <RDF:Description about="urn:mozilla:extension:sqlime@security.compass">
+  <RDF:Description about="urn:mozilla:extension:accessme@security.compass">
     <em:updates>
       <RDF:Seq>
         <!-- Each li is a different version of the same add-on -->

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://sqlime/skin/preferences.css" type="text/css"?>
-<prefwindow id="sqlimePreferences" title="SQL Inject ME Options"
+<?xml-stylesheet href="chrome://accessme/skin/preferences.css" type="text/css"?>
+<prefwindow id="accessmePreferences" title="Access MeOptions"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <prefpane label="General" id="sqligen" >
@@ -10,12 +10,12 @@ Copyright 2007 Security Compass
 
 This file is part of SQL Inject Me.
 
-SQL Inject Me is free software: you can redistribute it and/or modify
+Access Meis free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-SQL Inject Me is distributed in the hope that it will be useful,
+Access Meis distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -23,22 +23,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
 
-If you have any questions regarding SQL Inject Me please contact
+If you have any questions regarding Access Meplease contact
 tools@securitycompass.com
 -->
         <preferences>
             <preference id="preferedNumAttacks"
-                        name="extensions.sqlime.prefnumattacks"
+                        name="extensions.accessme.prefnumattacks"
                         type="int"/>
             <preference id="showContextMenu"
-                        name="extensions.sqlime.showcontextmenu"
+                        name="extensions.accessme.showcontextmenu"
                         type="bool"
                         instantApply='true'/>
             <preference id="numtabstouse"
-                        name="extensions.sqlime.numtabstouse"
+                        name="extensions.accessme.numtabstouse"
                         type="int"/>
             <preference id="prefSidebarBuildingPause"
-						name="extensions.sqlime.sidebarbuildingstop"
+						name="extensions.accessme.sidebarbuildingstop"
 						type="int" />
         </preferences>
         <checkbox label="Show Context Menu" preference="showContextMenu" />
@@ -57,13 +57,13 @@ tools@securitycompass.com
     <prefpane label="SQL Injection Strings" id="sqlistrings">
         <preferences>
         </preferences>
-        <script type="application/x-javascript;version=1.7" src="chrome://sqlime/content/json.js" />
-        <script type="application/x-javascript;version=1.7" src="chrome://sqlime/content/io.js" />
-        <script type="application/x-javascript;version=1.7" src="chrome://sqlime/content/util.js" />
-        <script type="application/x-javascript;version=1.7" src="chrome://sqlime/content/preferenceStringContainer.js" />
-        <script type="application/x-javascript;version=1.7" src="chrome://sqlime/content/ErrorStringContainer.js" />
-        <script type="application/x-javascript;version=1.7" src="chrome://sqlime/content/attackStringContainer.js" />
-        <script type="application/x-javascript;version=1.7" src="chrome://sqlime/content/preferences.js" />
+        <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/json.js" />
+        <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/io.js" />
+        <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/util.js" />
+        <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/preferenceStringContainer.js" />
+        <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/ErrorStringContainer.js" />
+        <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/attackStringContainer.js" />
+        <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/preferences.js" />
         <hbox>
             <button label="export" oncommand="preferencesController.exportAttacks()" />
             <button label="import" oncommand="preferencesController.importAttacks()" />
@@ -78,7 +78,7 @@ tools@securitycompass.com
                 <vbox>
                     <button label="up" oncommand="preferencesController.moveAttackStringUp()"/>
                     <button label="down" oncommand="preferencesController.moveAttackStringDown()"/>
-                    <button label="add" oncommand="window.openDialog('chrome://sqlime/content/addAttack.xul', 'attackstring', 'chrome', attackStringContainer, preferencesController, window)"/>
+                    <button label="add" oncommand="window.openDialog('chrome://accessme/content/addAttack.xul', 'attackstring', 'chrome', attackStringContainer, preferencesController, window)"/>
                     <button label="remove" oncommand="preferencesController.removeAttack()"/>
                 </vbox>
             </hbox>
@@ -95,7 +95,7 @@ tools@securitycompass.com
                 <vbox>
                     <button label="up" oncommand="preferencesController.moveErrorStringUp()"/>
                     <button label="down" oncommand="preferencesController.moveErrorStringDown()"/>
-                    <button label="add" oncommand="window.openDialog('chrome://sqlime/content/addError.xul', 'attackstring', 'chrome', errorStringContainer, preferencesController, window)"/>
+                    <button label="add" oncommand="window.openDialog('chrome://accessme/content/addError.xul', 'attackstring', 'chrome', errorStringContainer, preferencesController, window)"/>
                     <button label="remove" oncommand="preferencesController.removeError()"/>
                 </vbox>
             </hbox>

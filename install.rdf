@@ -2,14 +2,14 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
  xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
-    <em:id>sqlime@security.compass</em:id>
+    <em:id>accessme@security.compass</em:id>
     <em:name>SQL Inejct Me</em:name>
     <em:version>0.2.0</em:version>
     <em:creator>Security Compass</em:creator>
     <em:description>An extension to test for SQL injection vulnerabilities</em:description>
-    <em:optionsURL>chrome://sqlime/content/preferences.xul</em:optionsURL>
-    <em:iconURL>chrome://sqlime/skin/tiny_logo.png</em:iconURL>
-    <em:updateURL>http://www.securitycompass.com/sqlime/update.rdf</em:updateURL>
+    <em:optionsURL>chrome://accessme/content/preferences.xul</em:optionsURL>
+    <em:iconURL>chrome://accessme/skin/tiny_logo.png</em:iconURL>
+    <em:updateURL>http://www.securitycompass.com/accessme/update.rdf</em:updateURL>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- firefox -->

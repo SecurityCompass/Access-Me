@@ -3,12 +3,12 @@ Copyright 2007 Security Compass
 
 This file is part of SQL Inject Me.
 
-SQL Inject Me is free software: you can redistribute it and/or modify
+Access Meis free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-SQL Inject Me is distributed in the hope that it will be useful,
+Access Meis distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
 
-If you have any questions regarding SQL Inject Me please contact
+If you have any questions regarding Access Meplease contact
 tools@securitycompass.com
 */
 
@@ -200,7 +200,7 @@ extension.prototype = {
         }
         
         this.warningDialog = window.openDialog(
-                'chrome://sqlime/content/whiletestruns.xul', 'whiletestruns',
+                'chrome://accessme/content/whiletestruns.xul', 'whiletestruns',
                 'chrome,dialog,dependant=yes', testCount, testType);
         
         var testManager = getTestManager(this);
@@ -236,7 +236,7 @@ extension.prototype = {
         rv.menupopup= menupopup;
      
         button.setAttribute('label', "Execute");
-        button.setAttribute('command', 'sqlime_do_test');
+        button.setAttribute('command', 'accessme_do_test');
         button.className = 'run_form_test';
         
         menulist.setAttribute('class', 'TestType');
@@ -278,7 +278,7 @@ extension.prototype = {
     do_generate_form_ui: function() {
         var q = 0;
         var maindoc = getMainWindow().document.getElementById('content').contentDocument;
-        var box = document.getElementById('sqlime_here_be_tabs');
+        var box = document.getElementById('accessme_here_be_tabs');
         var docforms = maindoc.getElementsByTagName('form');
         var unnamedFormCounter = 0; //used for generating the unnamed form names 
         var tabbox = document.createElement('tabbox');
@@ -463,7 +463,7 @@ extension.prototype = {
                 addEventListener("TabSelect", 
                 this.windowEventClosure, false);
         
-        this.plistener = new sqlimeProgressListener(
+        this.plistener = new accessmeProgressListener(
             this.windowEventClosure);
         
         mainWindow.document.getElementById('content').
@@ -480,7 +480,7 @@ extension.prototype = {
         var observableBranch = branch.
                 QueryInterface(Components.interfaces.nsIPrefBranch2);
                 
-        observableBranch.addObserver('extensions.sqlime.sidebarbuildingstop',
+        observableBranch.addObserver('extensions.accessme.sidebarbuildingstop',
                                      this.sidebarBuilderPauseObserver, false);
         
     }
@@ -506,7 +506,7 @@ extension.prototype = {
         var observableBranch = branch.
                 QueryInterface(Components.interfaces.nsIPrefBranch2);
                 
-        observableBranch.removeObserver('extensions.sqlime.sidebarbuildingstop',
+        observableBranch.removeObserver('extensions.accessme.sidebarbuildingstop',
                 this.sidebarBuilderPauseObserver)
         
     }
@@ -514,7 +514,7 @@ extension.prototype = {
     getPreferredNumberOfAttacks: function(){
         var prefs = Components.classes["@mozilla.org/preferences-service;1"].
             getService(Components.interfaces.nsIPrefService);
-        var branch = prefs.getBranch("extensions.sqlime.");
+        var branch = prefs.getBranch("extensions.accessme.");
         return branch.getIntPref("prefnumattacks");   
     }
     ,
@@ -776,7 +776,7 @@ function isFormField(node){
 function watchSidebarBuilderPausePref(subject, topic, data) {
     var prefService = Components.classes['@mozilla.org/preferences-service;1'].
             getService(Components.interfaces.nsIPrefService);
-    var branch = prefService.getBranch('extensions.sqlime.');
+    var branch = prefService.getBranch('extensions.accessme.');
     
     getSidebarBuilder().time = branch.getIntPref('sidebarbuildingstop');
 }
