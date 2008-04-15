@@ -46,7 +46,7 @@ function checkContextMenu() {
     
 function XssOverlay() {}
 
-XssOverlay.prototype = {
+AccessMeOverlay.prototype = {
     contextMenuObserver: null
     ,
     onLoad: function() {
@@ -82,7 +82,7 @@ XssOverlay.prototype = {
     }
 };
 
-var xssOverlay = new XssOverlay();
+var accessMeOverlay = new AccessMeOverlay();
 
-window.addEventListener('load', xssOverlay.onLoad, false);
-window.addEventListener('unload', xssOverlay.onUnload, false);
+window.addEventListener('load', accessMeOverlay.onLoad, false);
+window.addEventListener('unload', accessMeOverlay.onUnload, false);

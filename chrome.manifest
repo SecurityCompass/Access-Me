@@ -1,5 +1,5 @@
-content	accessme	content/
-locale	accessme	en-US	locale/en-US/
-skin	accessme	classic/1.0	skin/
+content	accessme    content/
+locale	accessme    en-US       locale/en-US/
+skin	accessme    classic/1.0	skin/
 overlay	chrome://browser/content/browser.xul	chrome://accessme/content/overlay.xul
 style	chrome://global/content/customizeToolbar.xul	chrome://accessme/skin/overlay.css

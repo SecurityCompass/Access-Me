@@ -38,3 +38,38 @@ along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
 {
   -moz-image-region: rect(24px 40px 40px 24px);
 }
+
+#logo {
+  color: blue;
+}
+
+toolbox[mode='icons'] #accessme-test-action .toolbarbutton-text,
+toolbox[mode='icons'] #accessme-test-status .toolbarbutton-text,
+toolbox[mode='icons'] #accessme-gen-report  .toolbarbutton-text {
+  display: none !important;
+}
+
+toolbox[mode='full'] #accessme-test-action .toolbarbutton-text,
+toolbox[mode='full'] #accessme-test-status .toolbarbutton-text,
+toolbox[mode='full'] #accessme-gen-report  .toolbarbutton-text {
+  display: -moz-box !important;
+}
+
+toolbox[mode='text'] #accessme-test-action .toolbarbutton-icon,
+toolbox[mode='text'] #accessme-test-status .toolbarbutton-icon,
+toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon {
+  display: none !important;
+}
+
+#accessme-test-action.start {
+  list-style-image: url('chrome://accessme/skin/media-record.png') !important;
+  
+}
+
+#accessme-test-status.start {
+  list-style-image: url('chrome://accessme/skin/weather-clear.png') !important;
+}
+
+#accessme-gen-report {
+  list-style-image: url('chrome://accessme/skin/edit-select-all.png') !important;
+}

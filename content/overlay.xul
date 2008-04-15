@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <?xml-stylesheet href="chrome://accessme/skin/overlay.css" type="text/css" ?>
-<!DOCTYPE overlay SYSTEM "chrome://accessme/locale/overlay.dtd">
 <overlay id="accessme-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <!-- 
+<!-- 
 Copyright 2007 Security Compass
 
 This file is part of SQL Inject Me.
@@ -23,42 +22,36 @@ along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
 If you have any questions regarding Access Meplease contact
 tools@securitycompass.com
 -->
-    <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/json.js" />
-    <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/PrefObserver.js" />
-    <script type="application/x-javascript;version=1.7" src="chrome://accessme/content/overlay.js" />
-    <menupopup id="menu_ToolsPopup">
-        <menu id="accessme-tools" label="SQL Inject ME"  insertafter="devToolsSeparator" accesskey="S">
-            <menupopup>
-                <menuitem 
-                        label="Open Access MeSidebar" 
-                        observes="openaccessmeSidebar" 
-                />
-                <menuitem 
-                          label="&accessme.options;" 
-                          oncommand="window.openDialog('chrome://accessme/content/preferences.xul')" 
-                /> 
-                <menuitem label="&accessme.about;" oncommand="window.openDialog('chrome://accessme/content/about.xul');" />
-                <menuitem label="&accessme.help;" oncommand="window.open('http://securitycompass.com/exploitme.shtml', 'helpwindow', '');" />  
-            </menupopup>
-        </menu>
-    </menupopup>
-    <broadcasterset id="mainBroadcasterSet">
-        <broadcaster id="openaccessmeSidebar"
-                     label="Open Access MeSidebar"
-                     autoCheck="false"
-                     group="sidebar"
-                     sidebarurl="chrome://accessme/content/accessme_sidebar.xul"
-                     sidebartitle="SQL Inject Me"
-                     oncommand="toggleSidebar('openaccessmeSidebar');" />
-    </broadcasterset>
-    
-    <popup id="contentAreaContextMenu">
+  <toolbox id="navigator-toolbox" >
+    <!--
+      <toolbar id="accessme-bar" customizable='false' defaultset='accessme-foo' toolbarname='Access Me bar' insertafter="customToolbars">
+        <toolbarbutton label="Security Compass" image="chrome://accessme/skin/tiny_logo.png" orient="vertical"/>
+        <toolbarbutton label="Working" id='accessme-test-status' orient="vertical"
+                       image='chrome://browser/skin/Throbber.gif' />
+        <toolbarbutton label="Stop" id='accessme-test-action'
+                       image='' />
         
-        <menuitem label="Open Access MeSidebar"
-                  observes="openaccessmeSidebar"
-                  insertbefore="context-viewbgimage"
-                  id='accessmecontextmenu'
-                  />
+      </toolbar>
+      <toolbar id="accessme-bar" customizable='false' defaultset='accessme-foo' toolbarname='Access Me bar' insertafter="customToolbars">
+        <toolbaritem>
+          <image src="chrome://accessme/skin/tiny_logo.png" />
+        </toolbaritem>
+        <toolbaritem>
+          <label id='seccomp' value="Security Compass" />
+        </toolbaritem>
+        <toolbarbutton label="Working" id='accessme-test-status' orient="vertical"
+                       image='chrome://browser/skin/Throbber.gif' />
+        <toolbarbutton label="Stop" id='accessme-test-action'
+                       image='' />
         
-    </popup>
+      </toolbar>
+    -->
+    <toolbar id="accessme-bar" toolbarname='Access Me bar' insertafter="customToolbars">
+      <toolbarbutton label="Security Compass Access Me" id="logo" image="chrome://accessme/skin/tiny_logo.png" orient="horizontal"/>
+      <toolbarbutton label="Not Started" id='accessme-test-status' orient="vertical" class="start"/>
+      <toolbarbutton label="Start" id='accessme-test-action' orient="vertical" class="start" />
+      <toolbarbutton label="Report" id='accessme-gen-report' orient='vertical' disabled='true' />
+    </toolbar>
+      
+  </toolbox>
 </overlay>
