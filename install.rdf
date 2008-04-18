@@ -3,10 +3,10 @@
  xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
     <em:id>accessme@security.compass</em:id>
-    <em:name>SQL Inejct Me</em:name>
-    <em:version>0.2.0</em:version>
+    <em:name>Access Me</em:name>
+    <em:version>0.1.0</em:version>
     <em:creator>Security Compass</em:creator>
-    <em:description>An extension to test for SQL injection vulnerabilities</em:description>
+    <em:description>An extension to test for page access vulnerabilities (session tampering).</em:description>
     <em:optionsURL>chrome://accessme/content/preferences.xul</em:optionsURL>
     <em:iconURL>chrome://accessme/skin/tiny_logo.png</em:iconURL>
     <em:updateURL>http://www.securitycompass.com/accessme/update.rdf</em:updateURL>
