@@ -23,14 +23,14 @@ tools@securitycompass.com
 /**
  * StreamListener
  */
-function StreamListener(attackRunner, resultsManager) {
+function TestStreamListener(attackRunner, resultsManager) {
     this.attackRunner = attackRunner;
     this.resultsManager = resultsManager;
     this.done = false;
     this.data = "";
 }
 
-StreamListener.prototype = {
+TestStreamListener.prototype = {
     // nsIStreamListener
     onStartRequest: function (aRequest, aContext) {
         //do nothing...

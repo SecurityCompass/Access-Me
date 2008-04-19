@@ -28,15 +28,16 @@ tools@securitycompass.com
  * of this preference as well as the preference itself).
  */
 
-function Xss_PrefObserver(functionToCall){
+function SecCompObserver(topic, functionToCall){
     this.funcToCall = functionToCall;
+    this.topic = topic;
     
 }
 
-Xss_PrefObserver.prototype = {
+SecCompObserver.prototype = {
     observe: function(subject, topic, data) {
-        dump('Xss_PrefObserver::Observe topic == ' + topic + '\n');
-        if (topic == "nsPref:changed") {
+        dump('\nSecCompObserver::Observe topic == ' + topic + '\n');
+        if (topic == this.topic) {
             this.funcToCall(subject, topic, data);
         }
     }

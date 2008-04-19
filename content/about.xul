@@ -26,8 +26,8 @@ tools@securitycompass.com
 <groupbox align="center" orient="horizontal">
 <vbox>
   <box><image src="chrome://accessme/skin/logo_sc.png" /> </box> 
-  <text value="SQL Inject Me" style="font-weight: bold; font-size: x-large;"/>
-  <text value="Beta 1"/>
+  <text value="Access Me" style="font-weight: bold; font-size: x-large;"/>
+  <text value="Trunk"/>
   <separator class="thin"/>
   <text value="Created By" style="font-weight: bold;"/>
   <text value="Security Compass"/>

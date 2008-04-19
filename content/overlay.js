@@ -43,46 +43,88 @@ function checkContextMenu() {
     dump(showContextMenu +'\n');
     contextMenu.setAttribute('collapsed', !showContextMenu);
 }
-    
-function XssOverlay() {}
+
+function AccessMeGotRequest(subject, topic, data) {
+    var httpChannel = subject.QueryInterface(Components.interfaces.
+            nsIHttpChannel);
+    accessMeOverlay.recordRequestParameters(httpChannel);
+}
+
+function AccessMeGotResponse(subject, topic, data) {
+    var httpChannel = subject.QueryInterface(Components.interfaces.
+            nsIHttpChannel);
+    accessMeOverlay.recordResponse(httpChannel);
+}
+
+function dumpHeader(aHeader, aValue) {
+    dump('\n dumpHeader::' + aHeader + " === " + aValue);
+}
+
+function AccessMeOverlay() {
+    dump('\nAccessMeOverlay::ctor()');
+    this.firstRun = true;
+    this.requestObserver = new SecCompObserver('http-on-modify-request',
+            AccessMeGotRequest);
+    this.responseObserver = new SecCompObserver('http-on-examine-response',
+            AccessMeGotResponse);
+    this.requestParameters = null;
+    this.response = null;
+    this.headerVisitor = new SecCompVisitor(dumpHeader);
+}
 
 AccessMeOverlay.prototype = {
-    contextMenuObserver: null
-    ,
     onLoad: function() {
+        dump('\nAccessMeOverlay::onLoad');
+        var observerService = Components.
+                classes["@mozilla.org/observer-service;1"].
+                getService(Components.interfaces.nsIObserverService);
+        dump('\nsdfasdf');
         
-        var prefService = Components.classes['@mozilla.org/preferences-service;1'].
-                getService(Components.interfaces.nsIPrefService);
+        Components.reportError(this.requestObserver.topic);
         
-        var branch = prefService.getBranch('');
-    
-        var observableBranch = branch.
-                QueryInterface(Components.interfaces.nsIPrefBranch2);
-        
-        this.contextMenuObserver = new Xss_PrefObserver(checkContextMenu);
-        
-        checkContextMenu();
-        
-        dump('mainwindow::onLoad contextMenuObserver ==' + this.contextMenuObserver +'\n');
-        
-        
-        observableBranch.addObserver('extensions.accessme.showcontextmenu', this.contextMenuObserver, false);
+        observerService.addObserver(this.requestObserver,
+                this.requestObserver.topic, false);
+        observerService.addObserver(this.reponseObserver,
+                this.responseObserver.topic, false);
     }
     ,
     onUnload: function() {
-        var prefService = Components.classes['@mozilla.org/preferences-service;1'].
-        getService(Components.interfaces.nsIPrefService);
+        dump('\nAccessMeOverlay::onUnload');
+        var observerService = Components.
+                classes["@mozilla.org/observer-service;1"].
+                getService(Components.interfaces.nsIObserverService);
         
-        var branch = prefService.getBranch('');
+        observerService.removeObserver(this.requestObserver,
+                this.requestObserver.topic);
+        observerService.removeObserver(this.responseObserver,
+                this.responseObserver.topic);
         
-        var observableBranch = branch.
-                QueryInterface(Components.interfaces.nsIPrefBranch2);
-        
-        observableBranch.removeObserver('extensions.accessme.showcontextmenu', this.contextMenuObserver)
     }
+    ,
+    start: function() {
+        if (this.firstRun) {
+            
+        }
+    }
+    ,
+    recordRequestParameters: function(httpChannel) {
+        dump('\ndumping out headers:');
+        httpChannel.visitRequestHeaders(this.headerVisitor);
+        var is = httpChannel.open();
+        var sis = Components.classes["@mozilla.org/scriptableinputstream;1"]
+            .createInstance(Components.interfaces.nsIScriptableInputStream);
+        sis.init(is);
+        dump('\nhere\'s some text: ' + sis.read(is.available()));
+        
+    }
+    ,
+    recordResponse: function(httpChannel) {
+        
+    }
+    
 };
 
 var accessMeOverlay = new AccessMeOverlay();
 
-window.addEventListener('load', accessMeOverlay.onLoad, false);
-window.addEventListener('unload', accessMeOverlay.onUnload, false);
+window.addEventListener('load', function(){accessMeOverlay.onLoad()}, false);
+window.addEventListener('unload', function(){accessMeOverlay.onUnload()}, false);
