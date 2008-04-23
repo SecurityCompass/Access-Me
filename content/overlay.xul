@@ -24,19 +24,17 @@ tools@securitycompass.com
 -->
     <script type="application/x-javascript" 
             src="chrome://accessme/content/io.js" />
+    <script type="application/x-javascript"
+            src="chrome://accessme/content/SecCompHistoryListener.js" />
     <script type="application/x-javascript" 
             src="chrome://accessme/content/util.js" />
     <script type="application/x-javascript"
             src="chrome://accessme/content/htmlStringEncoder.js" />
     <script type="application/x-javascript"
-            src="chrome://accessme/content/SecCompVisitor.js" />
-    <script type="application/x-javascript"
             src="chrome://accessme/content/sidebarBuilder.js" />
     <script type="application/x-javascript"
             src="chrome://accessme/content/StreamListener.js" />
     <script type="application/x-javascript"
-            src="chrome://accessme/content/SecCompObserver.js" />
-	<script type="application/x-javascript"
             src="chrome://accessme/content/TestManager.js" />
     <script type="application/x-javascript" 
             src="chrome://accessme/content/TestRunnerContainer.js" />
@@ -66,13 +64,11 @@ tools@securitycompass.com
             src="chrome://accessme/content/accessmeevaluators.js" />
     <script type="application/x-javascript" 
             src="chrome://accessme/content/overlay.js"/>
-  <commandset>
-    <command id='accessme-start' oncommand='accessMeOverlay.start();'/>
-    <command id='accessme-pause' />
-    <command id='accessme-clear' />
-    <command id='accessme-stop' />
-    <command id='accessme-report' />
-  </commandset>
+    <broadcasterset id="mainBroadcasterSet">
+        <broadcaster id="accessme-start"
+                     label="Start"
+                     oncommand="accessMeOverlay.start()" />
+    </broadcasterset>
   <toolbox id="navigator-toolbox" >
     <toolbar id="accessme-bar" toolbarname='Access Me bar' insertafter="customToolbars">
       <toolbarbutton label="Security Compass Access Me" id="logo" image="chrome://accessme/skin/tiny_logo.png" orient="horizontal"/>

@@ -28,15 +28,18 @@ const STATE_IS_DOCUMENT = Components.interfaces.nsIWebProgressListener.STATE_IS_
 const LISTEN_ON_WINDOW = 1;
 const LISTEN_ON_DOCUMENT = 2;
 
-function accessmeProgressListener(funcToCall, listenOn) {
+function SecCompProgressListener(funcToCall, listenOn, listenWhen) {
     
     this.func = funcToCall
     this.listenOn = listenOn != null ? listenOn : STATE_IS_WINDOW;
+    this.listenWhen = listenWhen === undefined ?
+            Components.interfaces.nsIWebProgressListener.STATE_STOP :
+            listenWhen;
     dump('created a listener... mode is ' + listenOn + '\n');
     this.interfaceName = "nsIWebProgressListener";
 };
 
-accessmeProgressListener.prototype =
+SecCompProgressListener.prototype =
 {
     QueryInterface: function(aIID)
     {
@@ -50,17 +53,14 @@ accessmeProgressListener.prototype =
         return null;
     },
     
-    onStateChange: function(aProgress, aRequest, aFlag, aStatus)
+    onStateChange: function(aWebProgress, aRequest, aFlag, aStatus)
     {
         dump('got a state change. aFlag is ' + aFlag.toString(16) + '\n');
         dump('got a state change. we are listening on ' + 
                 this.listenOn.toString(16) + '\n');
-        // Components sometimes seems to disappear or or malfunction so we're 
-        // just using the literal constant here.
-//         if((aFlag & 0x00000010) && 
-//             (aFlag & 0x00080000) )
-        if ((aFlag & STATE_STOP) && (aFlag & this.listenOn)) {
-            this.func();
+
+        if ((aFlag & this.listenWhen) && (aFlag & this.listenOn)) {
+            this.func(aWebProgress, aRequest, aFlag, aStatus);
         }
         return 0;
     },
