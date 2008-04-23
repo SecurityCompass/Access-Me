@@ -50,7 +50,7 @@ AccessMeOverlay.prototype = {
             
         }
         //document.getElementById('content').selectedBrowser.sessionHistory.addSHistoryListener(this.historyListener);
-        gBrowser.addProgressListener(this.progressListener,
+        gBrowser.selectedBrowser.addProgressListener(this.progressListener,
                 Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
     }
     ,
