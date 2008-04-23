@@ -29,10 +29,13 @@ function AccessMeOverlay() {
     this.historyListener.OnHistoryNewEntry = function(aNewURI) {self.onNewPage(aNewURI)}
     this.progressListener = new SecCompProgressListener(function(aWebProgress, aRequest, aFlag, aStatus){self.gotRequest(aWebProgress, aRequest, aFlag, aStatus)},
             Components.interfaces.nsIWebProgressListener.STATE_START,
+            // we could use stop, but earlier is faster :grin:
             Components.interfaces.nsIWebProgressListener.STATE_IS_DOCUMENT |
             Components.interfaces.nsIWebProgressListener.STATE_IS_NETWORK |
             Components.interfaces.nsIWebProgressListener.STATE_IS_REQUEST |
             Components.interfaces.nsIWebProgressListener.STATE_IS_WINDOW);
+    /* all these or's are because I'm not that sure which thing we're supposed
+      to be listening on */
 }
 AccessMeOverlay.prototype = {
     onLoad: function() {
@@ -55,7 +58,9 @@ AccessMeOverlay.prototype = {
     }
     ,
     gotRequest: function (aWebProgress, aRequest, aFlag, aStatus) {
-        //huh?
+        if (aRequest.name.substring(0,4) !== 'http'){
+            return; //we don't care about not http
+        }
         dump('\nfoo '+ aRequest.name);
         var hasChannel = false;
         try {
