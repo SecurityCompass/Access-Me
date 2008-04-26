@@ -35,7 +35,7 @@ function SecCompProgressListener(funcToCall, listenOn, listenWhen) {
     this.listenWhen = listenWhen === undefined ?
             Components.interfaces.nsIWebProgressListener.STATE_STOP :
             listenWhen;
-    dump('created a listener... mode is ' + listenOn + '\n');
+    //dump('created a listener... mode is ' + listenOn + '\n');
     this.interfaceName = "nsIWebProgressListener";
 };
 
@@ -55,9 +55,9 @@ SecCompProgressListener.prototype =
     
     onStateChange: function(aWebProgress, aRequest, aFlag, aStatus)
     {
-        dump('got a state change. aFlag is ' + aFlag.toString(16) + '\n');
-        dump('got a state change. we are listening on ' + 
-                this.listenOn.toString(16) + '\n');
+        //dump('got a state change. aFlag is ' + aFlag.toString(16) + '\n');
+        //dump('got a state change. we are listening on ' + 
+        //        this.listenOn.toString(16) + '\n');
 
         if ((aFlag & this.listenWhen) && (aFlag & this.listenOn)) {
             this.func(aWebProgress, aRequest, aFlag, aStatus);

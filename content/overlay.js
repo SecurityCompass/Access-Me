@@ -22,9 +22,11 @@ tools@securitycompass.com
 
 
 function AccessMeOverlay() {
-    dump('\nAccessMeOverlay::ctor()');
+    //dump('\nAccessMeOverlay::ctor()');
     var self = this;
     this.firstRun = true;
+    this.tabSelectListener = function(event){ dump('\n' + event.target);
+            dump('\n' + event.originalTarget);}
     this.historyListener = new SecCompHistoryListener();
     this.historyListener.OnHistoryNewEntry = function(aNewURI) {self.onNewPage(aNewURI)}
     this.progressListener = new SecCompProgressListener(function(aWebProgress, aRequest, aFlag, aStatus){self.gotRequest(aWebProgress, aRequest, aFlag, aStatus)},
@@ -36,86 +38,76 @@ function AccessMeOverlay() {
             Components.interfaces.nsIWebProgressListener.STATE_IS_WINDOW);
     /* all these or's are because I'm not that sure which thing we're supposed
       to be listening on */
+    this.browser = null;
+    this.started = false;
+    this.lastRequest = null;
 }
 AccessMeOverlay.prototype = {
     onLoad: function() {
         
+        gBrowser.selectedBrowser.addProgressListener(this.progressListener,
+                Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
+        gBrowser.tabContainer.addEventListener('TabSelect', this.tabSelectListener, false);
+        this.browser = gBrowser.selectedBrowser;
+
+    
         
     }
     ,
     onUnload: function() {
-
+        gBrowser.selectedBrowser.removeProgressListener(this.progressListener,
+                Components.interfaces);
+        gBrowser.tabContainer.removeEventListener('TabSelect', this.tabSelectListener);
         
     }
     ,
     start: function() {
-        if (this.firstRun) {
-            
+        this.started = true;
+        if (this.firstRun === false) {
+            this.firstRun = true;
         }
-        //document.getElementById('content').selectedBrowser.sessionHistory.addSHistoryListener(this.historyListener);
-        gBrowser.selectedBrowser.addProgressListener(this.progressListener,
-                Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
+        
+        var testManager = getTestManager(this);
+        
+        if (this.lastRequest) {
+            this.analyzeRequest(null, this.lastRequest, null, null);
+        }
+        
+        
+        
     }
     ,
     gotRequest: function (aWebProgress, aRequest, aFlag, aStatus) {
         if (aRequest.name.substring(0,4) !== 'http'){
             return; //we don't care about not http
         }
-        dump('\nfoo '+ aRequest.name);
-        var hasChannel = false;
-        try {
-            hasChannel = aRequest.QueryInterface(Components.interfaces.nsIChannel);
-        }
-        catch(e){
-            Components.utils.reportError(e);
-        }
-        dump('\n hasChannel === ' + hasChannel);
         
-        var hasHTTPChannel = false;
-        try {
-            hasHTTPChannel = aRequest.QueryInterface(Components.interfaces.nsIHttpChannel);
-        }
-        catch(e){
-            Components.utils.reportError(e);
-        }
-        dump('\n hasHTTPChannel === ' + hasHTTPChannel);
+        this.lastRequest = aRequest;
         
-        var hasUploadChannel= false;
-        try {
-            hasUploadChannel = aRequest.QueryInterface(Components.interfaces.nsIUploadChannel);
+        if (this.started){
+            this.analyzeRequest(aWebProgress, aRequest, aFlag, aStatus);
         }
-        catch(e){
-            Components.utils.reportError(e);
-        }
-        dump('\n hasUploadChannel === ' + hasUploadChannel);
-        if (aRequest.QueryInterface(Components.interfaces.nsIUploadChannel).uploadStream != null) {
-            var nsSIS = Components.classes["@mozilla.org/scriptableinputstream;1"]
-                .createInstance(Components.interfaces.nsIScriptableInputStream);
-            nsSIS.init(aRequest.QueryInterface(Components.interfaces.nsIUploadChannel).uploadStream);
-            dump('\n size == ' + nsSIS.available());
-            var ata = "";
-            while(true) {
-                var d = nsSIS.read(256)
-                if (d)
-                    ata += d;
-                else
-                    break;
-            }
-            dump('\n data: ' + ata);
-            var upStream = aRequest.QueryInterface(Components.interfaces.nsIUploadChannel).uploadStream;
-            var seekStream = upStream.QueryInterface(Components.interfaces.nsISeekableStream);
-            seekStream.seek(Components.interfaces.nsISeekableStream.NS_SEEK_SET, 0);
-                
-        }
-        else {
-            dump('\n no size');
-        }
-        dump("\n aRequest.requestMethod" + aRequest.requestMethod);
+        
+    }
+    ,
+    analyzeRequest: function (aWebProgress, aRequest, aFlag, aStatus) {
+        var req = aRequest.QueryInterface(Components.interfaces.nsIRequest);
+        var webProgress = aWebProgress.QueryInterface(Components.interfaces.nsIWebProgress);
+        var get = req.name;
+        var ioService = Components.classes["@mozilla.org/network/io-service;1"]
+                .getService(Components.interfaces.nsIIOService);
+        var uri = ioService.newURI(req, null, null);
+        
+        
 
         
     }
     ,
-    recordRequestParameters: function(httpChannel) {
+    listenForRequests: function (browser) {
+                
+    }
+    ,
+    recordRequestParameters: function(aRequest) {
 
     }
     ,
@@ -129,12 +121,12 @@ AccessMeOverlay.prototype = {
      * the SessionHistory object anyway.
      */
     onNewPage: function(aNewURI) {
-        dump('\nGot a new page');
+        //dump('\nGot a new page');
         var sessionHistory = getBrowser().selectedBrowser.sessionHistory.QueryInterface(Components.interfaces.nsISHistory);
         var webNav = sessionHistory.QueryInterface(Components.interfaces.nsIWebNavigation);
         var curEntry = sessionHistory.getEntryAtIndex(0, false);
         
-        dump(' title is:' + curEntry.title);
+        //dump(' title is:' + curEntry.title);
     }
 };
 
