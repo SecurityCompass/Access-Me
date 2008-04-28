@@ -30,9 +30,10 @@ tools@securitycompass.com
 /**
  * @class AttackRunner
  */
-function AttackRunner(){
+function AttackRunner(typeOfAttack, parameters, nameParamToAttack){
 
     this.className = "AttackRunner";
+    
     /**
      * a reference to the nsIHttpChannel being used by this
      */
@@ -43,11 +44,28 @@ function AttackRunner(){
      * order to find the char they sent
      */
     this.uniqueID = Math.floor(Date.now() * Math.random());
+    /**
+     * type of attack to do
+     */
+    this.typeOfAttack = typeOfAttack;
+    /**
+     * the parameters for the connection
+     */
+    this.parameters = parameters;
+    
+    /**
+     * the param to attack
+     */
+    this.nameParamToAttack = nameParamToAttack;
     
 }
 
 AttackRunner.prototype = {
-    testData: null
+    ATTACK_GET: 1
+    ,
+    ATTACK_POST: 2
+    ,
+    ATTACK_COOKIES: 3
     ,
     submitForm: function(browser, formIndex){
         var forms = browser.webNavigation.document.forms;

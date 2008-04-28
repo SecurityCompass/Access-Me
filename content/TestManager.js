@@ -161,16 +161,22 @@ TestManager.prototype = {
         
         var parameters = this.analyzeRequest(aRequest);
         
-        for each (var field in vulnerableFields) {
-            
-            for (var n = 0; n < numberOfTests && testStrings[n]; n++) {
-                
-                var testRunner = new AttackRunner();
-               
-            }
-            
+        for (var paramName in parameters.get) {
+            var attackRunner = new AttackRunner(AttackRunner.ATTACK_GET, parameters, paramName);
+            //add to test Runner Container
         }
         
+        for (var paramName in parameters.post) {
+            var attackRunner = new AttackRunner(AttackRunner.ATTACK_POST, parameters, paramName);
+            //add to test Runner Container
+        }
+        
+        for (var paramName in parameters.cookies) {
+            var attackRunner = new AttackRunner(AttackRunner.ATTACK_COOKIES, parameters, paramName);
+            //add to test Runner Container
+        }
+        
+        //Start TestRunnerContainer.
         
     }
     ,
