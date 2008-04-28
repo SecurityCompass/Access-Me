@@ -46,17 +46,12 @@ function TestManager(){
 
 TestManager.prototype = {
     /**
-     * Runs a test on the passed fields.
-     * @param testType the test type
-     * @param fieldsToTest the fields to test
+     * Runs tests on the passed Request.
+     * @param aRequest a request
      */
-    runTest: function (testType, fieldsToTest) {
+    runTest: function (aRequest) {
         
-        this.testType = testType;
-        
-        this.clear();
-        
-        this.runThoroughTest(testType, fieldsToTest);
+        this.runThoroughTest(aRequest);
     }
     ,
     /**
@@ -159,48 +154,23 @@ TestManager.prototype = {
     }
     ,
     /**
-     * runs non-heuristic tests on the fields.
-     * @param testType with all strings or just the top strings.
+     * runs tests on the request.
+     * @param aRequest a request
      */
-    runThoroughTest: function(testType, vulnerableFields) {
+    runThoroughTest: function(aRequest) {
         
-        this.resultsManager = new ResultsManager(this.controller);
-        
-        this.resultsManager.addEvaluator(checkForErrorString);
-        this.resultsManager.addSourceEvaluator(checkSrcForErrorString);
-        
-        getTestRunnerContainer().clear();
-        var testStrings = getAttackStringContainer().getStrings();
-        var numberOfTests;
-        if (testType.allTests)
-            numberOfTests = testStrings.length;
-        else {
-            numberOfTests = this.controller.getPreferredNumberOfAttacks();
-        }
+        var parameters = this.analyzeRequest(aRequest);
         
         for each (var field in vulnerableFields) {
             
             for (var n = 0; n < numberOfTests && testStrings[n]; n++) {
                 
                 var testRunner = new AttackRunner();
-                this.resultsManager.registerAttack(testRunner);
-                
-                getTestRunnerContainer().addTestRunner(testRunner, null,
-                        field.formIndex, field, testStrings[n],
-                        this.resultsManager);
-                
+               
             }
             
         }
         
-        var self = this;
-        var testRunnerContainer = getTestRunnerContainer(getMainWindow().
-                document.getElementById('content').mTabs.length, self);
-        
-        if (testRunnerContainer.keepChecking === false) {
-            testRunnerContainer.keepChecking = true;
-        }
-        testRunnerContainer.start(); 
         
     }
     ,
@@ -291,6 +261,82 @@ TestManager.prototype = {
         Components.utils.reportError(
                 'The loading of this page in a work tab as not successful: ' +
                 getMainHTMLDoc().documentURI);
+    }
+    ,
+    /**
+     * Analyzes a request and returns all the parameters and cookies
+     * related to it
+     */
+    analyzeRequest:function(aRequest) {
+        var strURL = aRequest.name;
+        var getParameters = strURL.substr(strURL.indexOf("?")).split("&");
+        var rc = new Object();
+        rc.get = new Object();        
+        
+        for each (var param in getParameters) {
+            var [key, val] = param.split('=');
+            rc.get[key] = val;
+        }
+        var uploadChannel = null;
+        try {
+            uploadChannel = aRequest.QueryInterface(Components.interfaces.
+                    nsIUploadChannel);
+            if (uploadChannel.uploadStream) {
+                rc.post = new Object();
+                var postStream= "";
+                while (true) {
+                    var str = uploadChannel.uploadStream.read(512);
+                    if (str) {
+                        postStream += str;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                var postParameters = postStream.split="&";
+                for each(var param in postParameters) {
+                    var [key, val] = param.split('=');
+                    rc.post[key] = val;
+                }
+            }
+        }
+        catch (e) {
+            // we don't care if it's not an upload channel just need to know
+            // if there's POST stuff or not.
+            // aparently not.
+            uploadChannel = null;
+        }
+        
+        
+        var strURLWithoutProtocol = strURL.substr(7);
+        var strRequstDomain = strURLWithoutProtocol.substring(0,
+                strURLWithoutProtocol.indexOf('/'));
+        
+        var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
+                        .getService(Components.interfaces.nsICookieManager);
+        var iter = cookieManager.enumerator;
+        
+        while (iter.hasMoreElements()){
+            var cookie = iter.getNext().QueryInterface(Components.interfaces.nsICookie);
+
+            if (cookie) {
+                /* below could be done with regex... /.*\.?+strRequstDomain$/
+                  but creating a regex object N times might be a pain.
+                  Oh well. */
+                var indexOfDomain = strRequstDomain.lastIndexOf(cookie.host);
+                if (indexOfDomain != -1) {
+                    var isTail = (indexOfDomain == 0 ||
+                            strRequstDomain.charAt(indexOfDomain) === '.')
+                    if (isTail) {
+                        if (rc.cookies === undefined) {
+                            rc.cookies = new Object();
+                        }
+                        rc.cookies[cookie.name] = cookie.value;
+                    }
+                }
+            }
+        }
+        return rc;
     }
 }
 

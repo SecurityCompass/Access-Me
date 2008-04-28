@@ -70,10 +70,8 @@ AccessMeOverlay.prototype = {
         var testManager = getTestManager(this);
         
         if (this.lastRequest) {
-            this.analyzeRequest(null, this.lastRequest, null, null);
+            testManager.runTest(this.lastRequest)
         }
-        
-        
         
     }
     ,
@@ -85,7 +83,7 @@ AccessMeOverlay.prototype = {
         this.lastRequest = aRequest;
         
         if (this.started){
-            this.analyzeRequest(aWebProgress, aRequest, aFlag, aStatus);
+            //this.analyzeRequest(aWebProgress, aRequest, aFlag, aStatus);
         }
         
     }
