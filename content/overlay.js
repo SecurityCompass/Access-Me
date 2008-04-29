@@ -27,9 +27,7 @@ function AccessMeOverlay() {
     this.firstRun = true;
     this.tabSelectListener = function(event){ dump('\n' + event.target);
             dump('\n' + event.originalTarget);}
-    this.historyListener = new SecCompHistoryListener();
-    this.historyListener.OnHistoryNewEntry = function(aNewURI) {self.onNewPage(aNewURI)}
-    this.progressListener = new SecCompProgressListener(function(aWebProgress, aRequest, aFlag, aStatus){self.gotRequest(aWebProgress, aRequest, aFlag, aStatus)},
+    this.progressListener = new SecCompProgressListener(function(aRequest, aURI){self.gotRequest(aRequest, aURI)},
             Components.interfaces.nsIWebProgressListener.STATE_START,
             // we could use stop, but earlier is faster :grin:
             Components.interfaces.nsIWebProgressListener.STATE_IS_DOCUMENT |
@@ -40,25 +38,21 @@ function AccessMeOverlay() {
       to be listening on */
     this.browser = null;
     this.started = false;
-    this.lastRequest = null;
+    this.lastOperation = new Object();
 }
 AccessMeOverlay.prototype = {
     onLoad: function() {
-        
         gBrowser.selectedBrowser.addProgressListener(this.progressListener,
                 Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
         gBrowser.tabContainer.addEventListener('TabSelect', this.tabSelectListener, false);
         this.browser = gBrowser.selectedBrowser;
-
-    
-        
     }
     ,
     onUnload: function() {
         gBrowser.selectedBrowser.removeProgressListener(this.progressListener,
                 Components.interfaces);
-        gBrowser.tabContainer.removeEventListener('TabSelect', this.tabSelectListener);
-        
+        gBrowser.tabContainer.removeEventListener('TabSelect',
+                this.tabSelectListener, false);
     }
     ,
     start: function() {
@@ -69,18 +63,19 @@ AccessMeOverlay.prototype = {
         
         var testManager = getTestManager(this);
         
-        if (this.lastRequest) {
-            testManager.runTest(this.lastRequest)
+        if (this.lastOperation) {
+            testManager.runTest(this.lastOperation)
         }
         
     }
     ,
-    gotRequest: function (aWebProgress, aRequest, aFlag, aStatus) {
-        if (aRequest.name.substring(0,4) !== 'http'){
+    gotRequest: function (aRequest, aURI) {
+        if (aURI.scheme !== 'http'){
             return; //we don't care about not http
         }
         
-        this.lastRequest = aRequest;
+        this.lastOperation.request = aRequest;
+        this.lastOperation.uri = aURI;
         
         if (this.started){
             //this.analyzeRequest(aWebProgress, aRequest, aFlag, aStatus);

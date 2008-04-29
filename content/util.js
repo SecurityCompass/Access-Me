@@ -25,8 +25,6 @@ tools@securitycompass.com
  * Utility Functions.
  */
 
-const EXTENSION_NAME = 'xssme@security.compass';
-
 /**
  * This takes a string of a piece of encoded XML and decodes it.
  * Specifically, this checks checks for encoded nested ]]> code.
@@ -209,3 +207,27 @@ function compareContentDocuments(origTabContentDocument, workTabContentDocument)
     }
     return rv
 }
+
+/**
+ * get a reference to the main firefox window
+ */
+function getMainWindow(){
+    var mainWindow = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+            .getInterface(Components.interfaces.nsIWebNavigation)
+            .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+            .rootTreeItem
+            .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+            .getInterface(Components.interfaces.nsIDOMWindow);
+    return mainWindow;
+}
+
+/**
+ * get a reference to the document object of the page that is being viewed now
+ */
+function getMainHTMLDoc(){
+    var mainWindow = getMainWindow();
+    var elTabBrowser = mainWindow.document.getElementById('content');
+    var currentDocument = elTabBrowser.contentDocument;
+    return currentDocument;
+}
+ 
