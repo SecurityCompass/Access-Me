@@ -160,23 +160,24 @@ TestManager.prototype = {
     runThoroughTest: function(aRequest) {
         
         var parameters = this.analyzeRequest(aRequest);
+        var testRunnerContainer = getTestRunnerContainer(1, this);
         
         for (var paramName in parameters.get) {
-            var attackRunner = new AttackRunner(AttackRunner.ATTACK_GET, parameters, paramName);
-            //add to test Runner Container
+            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName);
+            testRunnerContainer.addTestRunner(attackRunner);
         }
         
         for (var paramName in parameters.post) {
-            var attackRunner = new AttackRunner(AttackRunner.ATTACK_POST, parameters, paramName);
-            //add to test Runner Container
+            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName);
+            testRunnerContainer.addTestRunner(attackRunner);
         }
         
         for (var paramName in parameters.cookies) {
-            var attackRunner = new AttackRunner(AttackRunner.ATTACK_COOKIES, parameters, paramName);
-            //add to test Runner Container
+            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName);
+            testRunnerContainer.addTestRunner(attackRunner);
         }
         
-        //Start TestRunnerContainer.
+        testRunnerContainer.start();
         
     }
     ,
@@ -272,10 +273,14 @@ TestManager.prototype = {
     /**
      * Analyzes a request and returns all the parameters and cookies
      * related to it
+     * @todo Shouldn't be using objects as hashes here. this is a case where
+     *  receiving prototype as a key could screw a lot of things up.
      */
-    analyzeRequest:function(aRequest) {
-        var strURL = aRequest.name;
-        var getParameters = strURL.substr(strURL.indexOf("?")).split("&");
+    analyzeRequest:function(operation) {
+        var aRequest = operation.request;
+        var getParameters = operation.uri.path.indexOf("?") !== -1 ?
+                operation.uri.path.substr(operation.uri.path.indexOf("?")+1).split("&") :
+                (new Array());
         var rc = new Object();
         rc.get = new Object();        
         
@@ -314,34 +319,20 @@ TestManager.prototype = {
         }
         
         
-        var strURLWithoutProtocol = strURL.substr(7);
-        var strRequstDomain = strURLWithoutProtocol.substring(0,
-                strURLWithoutProtocol.indexOf('/'));
-        
-        var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
-                        .getService(Components.interfaces.nsICookieManager);
-        var iter = cookieManager.enumerator;
-        
-        while (iter.hasMoreElements()){
-            var cookie = iter.getNext().QueryInterface(Components.interfaces.nsICookie);
-
-            if (cookie) {
-                /* below could be done with regex... /.*\.?+strRequstDomain$/
-                  but creating a regex object N times might be a pain.
-                  Oh well. */
-                var indexOfDomain = strRequstDomain.lastIndexOf(cookie.host);
-                if (indexOfDomain != -1) {
-                    var isTail = (indexOfDomain == 0 ||
-                            strRequstDomain.charAt(indexOfDomain) === '.')
-                    if (isTail) {
-                        if (rc.cookies === undefined) {
-                            rc.cookies = new Object();
-                        }
-                        rc.cookies[cookie.name] = cookie.value;
-                    }
-                }
+        var httpChannel = aRequest.QueryInterface(Components.interfaces.nsIHttpChannel);
+        var cookies = httpChannel.getRequestHeader("Cookie").split(";");
+        //according to the Netscape Cookie and rfc 2109 cookie names are ;
+        //seperated. Ofcourse sites can also use other chars which only they
+        //understand. I'm looking at you, Google and your : second delimeter.
+        if (cookies.length > 0) {
+            rc.cookies = new Object();
+            for each (var cookie in cookies){
+                var [name, value] = cookie.split('=');
+                rc.cookies[name] = value;
             }
         }
+        
+        
         return rc;
     }
 }

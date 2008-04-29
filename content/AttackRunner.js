@@ -88,6 +88,7 @@ AttackRunner.prototype = {
     do_test: function(formPanel, formIndex, field, testData, resultsManager,
             tabIndex)
     {
+        return;
         var mainBrowser = getMainWindow().getBrowser();
         var currentTab = mainBrowser.selectedTab;
         var wroteTabData = false;

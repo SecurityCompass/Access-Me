@@ -29,11 +29,6 @@ tools@securitycompass.com
  */
 function TestRunnerContainer(currentNumTabs){
     this.testRunners = new Array(); //All these arrays are parallell
-    this.formPanels = new Array();
-    this.formIndexes = new Array();
-    this.fields = new Array();
-    this.testDatas = new Array();
-    this.resultsManagers = new Array();
     this.baseNumTabs = currentNumTabs;
     this.testManager = null;
     this.keepChecking = true;
@@ -42,15 +37,9 @@ function TestRunnerContainer(currentNumTabs){
 }
 
 TestRunnerContainer.prototype = {
-    addTestRunner: function(testRunner, formPanel, formIndex, field, 
-            testData, resultsManager)
+    addTestRunner: function(testRunner)
     {
         this.testRunners.push(testRunner);
-        this.formPanels.push(formPanel);
-        this.formIndexes.push(formIndex);
-        this.fields.push(field);
-        this.testDatas.push(testData);
-        this.resultsManagers.push(resultsManager);
     }
     ,
     start: function(){
@@ -69,15 +58,8 @@ TestRunnerContainer.prototype = {
                 }
         }
         if (hasEmptyIndex === true && this.testRunners.length !== 0) {
-            var testRunner = this.testRunners.pop();
-            var formPanel = this.formPanels.pop();
-            var formIndex = this.formIndexes.pop();
-            var field = this.fields.pop();
-            var testData = this.testDatas.pop();
-            var resultsManager = this.resultsManagers.pop();
-            
-            testRunner.do_test(formPanel, formIndex, field, testData, 
-                    resultsManager, firstEmptyIndex+this.baseNumTabs);
+            var testRunner = this.testRunners.pop()
+            testRunner.do_test();
             
         }
         else if (this.testRunners.length === 0) {

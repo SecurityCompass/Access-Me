@@ -59,16 +59,14 @@ SecCompProgressListener.prototype =
         //dump('got a state change. we are listening on ' + 
         //        this.listenOn.toString(16) + '\n');
 
-        if ((aFlag & this.listenWhen) && (aFlag & this.listenOn)) {
-            this.func(aWebProgress, aRequest, aFlag, aStatus);
-        }
-        return 0;
+
     },
     
     onLocationChange: function(aProgress, aRequest, aURI)
     {
-
-        return 0;
+        //if ((aFlag & this.listenWhen) && (aFlag & this.listenOn)) {
+            this.func(aRequest, aURI);
+        //}
     },
     
     // For definitions of the remaining functions see XULPlanet.com
