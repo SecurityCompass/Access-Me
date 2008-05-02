@@ -23,10 +23,11 @@ tools@securitycompass.com
 /**
  * StreamListener
  */
-function StreamListener(aFunction) {
+function StreamListener(aFunction, attackRunner) {
     this.aFunction = aFunction;
     this.done = false;
     this.data = "";
+    this.attackRunner = attackRunner;
 }
 
 StreamListener.prototype = {
@@ -47,12 +48,15 @@ StreamListener.prototype = {
     onStopRequest: function (aRequest, aContext, aStatus) {
         if (this.done === false) {
             this.done = true;
+            this.request = aRequest;
+            this.context = aContext;
+            this.status = aStatus;
             
             dump('\n---- Here is the raw source of the result:----\n')
             dump(this.data);
             dump('\n--- end of raw source ---');
             
-            this.aFunction(this.data);
+            this.aFunction(this);
         }
     }
     ,

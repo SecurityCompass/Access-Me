@@ -162,18 +162,22 @@ TestManager.prototype = {
         var parameters = this.analyzeRequest(aRequest);
         var testRunnerContainer = getTestRunnerContainer(1, this);
         
+        if (this.resultsManager == null) {
+            this.resultsManager = new ResultsManager();
+        }
+        
         for (var paramName in parameters.get) {
-            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName);
+            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName, this.resultsManager);
             testRunnerContainer.addTestRunner(attackRunner);
         }
         
         for (var paramName in parameters.post) {
-            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName);
+            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName, this.resultsManager);
             testRunnerContainer.addTestRunner(attackRunner);
         }
         
         for (var paramName in parameters.cookies) {
-            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName);
+            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName, this.resultsManager);
             testRunnerContainer.addTestRunner(attackRunner);
         }
         
@@ -282,7 +286,9 @@ TestManager.prototype = {
                 operation.uri.path.substr(operation.uri.path.indexOf("?")+1).split("&") :
                 (new Array());
         var rc = new Object();
-        rc.get = new Object();        
+        rc.request = operation.request;
+        
+        rc.get = new Object();  
         
         for each (var param in getParameters) {
             var [key, val] = param.split('=');
@@ -292,11 +298,17 @@ TestManager.prototype = {
         try {
             uploadChannel = aRequest.QueryInterface(Components.interfaces.
                     nsIUploadChannel);
+            var seekableStream = uploadChannel.uploadStream.QueryInterface(Components.interfaces.nsISeekableStream)
+            seekableStream.seek(Components.interfaces.nsISeekableStream.NS_SEEK_SET, 0);
             if (uploadChannel.uploadStream) {
-                rc.post = new Object();
+                var sis =  Components.
+                    classes["@mozilla.org/scriptableinputstream;1"].
+                    createInstance(Components.interfaces.
+                            nsIScriptableInputStream);
+                sis.init(uploadChannel.uploadStream);
                 var postStream= "";
                 while (true) {
-                    var str = uploadChannel.uploadStream.read(512);
+                    var str = sis.read(512);
                     if (str) {
                         postStream += str;
                     }
@@ -304,7 +316,10 @@ TestManager.prototype = {
                         break;
                     }
                 }
-                var postParameters = postStream.split="&";
+                dump('\npostStream' + postStream);
+                var postParameters = postStream.split("\r\n\r\n")[1].split("&");
+                dump('\npostParameters' + postParameters);
+                rc.post = new Object();
                 for each(var param in postParameters) {
                     var [key, val] = param.split('=');
                     rc.post[key] = val;
@@ -316,22 +331,28 @@ TestManager.prototype = {
             // if there's POST stuff or not.
             // aparently not.
             uploadChannel = null;
+            Components.utils.reportError(e);
         }
         
         
         var httpChannel = aRequest.QueryInterface(Components.interfaces.nsIHttpChannel);
-        var cookies = httpChannel.getRequestHeader("Cookie").split(";");
-        //according to the Netscape Cookie and rfc 2109 cookie names are ;
-        //seperated. Ofcourse sites can also use other chars which only they
-        //understand. I'm looking at you, Google and your : second delimeter.
-        if (cookies.length > 0) {
-            rc.cookies = new Object();
-            for each (var cookie in cookies){
-                var [name, value] = cookie.split('=');
-                rc.cookies[name] = value;
+        try {
+            var cookies = httpChannel.getRequestHeader("Cookie").split(";");
+            //according to the Netscape Cookie and rfc 2109 cookie names are ;
+            //seperated. Ofcourse sites can also use other chars which only they
+            //understand. I'm looking at you, Google and your : second delimeter.
+            if (cookies.length > 0) {
+                rc.cookies = new Object();
+                for each (var cookie in cookies){
+                    var [name, value] = cookie.split('=');
+                    rc.cookies[name] = value;
+                }
             }
         }
-        
+        catch (e){
+            //likely no cookies. That's ok.
+            Components.utils.reportError(e); //just in case.
+        }
         
         return rc;
     }

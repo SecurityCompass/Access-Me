@@ -76,7 +76,7 @@ AccessMeOverlay.prototype = {
         
         this.lastOperation.request = aRequest;
         this.lastOperation.uri = aURI;
-        
+        dump('\nchanging lastOp' + aURI);
         if (this.started){
             //this.analyzeRequest(aWebProgress, aRequest, aFlag, aStatus);
         }

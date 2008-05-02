@@ -30,7 +30,7 @@ tools@securitycompass.com
 /**
  * @class AttackRunner
  */
-function AttackRunner(typeOfAttack, parameters, nameParamToAttack){
+function AttackRunner(typeOfAttack, parameters, nameParamToAttack, resultsManager){
 
     this.className = "AttackRunner";
     
@@ -57,6 +57,11 @@ function AttackRunner(typeOfAttack, parameters, nameParamToAttack){
      * the param to attack
      */
     this.nameParamToAttack = nameParamToAttack;
+    
+    /**
+     * the results manager
+     */
+    this.resultsManager = resultsManager;
     
 }
 
@@ -85,88 +90,104 @@ AttackRunner.prototype = {
         return formFound;
     }
     ,
-    do_test: function(formPanel, formIndex, field, testData, resultsManager,
-            tabIndex)
+    do_test: function()
     {
-        return;
         var mainBrowser = getMainWindow().getBrowser();
         var currentTab = mainBrowser.selectedTab;
-        var wroteTabData = false;
-        var tabManager = new TabManager();
+
         var self = this; //make sure we always have a reference to this object
         var formData = null;
-        
-        //var browser = mainBrowser.getBrowserAtIndex(tabIndex);
-             
-        this.formIndex = formIndex;
-        this.fieldIndex = field.index;
-        this.field = field;
-        this.tabIndex = tabIndex;
-        
-        tabManager.readTabData(currentTab);
-        
-        if (field)
-        {
-            formData = tabManager.getFormDataForURL(mainBrowser.
-                    contentDocument.forms,  formIndex, field.index, 
-                    testData.string);
-        }
-        else 
-        {
-            formData = tabManager.getFormDataForURL(mainBrowser.
-                    contentDocument.forms,  formIndex, null, testData.string);
-        }
-        this.testData = tabManager.getTabData(mainBrowser.
-                    contentDocument.forms,  formIndex, field.index, testData.string);
+                
         dump('\ndoing source test...');
-        this.do_source_test(formIndex, formIndex, field, testData,
-                resultsManager, mainBrowser,formData);
+        this.do_source_test();
         
     }
     ,
-    do_source_test:function(formPanel, formIndex, field, testData, resultsManager, 
-            browser, formData) {
-        var streamListener = new StreamListener(this, resultsManager);
-        resultsManager.addSourceListener(streamListener);
+    do_source_test:function() {
+        var httpChannel = this.parameters.request.QueryInterface(Components.interfaces.nsIHttpChannel);
+        var self = this;
+        var streamListener = new StreamListener(
+                function(streamListener){
+                    self.resultsManager.evaluateSource(streamListener)
+                }, this);
+        this.resultsManager.addSourceListener(streamListener);
 
         // the IO service
         var ioService = Components.classes['@mozilla.org/network/io-service;1']
                 .getService(Components.interfaces.nsIIOService);
-        var formURL = browser.contentDocument.URL;
-        var form = browser.contentDocument.forms[formIndex];
-        var formAction = form.action ? form.action : browser.contentDocument.
-                location.toString();
-                
-        dump('AttackRunner::do_source_test  formAction=== '+formAction+'\n');
-        if (form.method.toLowerCase() != 'post'){
-            formAction += formAction.indexOf('?') === -1 ? '?' : '&';
-            formAction += formData;
-        } 
+        var uri = null;
+        var postStream = null;
+        var cookies = null;
         
-        dump('attackrunner::do_source_test::formAction == ' + formAction + '\n');
-        dump('attackrunner::do_source_test::formData == ' + formData + '\n');
-        
-        var uri = ioService.newURI(formAction, null, null);
-        var referingURI = ioService.newURI(formURL, null, null);
-        this.channel = ioService.newChannelFromURI(uri);
-        this.channel.QueryInterface(Components.interfaces.nsIHttpChannel).
-                referrer = referingURI;
-        
-        if (form.method.toLowerCase() == 'post'){
-            var inputStream = Components.
+        //setup
+        switch (this.typeOfAttack) {
+            case this.ATTACK_GET:
+                var moddedURI = httpChannel.URI.prePath +
+                        httpChannel.URI.path.substring(0,
+                        httpChannel.URI.path.indexOf('?'));
+                for (var key in this.parameters.get) {
+                    if (key == this.nameParamToAttack) {
+                        break;
+                    }
+                    moddedURI = key + "=" + this.parameters.get[key] + "&";
+                }
+                uri = ioService.newURI(moddedURI , null, null);
+                break;
+            case this.ATTACK_POST:
+                postStream = Components.
                     classes['@mozilla.org/io/string-input-stream;1'].
                     createInstance(Components.interfaces.nsIStringInputStream);
-            inputStream.setData(formData, formData.length);
-           this.channel.QueryInterface(Components.interfaces.nsIUploadChannel).
-                    setUploadStream(inputStream, 
-                    'application/x-www-form-urlencoded', -1);
-           this.channel.QueryInterface(Components.interfaces.nsIHttpChannel).
-                    requestMethod = 'POST';
+                var modifiedPost = "";
+                
+                for (var key in this.parameters.post) {
+                    if (key == this.nameParamToAttack) {
+                        break;
+                    }
+                    modifiedPost = key + "=" + this.parameters.post[key] + "&";
+                }
+                
+                postStream.setData(modifiedPost, modifiedPost.length);
+                
+                break;
+            case this.ATTACK_COOKIES:
+                cookies ="";
+                for (key in this.parameters.cookies) {
+                    if (key == this.nameParamToAttack) {
+                        break;
+                    }
+                    cookies += key + "=" +this.parameters.cookies[key] + "; ";
+                }
+                break;
+            default:
+                Components.utils.reportError('Unknown type of attack');
+                //@todo reporting is probably not enough here.
+                break;
         }
         
-        var streamListener = new StreamListener(this, resultsManager);
-        streamListener.testData = this.testData;
-       this.channel.asyncOpen(streamListener, null);
+        this.channel = ioService.newChannelFromURI((uri?uri:httpChannel.URI)).
+                QueryInterface(Components.interfaces.nsIHttpChannel);
+        
+        this.channel.referrer = httpChannel.referrer;
+        try {
+            if (cookies === null) cookies = httpChannel.getRequestHeader("Cookie")
+        
+            //This seems silly but it's actually what lets us do parallel requests
+            //since we need to screw around with cookies and cookies are (usually)
+            //shared from a central store.
+            this.channel.setRequestHeader("Cookie", cookies, false);
+        }
+        catch(e) {
+            Components.utils.reportError(e);
+        }
+        
+        if (postStream){
+            this.channel.QueryInterface(Components.interfaces.nsIUploadChannel).
+                    setUploadStream(postStream, 
+                    'application/x-www-form-urlencoded', -1);
+            this.channel.requestMethod = 'POST';
+        }
+                
+        this.channel.asyncOpen(streamListener, null);
     }
 }
 
