@@ -122,6 +122,14 @@ AccessMeOverlay.prototype = {
         
         //dump(' title is:' + curEntry.title);
     }
+    ,
+    generatingReport: function() {
+        // do nothing yet.
+    }
+    ,
+    postTest: function() {
+        // do nothing right now.
+    }
 };
 
 var accessMeOverlay = new AccessMeOverlay();

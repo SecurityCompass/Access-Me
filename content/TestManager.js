@@ -194,44 +194,17 @@ TestManager.prototype = {
         function checkAgain() {
             self.doneTesting();
         }
-        if (this.waitingForHeuristicTests === true) {
-        
-            if (this.resultsStillExpected === 0) {
-                this.waitingForHeuristicTests = false;
-                if (this.vulnerableFields.length > 0) {
-                    this.waitingForHeuristicTests = false;
-                    function doRunThoroughTests(){
-                        getTestRunnerContainer().clearWorkTabs();
-                        self.controller.warningDialog.startThoroughTesting(self.vulnerableFields.length, self.testType);
-                        self.runThoroughTest(self.testType, self.vulnerableFields);
-                    }
-                    window.setTimeout(doRunThoroughTests, 0);
-                }
-                else {
-                    this.resultsManager = new ResultsManager(self.controller)
-                    this.resultsManager.showResults(this);
-                    getTestRunnerContainer().clearWorkTabs();
-                    this.controller.postTest();
-                }
-            }
-            else {
-                window.setTimeout(checkAgain, 1);
-            }
-            
+
+        if (this.resultsManager.allResultsLogged === false){
+            dump('\nnot done yet...');
+            window.setTimeout(checkAgain, 100);
+            //Components.utils.reportError('results not all logged yet');
+            return
         }
-        else if (this.controller) {
-            if (this.resultsManager.allResultsLogged === false){
-                dump('\nnot done yet...');
-                window.setTimeout(checkAgain, 100);
-                //Components.utils.reportError('results not all logged yet');
-                return
-            }
-            dump('\ndone now.')
-            getTestRunnerContainer().clearWorkTabs();
-            this.controller.generatingReport();
-            this.resultsManager.showResults(this);
-            
-        }
+        dump('\ndone now.')
+        getTestRunnerContainer().clearWorkTabs();
+        this.controller.generatingReport();
+        this.resultsManager.showResults(this);
         
     }
     ,
