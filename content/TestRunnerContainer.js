@@ -97,6 +97,7 @@ TestRunnerContainer.prototype = {
         this.fields.splice(0, this.formPanels.length);
         this.testDatas.splice(0, this.formPanels.length);
         this.resultsManagers.splice(0, this.formPanels.length);
+        this.keepChecking = true;
     }
     ,
     setup: function(currentNumTabs, testManager) {

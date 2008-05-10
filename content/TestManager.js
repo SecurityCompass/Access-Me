@@ -298,31 +298,33 @@ TestManager.prototype = {
         try {
             uploadChannel = aRequest.QueryInterface(Components.interfaces.
                     nsIUploadChannel);
-            var seekableStream = uploadChannel.uploadStream.QueryInterface(Components.interfaces.nsISeekableStream)
-            seekableStream.seek(Components.interfaces.nsISeekableStream.NS_SEEK_SET, 0);
-            if (uploadChannel.uploadStream) {
-                var sis =  Components.
-                    classes["@mozilla.org/scriptableinputstream;1"].
-                    createInstance(Components.interfaces.
-                            nsIScriptableInputStream);
-                sis.init(uploadChannel.uploadStream);
-                var postStream= "";
-                while (true) {
-                    var str = sis.read(512);
-                    if (str) {
-                        postStream += str;
+            if (uploadChannel && uploadChannel.uploadStream) {
+                var seekableStream = uploadChannel.uploadStream.QueryInterface(Components.interfaces.nsISeekableStream)
+                seekableStream.seek(Components.interfaces.nsISeekableStream.NS_SEEK_SET, 0);
+                if (uploadChannel.uploadStream) {
+                    var sis =  Components.
+                        classes["@mozilla.org/scriptableinputstream;1"].
+                        createInstance(Components.interfaces.
+                                nsIScriptableInputStream);
+                    sis.init(uploadChannel.uploadStream);
+                    var postStream= "";
+                    while (true) {
+                        var str = sis.read(512);
+                        if (str) {
+                            postStream += str;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
-                        break;
+                    dump('\npostStream' + postStream);
+                    var postParameters = postStream.split("\r\n\r\n")[1].split("&");
+                    dump('\npostParameters' + postParameters);
+                    rc.post = new Object();
+                    for each(var param in postParameters) {
+                        var [key, val] = param.split('=');
+                        rc.post[key] = val;
                     }
-                }
-                dump('\npostStream' + postStream);
-                var postParameters = postStream.split("\r\n\r\n")[1].split("&");
-                dump('\npostParameters' + postParameters);
-                rc.post = new Object();
-                for each(var param in postParameters) {
-                    var [key, val] = param.split('=');
-                    rc.post[key] = val;
                 }
             }
         }
@@ -345,7 +347,7 @@ TestManager.prototype = {
                 rc.cookies = new Object();
                 for each (var cookie in cookies){
                     var [name, value] = cookie.split('=');
-                    rc.cookies[name] = value;
+                    rc.cookies[name.replace(" ", "")] = value;
                 }
             }
         }

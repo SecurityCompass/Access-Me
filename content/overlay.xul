@@ -26,6 +26,8 @@ tools@securitycompass.com
             src="chrome://accessme/content/io.js" />
     <script type="application/x-javascript"
             src="chrome://accessme/content/SecCompHistoryListener.js" />
+    <script type="application/x-javascript"
+            src="chrome://accessme/content/SecCompObserver.js" />
     <script type="application/x-javascript" 
             src="chrome://accessme/content/util.js" />
     <script type="application/x-javascript"

@@ -30,7 +30,9 @@ tools@securitycompass.com
 /**
  * @class AttackRunner
  */
-function AttackRunner(typeOfAttack, parameters, nameParamToAttack, resultsManager){
+function AttackRunner(typeOfAttack, parameters, nameParamToAttack,
+        resultsManager)
+{
 
     this.className = "AttackRunner";
     
@@ -63,6 +65,11 @@ function AttackRunner(typeOfAttack, parameters, nameParamToAttack, resultsManage
      */
     this.resultsManager = resultsManager;
     
+    /**
+     * cookie modifying Observer
+     */
+    this.cookieModifyingObserver = null;
+    
 }
 
 AttackRunner.prototype = {
@@ -77,14 +84,16 @@ AttackRunner.prototype = {
         var formFound = false;
         for (var i = 0; i < forms.length && !formFound; i++){
             if (i == formIndex){
-                dump('submitting form ... ' + i + ' ' + (i == formIndex) + '\n');
+                dump('submitting form ... ' + i + ' ' + (i == formIndex) +
+                        '\n');
                 if (forms[i].target) forms[i].target = null;
                 forms[i].submit();
                 formFound = true;
             }
             //debug code..
             else {
-                dump('this form is not it... ' + i + ' ' + (i == formIndex) + '\n');  
+                dump('this form is not it... ' + i + ' ' +
+                     (i == formIndex) + '\n');  
             }
         }
         return formFound;
@@ -104,7 +113,8 @@ AttackRunner.prototype = {
     }
     ,
     do_source_test:function() {
-        var httpChannel = this.parameters.request.QueryInterface(Components.interfaces.nsIHttpChannel);
+        var httpChannel = this.parameters.request.
+                QueryInterface(Components.interfaces.nsIHttpChannel);
         var self = this;
         var streamListener = new StreamListener(
                 function(streamListener){
@@ -141,7 +151,7 @@ AttackRunner.prototype = {
                 
                 for (var key in this.parameters.post) {
                     if (key == this.nameParamToAttack) {
-                        break;
+                        continue;
                     }
                     modifiedPost = key + "=" + this.parameters.post[key] + "&";
                 }
@@ -151,9 +161,9 @@ AttackRunner.prototype = {
                 break;
             case this.ATTACK_COOKIES:
                 cookies ="";
-                for (key in this.parameters.cookies) {
+                for (var key in this.parameters.cookies) {
                     if (key == this.nameParamToAttack) {
-                        break;
+                        continue;
                     }
                     cookies += key + "=" +this.parameters.cookies[key] + "; ";
                 }
@@ -168,17 +178,16 @@ AttackRunner.prototype = {
                 QueryInterface(Components.interfaces.nsIHttpChannel);
         
         this.channel.referrer = httpChannel.referrer;
-        try {
-            if (cookies === null) cookies = httpChannel.getRequestHeader("Cookie")
         
-            //This seems silly but it's actually what lets us do parallel requests
-            //since we need to screw around with cookies and cookies are (usually)
-            //shared from a central store.
-            this.channel.setRequestHeader("Cookie", cookies, false);
-        }
-        catch(e) {
-            Components.utils.reportError(e);
-        }
+        this.cookieModifyingObserver =
+                new SecCompObserver('http-on-modify-request', ModifyCookies);
+                
+        var observerService = Components.
+                classes["@mozilla.org/observer-service;1"].
+                getService(Components.interfaces.nsIObserverService);
+                
+        observerService.addObserver(this.cookieModifyingObserver,
+                this.cookieModifyingObserver.topic, false);
         
         if (postStream){
             this.channel.QueryInterface(Components.interfaces.nsIUploadChannel).
@@ -186,8 +195,25 @@ AttackRunner.prototype = {
                     'application/x-www-form-urlencoded', -1);
             this.channel.requestMethod = 'POST';
         }
-                
+        
         this.channel.asyncOpen(streamListener, null);
+        
+        function ModifyCookies (subject, topic, data) {
+            var httpChannel = subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+            dump("\ncomparing channel to subject" + self.channel + " " + httpChannel);
+            if ( httpChannel && (httpChannel == self.channel) ) {
+                if (cookies === null)
+                    cookies = httpChannel.getRequestHeader("Cookie")
+                
+                // This seems silly but it's actually what lets us do parallel
+                // requests since we need to screw around with cookies and
+                // cookies are (usually) shared from a central store. And we
+                // want to make sure that the cookies are the same as in the
+                // previous request.
+                dump('\ngoing to set cookies: ' + cookies);
+                self.channel.setRequestHeader("cookie", cookies, false);
+            }
+        }
     }
 }
 

@@ -51,8 +51,8 @@ SecCompProgressListener.prototype =
         }
         throw Components.results.NS_NOINTERFACE;
         return null;
-    },
-    
+    }
+    ,
     onStateChange: function(aWebProgress, aRequest, aFlag, aStatus)
     {
         //dump('got a state change. aFlag is ' + aFlag.toString(16) + '\n');
@@ -60,15 +60,15 @@ SecCompProgressListener.prototype =
         //        this.listenOn.toString(16) + '\n');
 
 
-    },
-    
+    }
+    ,
     onLocationChange: function(aProgress, aRequest, aURI)
     {
         //if ((aFlag & this.listenWhen) && (aFlag & this.listenOn)) {
             this.func(aRequest, aURI);
         //}
-    },
-    
+    }
+    ,
     // For definitions of the remaining functions see XULPlanet.com
     onProgressChange: function() {return 0;},
     onStatusChange: function() {return 0;},

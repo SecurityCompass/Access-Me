@@ -27,7 +27,8 @@ function AccessMeOverlay() {
     this.firstRun = true;
     this.tabSelectListener = function(event){ dump('\n' + event.target);
             dump('\n' + event.originalTarget);}
-    this.progressListener = new SecCompProgressListener(function(aRequest, aURI){self.gotRequest(aRequest, aURI)},
+    this.progressListener = new SecCompProgressListener(
+            function(aRequest, aURI){self.gotRequest(aRequest, aURI)},
             Components.interfaces.nsIWebProgressListener.STATE_START,
             // we could use stop, but earlier is faster :grin:
             Components.interfaces.nsIWebProgressListener.STATE_IS_DOCUMENT |
@@ -40,6 +41,7 @@ function AccessMeOverlay() {
     this.started = false;
     this.lastOperation = new Object();
 }
+
 AccessMeOverlay.prototype = {
     onLoad: function() {
         gBrowser.selectedBrowser.addProgressListener(this.progressListener,
@@ -84,15 +86,14 @@ AccessMeOverlay.prototype = {
     }
     ,
     analyzeRequest: function (aWebProgress, aRequest, aFlag, aStatus) {
+        
         var req = aRequest.QueryInterface(Components.interfaces.nsIRequest);
-        var webProgress = aWebProgress.QueryInterface(Components.interfaces.nsIWebProgress);
+        var webProgress = aWebProgress.
+                QueryInterface(Components.interfaces.nsIWebProgress);
         var get = req.name;
         var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                 .getService(Components.interfaces.nsIIOService);
         var uri = ioService.newURI(req, null, null);
-        
-        
-
         
     }
     ,

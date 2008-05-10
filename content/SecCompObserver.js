@@ -43,10 +43,11 @@ SecCompObserver.prototype = {
     }
     ,
     QueryInterface : function(aIID) {
-        if (aIID.equals(Components.interfaces.nsIObserver)) {
+        if (aIID.equals(Components.interfaces.nsIObserver) ||
+            aIID.equals(Components.interfaces.nsISupports))
+        {
             return this;
         }
-    
         throw Components.results.NS_NOINTERFACE;
     }
 };
