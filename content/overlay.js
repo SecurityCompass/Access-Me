@@ -145,14 +145,14 @@ AccessMeOverlay.prototype = {
     ,
     displayerErrorState: function(){
         var statusIcon = document.getElementById('accessme-test-status');
-        
         statusIcon.className = 'error';
+        statusIcon.label='Errors';
     }
     ,
     displayPassState: function(){
         var statusIcon = document.getElementById('accessme-test-status');
-        
         statusIcon.className = 'pass';
+        statusIcon.label='Passed';
         
     }
 };
