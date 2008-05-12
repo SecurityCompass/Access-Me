@@ -49,7 +49,16 @@ function ResultsManager(extensionManager) {
      *  index of the form. The second dimension is the index of the field that
      *  is being tested
      */
-    this.fields = new Array(); 
+    this.fields = new Array();
+    
+    this.addSourceEvaluator(fail);
+    
+    /**
+     * the current state of the results.
+     * This is used to keep track 
+     */
+    this.state = this.STATE_UNKNOWN;
+    
 
 }
 
@@ -68,6 +77,18 @@ ResultsManager.prototype = {
             this.fields[field.formIndex][field.index] = new FieldResult(field);
         }
         this.fields[field.formIndex][field.index].addResults(resultsWrapper.results);
+        var noErrors = true;
+        for each(var r in resultsWrapper.results){
+            if (r.type !== RESULT_TYPE_PASS){
+                noErrors = false;
+                this.state = this.STATE_ERROR;
+                break;
+            }
+        }
+        if (noErrors){
+            this.state = this.STATE_PASS;
+        }
+        
         this.extensionManager.finishedTest();
         if (this.sourceListeners.length === 0 && getTestRunnerContainer().testRunners.length === 0) {
             dump('\nall results logged now.')
@@ -552,7 +573,6 @@ ResultsManager.prototype = {
             this.allResultsLogged = true;
         }
         getTestRunnerContainer().freeTab(attackRunner.tabIndex);
-
         
     }
     ,
@@ -662,6 +682,12 @@ ResultsManager.prototype = {
         rv += "</style></head><body>";
         return rv;
     }
+    ,
+    STATE_UNKNOWN: 0
+    ,
+    STATE_ERROR: RESULT_TYPE_ERROR
+    ,
+    STATE_PASS: RESULT_TYPE_PASS
 };
 
 function generateMoreOfReportBody(resultsManager, sortedResults, errorstr,

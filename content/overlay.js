@@ -130,6 +130,31 @@ AccessMeOverlay.prototype = {
     postTest: function() {
         // do nothing right now.
     }
+    ,
+    finishedTest: function() {
+        //do nothing right now.
+        var resultState = getTestManager().resultsManager.state;
+        
+        if (resultState === ResultsManager.STATE_PASS) {
+            this.displayPassState();
+        }
+        else {
+            this.displayerErrorState();
+        }
+    }
+    ,
+    displayerErrorState: function(){
+        var statusIcon = document.getElementById('accessme-test-status');
+        
+        statusIcon.className = 'error';
+    }
+    ,
+    displayPassState: function(){
+        var statusIcon = document.getElementById('accessme-test-status');
+        
+        statusIcon.className = 'pass';
+        
+    }
 };
 
 var accessMeOverlay = new AccessMeOverlay();

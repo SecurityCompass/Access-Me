@@ -163,7 +163,7 @@ TestManager.prototype = {
         var testRunnerContainer = getTestRunnerContainer(1, this);
         
         if (this.resultsManager == null) {
-            this.resultsManager = new ResultsManager();
+            this.resultsManager = new ResultsManager(this.controller);
         }
         
         for (var paramName in parameters.get) {

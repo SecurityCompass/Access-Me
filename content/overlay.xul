@@ -63,7 +63,7 @@ tools@securitycompass.com
     <script type="application/x-javascript" 
             src="chrome://accessme/content/AttackHttpResponseObserver.js" />
     <script type="application/x-javascript" 
-            src="chrome://accessme/content/accessmeevaluators.js" />
+            src="chrome://accessme/content/evaluators.js" />
     <script type="application/x-javascript" 
             src="chrome://accessme/content/overlay.js"/>
     <broadcasterset id="mainBroadcasterSet">

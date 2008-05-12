@@ -108,3 +108,8 @@ function checkForServerResponseCode(nsiHttpChannel){
         return false;
     }
 }
+
+function fail(streamListener) {
+    
+    return [new Result(RESULT_TYPE_ERROR, 100, 'auto fail')];    
+}

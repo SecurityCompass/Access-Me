@@ -70,6 +70,13 @@ function AttackRunner(typeOfAttack, parameters, nameParamToAttack,
      */
     this.cookieModifyingObserver = null;
     
+    this.fieldIndex = -1;
+    this.field = new Object();
+    this.field.index = -1;
+    this.field.name = this.nameParamToAttack;
+    this.field.formIndex = -1;
+    this.field.formName = this.typeOfAttack;
+    
 }
 
 AttackRunner.prototype = {
@@ -116,10 +123,7 @@ AttackRunner.prototype = {
         var httpChannel = this.parameters.request.
                 QueryInterface(Components.interfaces.nsIHttpChannel);
         var self = this;
-        var streamListener = new StreamListener(
-                function(streamListener){
-                    self.resultsManager.evaluateSource(streamListener)
-                }, this);
+        var streamListener = new StreamListener(self.resultsManager, this);
         this.resultsManager.addSourceListener(streamListener);
 
         // the IO service
