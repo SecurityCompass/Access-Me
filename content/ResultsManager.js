@@ -78,6 +78,7 @@ ResultsManager.prototype = {
         }
         this.fields[field.formIndex][field.index].addResults(resultsWrapper.results);
         var noErrors = true;
+        
         for each(var r in resultsWrapper.results){
             if (r.type !== RESULT_TYPE_PASS){
                 noErrors = false;

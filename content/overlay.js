@@ -50,6 +50,8 @@ function AccessMeOverlay() {
     this.browser = null;
     this.started = false;
     this.lastOperation = new Object();
+    
+    this.testManager = null;
 }
 
 AccessMeOverlay.prototype = {
@@ -69,15 +71,19 @@ AccessMeOverlay.prototype = {
     ,
     runTest: function(){
         dump('\going to run test...');
-        if (this.started && this.lastOperation) {
-            this.testManager = getTestManager(this);
+        if (this.started === true && this.lastOperation !== null) {
+            if (this.testManager === null) {
+                this.testManager = getTestManager(this);
+            }
             this.testManager.runTest(this.lastOperation)
         }
     }
     ,
     start: function() {
-        this.started = true;
-        this.runTest();
+        if (this.started === false) {
+            this.started = true;
+            this.runTest();
+        }
     }
     ,
     gotRequest: function (aRequest, aURI) {

@@ -203,8 +203,8 @@ TestManager.prototype = {
         }
         dump('\ndone now.')
         getTestRunnerContainer().clearWorkTabs();
-        this.controller.generatingReport();
-        this.resultsManager.showResults(this);
+        //this.controller.generatingReport();
+        //this.resultsManager.showResults(this);
         
     }
     ,

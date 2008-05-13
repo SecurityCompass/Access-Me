@@ -220,6 +220,8 @@ AttackRunner.prototype = {
                 // previous request.
                 dump('\ngoing to set cookies: ' + cookies);
                 self.channel.setRequestHeader("cookie", cookies, false);
+                observerService.removeObserver(self.cookieModifyingObserver,
+                        self.cookieModifyingObserver.topic);
             }
         }
     }
