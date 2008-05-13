@@ -65,10 +65,10 @@ TestRunnerContainer.prototype = {
         else if (this.testRunners.length === 0) {
             this.keepChecking = false;
             this.testManager.doneTesting();
-            
         }
         
         function doAgain(){
+            dump('\ndoing again...' + self.testRunners.length)
             self.start();
         }
         if (this.keepChecking === true) {
@@ -91,12 +91,6 @@ TestRunnerContainer.prototype = {
     }
     ,
     clear: function (){
-        this.testRunners.splice(0, this.testRunners.length);
-        this.formPanels.splice(0, this.formPanels.length);
-        this.formIndexes.splice(0, this.formPanels.length);
-        this.fields.splice(0, this.formPanels.length);
-        this.testDatas.splice(0, this.formPanels.length);
-        this.resultsManagers.splice(0, this.formPanels.length);
         this.keepChecking = true;
     }
     ,

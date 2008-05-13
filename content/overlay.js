@@ -49,7 +49,7 @@ function AccessMeOverlay() {
       to be listening on */
     this.browser = null;
     this.started = false;
-    this.lastOperation = new Object();
+    this.lastOperation = null;
     
     this.testManager = null;
 }
@@ -91,7 +91,8 @@ AccessMeOverlay.prototype = {
             return; //we don't care about not http
         }
         var self = this;
-        
+        this.lastOperation = null;
+        this.lastOperation = new Object();
         this.lastOperation.request = aRequest;
         this.lastOperation.uri = aURI;
         

@@ -160,7 +160,9 @@ TestManager.prototype = {
     runThoroughTest: function(aRequest) {
         
         var parameters = this.analyzeRequest(aRequest);
+        
         var testRunnerContainer = getTestRunnerContainer(1, this);
+        testRunnerContainer.clear();
         
         if (this.resultsManager == null) {
             this.resultsManager = new ResultsManager(this.controller);
@@ -190,6 +192,7 @@ TestManager.prototype = {
      * complete.
      */
     doneTesting: function() {
+        dump('\nTestManager::DoneTesting is called.');
         var self = this;
         function checkAgain() {
             self.doneTesting();
