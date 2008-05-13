@@ -23,9 +23,9 @@ tools@securitycompass.com
 /**
  * StreamListener
  */
-function StreamListener(resultsManager, attackRunner) {
+function StreamListener(aFunction, attackRunner) {
+    this.aFunction = aFunction;
     this.attackRunner = attackRunner;
-    this.resultsManager = resultsManager;
     this.done = false;
     this.data = "";
 }
@@ -56,7 +56,7 @@ StreamListener.prototype = {
             dump(this.data);
             dump('\n--- end of raw source ---');
             
-            this.resultsManager.evaluateSource(this);
+            this.aFunction(this);
         }
     }
     ,

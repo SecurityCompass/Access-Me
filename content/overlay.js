@@ -27,6 +27,10 @@ function AccessMeOverlay() {
     this.firstRun = true;
     this.tabSelectListener = function(event){ dump('\n' + event.target);
             dump('\n' + event.originalTarget);}
+    
+    /**
+     * used to listen for requests
+     */
     this.progressListener = new SecCompProgressListener(
             function(aRequest, aURI){self.gotRequest(aRequest, aURI)},
             Components.interfaces.nsIWebProgressListener.STATE_START,
@@ -35,6 +39,12 @@ function AccessMeOverlay() {
             Components.interfaces.nsIWebProgressListener.STATE_IS_NETWORK |
             Components.interfaces.nsIWebProgressListener.STATE_IS_REQUEST |
             Components.interfaces.nsIWebProgressListener.STATE_IS_WINDOW);
+    /**
+     * used to listen for the data from the requests
+     */
+    this.rawResponseListener = null; 
+    
+    this.rawResponse = null;
     /* all these or's are because I'm not that sure which thing we're supposed
       to be listening on */
     this.browser = null;
@@ -57,31 +67,40 @@ AccessMeOverlay.prototype = {
                 this.tabSelectListener, false);
     }
     ,
+    runTest: function(){
+        dump('\going to run test...');
+        if (this.started && this.lastOperation) {
+            this.testManager = getTestManager(this);
+            this.testManager.runTest(this.lastOperation)
+        }
+    }
+    ,
     start: function() {
         this.started = true;
-        if (this.firstRun === false) {
-            this.firstRun = true;
-        }
-        
-        var testManager = getTestManager(this);
-        
-        if (this.lastOperation) {
-            testManager.runTest(this.lastOperation)
-        }
-        
+        this.runTest();
     }
     ,
     gotRequest: function (aRequest, aURI) {
         if (aURI.scheme !== 'http'){
             return; //we don't care about not http
         }
+        var self = this;
         
         this.lastOperation.request = aRequest;
         this.lastOperation.uri = aURI;
+        
+        this.rawResponseListener = new StreamListener(
+            function(streamListener){
+                dump('\ngot raw data');
+                self.lastOperation.rawResponse = streamListener.data;
+                self.runTest();
+            },
+            null);
+        
+        var httpChannelCopy = cloneHttpChannel(aRequest);
+        httpChannelCopy.asyncOpen(this.rawResponseListener, httpChannelCopy);
+        
         dump('\nchanging lastOp' + aURI);
-        if (this.started){
-            //this.analyzeRequest(aWebProgress, aRequest, aFlag, aStatus);
-        }
         
     }
     ,

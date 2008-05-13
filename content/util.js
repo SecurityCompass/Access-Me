@@ -231,3 +231,74 @@ function getMainHTMLDoc(){
     return currentDocument;
 }
  
+ 
+/**
+ * takes an http channel and returns a distinct copy of it. Copies POST, GET,
+ * and referer.
+ * @param httpChannel an nsIHttpChannel
+ * @returns a new nsIHttpChannel on succes, null on failure.
+ */
+function cloneHttpChannel(channel){
+    var httpChannel;
+    try {
+        httpChannel = channel.QueryInterface(Components.interfaces.
+                nsIHttpChannel);
+    }
+    catch(e){
+        return null;
+    }
+    
+    var ioService = Components.classes['@mozilla.org/network/io-service;1']
+        .getService(Components.interfaces.nsIIOService);
+
+    var rv = ioService.newChannelFromURI(httpChannel.URI);
+    
+    var rvAsHttpChannel = rv.QueryInterface(Components.interfaces.nsIHttpChannel);
+    if (httpChannel.requestMethod.toLowerCase() == 'post'){
+
+        var uploadChannel = null;
+        try {
+            uploadChannel = channel.QueryInterface(Components.interfaces.
+                    nsIUploadChannel);
+            if (uploadChannel && uploadChannel.uploadStream) {
+                    if (uploadChannel.uploadStream) {
+                    var sis =  Components.
+                        classes["@mozilla.org/scriptableinputstream;1"].
+                        createInstance(Components.interfaces.
+                                nsIScriptableInputStream);
+                    sis.init(uploadChannel.uploadStream);
+                    var postStream= "";
+                    while (true) {
+                        var str = sis.read(512);
+                        if (str) {
+                            postStream += str;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    
+                    var inputStream = Components.
+                        classes['@mozilla.org/io/string-input-stream;1'].
+                        createInstance(Components.interfaces.nsIStringInputStream);
+                        inputStream.setData(postStream, postStream.length);
+                    
+                    rv.QueryInterface(Components.interfaces.nsIUploadChannel).
+                            setUploadStream(inputStream,
+                            'application/x-www-form-urlencoded', -1);
+                    rvAsHttpChannel.requestMethod = 'POST';
+                    
+                    var seekableStream = uploadChannel.uploadStream.
+                        QueryInterface(Components.interfaces.nsISeekableStream)
+                    seekableStream.seek(Components.interfaces.nsISeekableStream.NS_SEEK_SET, 0);
+                }
+            }
+        }
+        catch (e) {
+            Components.utils.reportError(e);
+        }
+    }
+
+    return rv;
+
+}

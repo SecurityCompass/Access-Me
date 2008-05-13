@@ -123,7 +123,11 @@ AttackRunner.prototype = {
         var httpChannel = this.parameters.request.
                 QueryInterface(Components.interfaces.nsIHttpChannel);
         var self = this;
-        var streamListener = new StreamListener(self.resultsManager, this);
+        var streamListener = new StreamListener(
+                function(sl){
+                    self.resultsManager.evaluateSource(sl);
+                },
+                this);
         this.resultsManager.addSourceListener(streamListener);
 
         // the IO service
