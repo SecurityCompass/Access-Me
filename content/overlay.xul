@@ -70,14 +70,17 @@ tools@securitycompass.com
         <broadcaster id="accessme-start"
                      label="Start"
                      oncommand="accessMeOverlay.start()" />
+        <broadcaster id='accessme-report'
+                     label='Report'
+                     oncommand="accessMeOverlay.showReport()" />
     </broadcasterset>
   <toolbox id="navigator-toolbox" >
     <toolbar id="accessme-bar" toolbarname='Access Me bar' insertafter="customToolbars">
       <toolbarbutton label="Security Compass Access Me" id="logo" image="chrome://accessme/skin/tiny_logo.png" orient="horizontal"/>
-      <toolbarbutton label="Start" id='accessme-test-action' orient="vertical" class="start" command='accessme-start' />
+      <toolbarbutton id='accessme-test-action' orient="vertical" class="start" observes='accessme-start' />
       <toolbarbutton label="Not Started" id='accessme-test-status' orient="vertical" class="start" disabled='true'/>
       <toolbarbutton label="Clear Results" id='accessme-clear-results' orient='vertical' disabled='true' hidden='true' command='accessme-clear'/>
-      <toolbarbutton label="Report" id='accessme-gen-report' orient='vertical' disabled='true' command='accessme-report'/>
+      <toolbarbutton id='accessme-gen-report' orient='vertical' observes='accessme-report'/>
     </toolbar>
   </toolbox>
   <menupopup id="menu_ToolsPopup">

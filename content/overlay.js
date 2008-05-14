@@ -181,6 +181,19 @@ AccessMeOverlay.prototype = {
         statusIcon.label='Passed';
         
     }
+    ,
+    showReport: function(){
+        if (this.testManager && this.testManager.resultsManager &&
+            this.testManager.resultsManager.results )
+        {
+            this.testManager.resultsManager.showResults(this.testManager);
+        }
+        else {
+            var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+                        .getService(Components.interfaces.nsIPromptService);
+            prompts.alert(null, "Can't Generate Reports", "Please start Access Me.");
+        }
+    }
 };
 
 var accessMeOverlay = new AccessMeOverlay();
