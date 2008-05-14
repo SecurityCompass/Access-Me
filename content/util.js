@@ -261,7 +261,11 @@ function cloneHttpChannel(channel){
             uploadChannel = channel.QueryInterface(Components.interfaces.
                     nsIUploadChannel);
             if (uploadChannel && uploadChannel.uploadStream) {
-                    if (uploadChannel.uploadStream) {
+                if (uploadChannel.uploadStream) {
+                    var seekableStream = uploadChannel.uploadStream.
+                        QueryInterface(Components.interfaces.nsISeekableStream)
+                    seekableStream.seek(Components.interfaces.
+                            nsISeekableStream.NS_SEEK_SET, 0);
                     var sis =  Components.
                         classes["@mozilla.org/scriptableinputstream;1"].
                         createInstance(Components.interfaces.
@@ -277,7 +281,7 @@ function cloneHttpChannel(channel){
                             break;
                         }
                     }
-                    
+                    postStream = postStream.split('\r\n\r\n')[1];
                     var inputStream = Components.
                         classes['@mozilla.org/io/string-input-stream;1'].
                         createInstance(Components.interfaces.nsIStringInputStream);
@@ -288,8 +292,8 @@ function cloneHttpChannel(channel){
                             'application/x-www-form-urlencoded', -1);
                     rvAsHttpChannel.requestMethod = 'POST';
                     
-                    var seekableStream = uploadChannel.uploadStream.
-                        QueryInterface(Components.interfaces.nsISeekableStream)
+                    //var seekableStream = uploadChannel.uploadStream.
+                    //    QueryInterface(Components.interfaces.nsISeekableStream)
                     seekableStream.seek(Components.interfaces.nsISeekableStream.NS_SEEK_SET, 0);
                 }
             }

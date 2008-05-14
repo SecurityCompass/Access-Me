@@ -147,7 +147,7 @@ AttackRunner.prototype = {
                     if (key == this.nameParamToAttack) {
                         break;
                     }
-                    moddedURI = key + "=" + this.parameters.get[key] + "&";
+                    moddedURI += key + "=" + this.parameters.get[key] + "&";
                 }
                 uri = ioService.newURI(moddedURI , null, null);
                 break;
@@ -161,13 +161,26 @@ AttackRunner.prototype = {
                     if (key == this.nameParamToAttack) {
                         continue;
                     }
-                    modifiedPost = key + "=" + this.parameters.post[key] + "&";
+                    modifiedPost += key + "=" + this.parameters.post[key] + "&";
                 }
                 
                 postStream.setData(modifiedPost, modifiedPost.length);
                 
                 break;
             case this.ATTACK_COOKIES:
+                if (this.parameters.request.requestMethod == 'POST') {
+                    postStream = Components.
+                            classes['@mozilla.org/io/string-input-stream;1'].
+                            createInstance(Components.interfaces.
+                            nsIStringInputStream);
+                    var modifiedPost = "";
+                    
+                    for (var key in this.parameters.post) {
+                        modifiedPost += key + "=" + this.parameters.post[key] + "&";
+                    }
+                    postStream.setData(modifiedPost, modifiedPost.length);
+                    
+                }
                 cookies ="";
                 for (var key in this.parameters.cookies) {
                     if (key == this.nameParamToAttack) {
