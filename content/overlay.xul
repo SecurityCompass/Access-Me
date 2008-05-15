@@ -55,8 +55,6 @@ tools@securitycompass.com
     <script type="application/x-javascript" 
             src="chrome://accessme/content/preferenceStringContainer.js" />
     <script type="application/x-javascript" 
-            src="chrome://accessme/content/attackStringContainer.js" />
-    <script type="application/x-javascript" 
             src="chrome://accessme/content/ErrorStringContainer.js" />
     <script type="application/x-javascript" 
             src="chrome://accessme/content/AttackRunner.js" />
@@ -77,7 +75,7 @@ tools@securitycompass.com
   <toolbox id="navigator-toolbox" >
     <toolbar id="accessme-bar" toolbarname='Access Me bar' insertafter="customToolbars">
       <toolbarbutton label="Security Compass Access Me" id="logo" image="chrome://accessme/skin/tiny_logo.png" orient="horizontal"/>
-      <toolbarbutton id='accessme-test-action' orient="vertical" class="start" observes='accessme-start' />
+      <toolbarbutton id='accessme-test-action' class="start" observes='accessme-start' />
       <toolbarbutton label="Not Started" id='accessme-test-status' orient="vertical" class="start" disabled='true'/>
       <toolbarbutton label="Clear Results" id='accessme-clear-results' orient='vertical' disabled='true' hidden='true' command='accessme-clear'/>
       <toolbarbutton id='accessme-gen-report' orient='vertical' observes='accessme-report'/>
@@ -86,7 +84,8 @@ tools@securitycompass.com
   <menupopup id="menu_ToolsPopup">
     <menu id="accesme-tools" label="Access Me"  insertafter="devToolsSeparator" accesskey="a">
         <menupopup>
-            <menuitem label="Start" command='accessme-start' />
+            <menuitem observes="accessme-start" />
+            <menuitem observes="accessme-report" />
             <menuitem label="Options" oncommand="window.openDialog('chrome://accessme/content/preferences.xul')" />
             <menuitem label="About" oncommand="window.openDialog('chrome://accessme/content/about.xul');" />
             <menuitem label="Help" oncommand="window.open('http://securitycompass.com/exploitme.shtml', 'helpwindow', '');" />  

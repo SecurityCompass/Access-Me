@@ -32,21 +32,21 @@ function PreferencesController() {
 
 PreferencesController.prototype = {
     init: function(){
-//         getErrorStringContainer();
         
-        var attacks = getAttackStringContainer().getStrings();
+        var attackParamDetectRegexs = getAttackParamDetectRegexContainer().getStrings();
         var errorStrings = getErrorStringContainer().getStrings();
         
-        if (attacks.length) {
-            this.makeUI(attacks, null, 'existingSQLIstrings');
+        if (attackParamDetectRegexs.length) {
+            this.makeUI(attackParamDetectRegexs, null,
+                    'existingAttackParamDetectRegex');
         }
         else {
-            var label = document.getElementById('noattackslbl');
+            var label = document.getElementById('noregexlbl');
             label.style.visibility = 'visible';
         }
         
         if (errorStrings.length){
-            this.makeUI(errorStrings, null, 'existingSQLIerrStrings');   
+            this.makeUI(errorStrings, null, 'existingErrorDetectionRegex');   
         }
         else {
             var label = document.getElementById('noerrorslbl');
@@ -77,14 +77,6 @@ PreferencesController.prototype = {
         }
     }
     ,
-    removeError: function(){
-        this.removeItem(getErrorStringContainer(), 'existingSQLIerrStrings');    
-    }
-    ,
-    removeAttack: function(){
-        this.removeItem(getAttackStringContainer(), 'existingSQLIstrings');
-    }
-    ,
     removeItem: function(container, listboxID){
         var listbox = document.getElementById(listboxID);
         var selectedAttacks = listbox.selectedItems;
@@ -106,7 +98,7 @@ PreferencesController.prototype = {
         this.makeUI(container.getStrings(), window, listboxID);
     }
     ,
-    exportAttacks: function(){
+    exportAttacks: function(){/*
         var exportDoc = document.implementation.createDocument("", "", null);
         var root = exportDoc.createElement('exportedattacks');
         var xmlAttacks = exportDoc.createElement('attacks');
@@ -161,10 +153,11 @@ PreferencesController.prototype = {
         foStream.write(xml, xml.length);
         foStream.close();
         return true;
-
+        */
     }
     ,
     importAttacks: function(){
+        /*
         var nsIFilePicker = Components.interfaces.nsIFilePicker;
         var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
         picker.init(window, "Select File To Import From", nsIFilePicker.modeOpen);
@@ -265,14 +258,7 @@ PreferencesController.prototype = {
         this.makeUI(getAttackStringContainer().getStrings(), window, 'existingSQLIstrings');
         this.makeUI(getErrorStringContainer().getStrings(), window, 'existingSQLIerrStrings');
         return true;
-    }
-    ,
-    moveAttackStringUp: function(){
-        this.moveItemUp(getAttackStringContainer(), 'existingSQLIstrings');   
-    }
-    ,
-    moveErrorStringUp: function(){
-        this.moveItemUp(getErrorStringContainer(), 'existingSQLIerrStrings');   
+        */
     }
     ,
     moveItemUp: function(container, listboxID){
@@ -295,18 +281,9 @@ PreferencesController.prototype = {
         this.makeUI(container.getStrings(), window, listboxID);
         
         return true;
-
     }
     ,
-    moveAttackStringDown: function(){
-        this.moveItemDown(getAttackStringContainer(), 'existingSQLIstrings');   
-    }
-    ,
-    moveErrorStringDown: function(){
-        this.moveItemDown(getErrorStringContainer(), 'existingSQLIerrStrings');
-    }
-    ,
-    moveItemDown: function(container, listboxID){
+    moveItemDown: function(container, listboxID) {
         var listbox = document.getElementById(listboxID);
 
         if (listbox.selectedItems.length != 1){

@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
+<!DOCTYPE dialog PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 
-<dialog id="attackstring" title="Attack String"
+<dialog id="addDetectRegEx"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        persist="screenX screenY width height"
         buttons="accept,cancel"
-        buttonlabelaccept="Set Attack String"
+        buttonlabelaccept="Set Parameter Detection Regex"
         buttonlabelcancel="Cancel"
-        ondialogaccept="return checkOK();"
-        ondialogcancel="return checkCancel();">
-
+        ondialogaccept="return onOK();"
+        ondialogcancel="return onCancel();">
 <!-- 
-Copyright 2007 Security Compass
+Copyright 2008 Security Compass
 
 This file is part of SQL Inject Me.
 
@@ -33,20 +34,12 @@ tools@securitycompass.com
 -->
 <script type="application/x-javascript" src="chrome://accessme/content/json.js" />
 <script type="application/x-javascript" src="chrome://accessme/content/preferenceStringContainer.js" />
-<script type="application/x-javascript" src="chrome://accessme/content/attackStringContainer.js" />
+<script type="application/x-javascript" src="chrome://accessme/content/attackParamDetectRegexContainer.js" />
 <script type="application/x-javascript" src="chrome://accessme/content/preferences.js" />
-<script type="application/x-javascript" src="chrome://accessme/content/addAttack.js" />
-<description value="Please enter an attack string and a signature (an id by which we can attribute the string to you, ex. your name)" />
-<label value="Attack String" control="attackstringtxtbox" />
-<textbox id="attackstringtxtbox" />
+<script type="application/x-javascript" src="chrome://accessme/content/addDetectRegEx.js" />
+<description value="Please enter a regular expression that will match your name and a signature (an id by which we can attribute the string to you, ex. your name)" />
+<label value="Attack String" control="DetectRegExtxtbox" />
+<textbox id="DetectRegExtxtbox" />
 <label value="Your Signature" control="sigtxtbox" />
 <textbox id="sigtxtbox" />
-<script>
-    function checkOK(){
-        return onOk();
-    }
-    function checkCancel(){
-        return onCancel();
-    }
-</script>
 </dialog>

@@ -191,7 +191,7 @@ AccessMeOverlay.prototype = {
         else {
             var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                         .getService(Components.interfaces.nsIPromptService);
-            prompts.alert(null, "Can't Generate Reports", "Please start Access Me.");
+            prompts.alert(null, "Can't Generate Reports", "Please start Access Me and run some tests before trying to view results.");
         }
     }
 };

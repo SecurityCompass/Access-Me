@@ -66,8 +66,12 @@ toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon {
   
 }
 
-#accessme-test-status.start {
+#accessme-test-status.start, #accessme-test-status.pass{
   list-style-image: url('chrome://accessme/skin/weather-clear.png') !important;
+}
+
+#accessme-test-status.error {
+  list-style-image: url('chrome://accessme/skin/dialog-warning.png') !important;
 }
 
 #accessme-gen-report {
