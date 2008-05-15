@@ -64,7 +64,7 @@ TestRunnerContainer.prototype = {
         }
         else if (this.testRunners.length === 0) {
             this.keepChecking = false;
-            this.testManager.doneTesting();
+            //this.testManager.doneTesting();
         }
         
         function doAgain(){

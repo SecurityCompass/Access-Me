@@ -162,6 +162,22 @@ TestManager.prototype = {
         var parameters = this.analyzeRequest(aRequest);
         
         var testRunnerContainer = getTestRunnerContainer(1, this);
+        var detectorContainer = getAttackParamDetectRegexContainer();
+        var detectors = new Array();
+        var attackThis = false;
+        
+        for each (var detector in detectorContainer.getStrings(true)){
+            //if it's a regexp then store it as one, if not then we'll use it
+            //as a string
+            try {
+                detectors.push(new RegExp(detector.string))
+            }
+            catch(e){
+                detectors.push(detector);
+            }
+            
+        }
+        
         testRunnerContainer.clear();
         
         if (this.resultsManager == null) {
@@ -169,18 +185,50 @@ TestManager.prototype = {
         }
         
         for (var paramName in parameters.get) {
-            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName, this.resultsManager);
-            testRunnerContainer.addTestRunner(attackRunner);
+            for each (var detector in detectors) {
+                if ((typeof(detector) == "function" && detector.test(paramName)) ||
+                    (typeof(detector) == "string" && paramName.indexOf(detector) !== -1))
+                {
+                    attackThis=true;
+                    break; // one is true is enough for us.
+                }
+            }
+            
+            if (attackThis === true){
+                var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName, this.resultsManager);
+                testRunnerContainer.addTestRunner(attackRunner);
+            }
         }
-        
         for (var paramName in parameters.post) {
-            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName, this.resultsManager);
-            testRunnerContainer.addTestRunner(attackRunner);
+            for each (var detector in detectors) {
+                if ((typeof(detector) == "function" && detector.test(paramName)) ||
+                    (typeof(detector) == "string" && paramName.indexOf(detector) !== -1))
+                {
+                    attackThis=true;
+                    break; // one is true is enough for us.
+                }
+            }
+            
+            if (attackThis === true){
+                var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName, this.resultsManager);
+                testRunnerContainer.addTestRunner(attackRunner);
+            }
         }
         
         for (var paramName in parameters.cookies) {
-            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName, this.resultsManager);
-            testRunnerContainer.addTestRunner(attackRunner);
+            for each (var detector in detectors) {
+                if ((typeof(detector) == "function" && detector.test(paramName)) ||
+                    (typeof(detector) == "string" && paramName.indexOf(detector) !== -1))
+                {
+                    attackThis=true;
+                    break; // one is true is enough for us.
+                }
+            }
+            
+            if (attackThis === true){
+                var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName, this.resultsManager);
+                testRunnerContainer.addTestRunner(attackRunner);
+            }
         }
         
         testRunnerContainer.start();
