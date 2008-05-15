@@ -51,7 +51,8 @@ function ResultsManager(extensionManager) {
      */
     this.fields = new Array();
     
-    this.addSourceEvaluator(fail);
+    //this.addSourceEvaluator(fail);
+    this.addSourceEvaluator(checkSrcForErrorString);
     
     /**
      * the current state of the results.

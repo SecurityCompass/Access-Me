@@ -202,8 +202,9 @@ AccessMeOverlay.prototype = {
     }
     ,
     showReport: function(){
-        if (this.testManager && this.testManager.resultsManager &&
-            this.testManager.resultsManager.results )
+        if (this.testManager != null &&
+            this.testManager.resultsManager != null &&
+            this.testManager.resultsManager.results != null)
         {
             this.testManager.resultsManager.showResults(this.testManager);
         }

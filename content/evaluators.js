@@ -39,12 +39,22 @@ function checkSrcForErrorString(streamListener) {
     dump("\nStart freeze...");
     for each (var error in errorContainer.getStrings()){
         var result;
-        
-        if (doc.indexOf(error.string) !== -1) {
-            result = new Result(RESULT_TYPE_ERROR, 100, "Error string found: '" + stringEncoder.encodeString(error.string) + "'");
+        try {
+            var regexp = new RegExp(error.string);
+            if (regexp.test(doc)){
+                result = new Result(RESULT_TYPE_ERROR, 100, "Error string found: '" + stringEncoder.encodeString(error.string) + "'");
+            }
+            else {
+                result = new Result(RESULT_TYPE_PASS, 100, "Error string not found: '" + stringEncoder.encodeString(error.string) + "'");
+            }
         }
-        else {
-            result = new Result(RESULT_TYPE_PASS, 100, "Error string not found: '" + stringEncoder.encodeString(error.string) + "'");
+        catch (e){
+            if (doc.indexOf(error.string) !== -1) {
+                result = new Result(RESULT_TYPE_ERROR, 100, "Error string found: '" + stringEncoder.encodeString(error.string) + "'");
+            }
+            else {
+                result = new Result(RESULT_TYPE_PASS, 100, "Error string not found: '" + stringEncoder.encodeString(error.string) + "'");
+            }
         }
         
         results.push(result);
