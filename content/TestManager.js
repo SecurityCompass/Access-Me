@@ -154,6 +154,14 @@ TestManager.prototype = {
     }
     ,
     /**
+     * called when a set of tests is finished but testing is not done. E.g.
+     * after a page has been tested but the browser is still in testing mode
+     */
+    doneTestSet: function(){
+        this.controller.doneTestSet();        
+    }
+    ,
+    /**
      * runs tests on the request.
      * @param aRequest a request
      */
@@ -230,8 +238,8 @@ TestManager.prototype = {
                 testRunnerContainer.addTestRunner(attackRunner);
             }
         }
-        
-        testRunnerContainer.start();
+        if (testRunnerContainer.testRunners.length >0 )
+            testRunnerContainer.start();
         
     }
     ,

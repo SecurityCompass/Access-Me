@@ -64,7 +64,6 @@ TestRunnerContainer.prototype = {
         }
         else if (this.testRunners.length === 0) {
             this.keepChecking = false;
-            //this.testManager.doneTesting();
         }
         
         function doAgain(){
@@ -110,6 +109,15 @@ TestRunnerContainer.prototype = {
     ,
     clearWorkTabs: function () {
         //not needed any more.
+    }
+    ,
+    areAllTabsFree: function(){
+        var rv = true;
+        for each(var isTabFree in this.tabs){
+            rv = isTabFree == null;
+            if (!rv) break;
+        }
+        return rv;
     }
     ,
     /**

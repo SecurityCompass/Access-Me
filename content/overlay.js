@@ -177,10 +177,14 @@ AccessMeOverlay.prototype = {
     }
     ,
     finishedTest: function() {
-        //do nothing right now.
+
+    }
+    ,
+    doneTestSet: function() {
+                //do nothing right now.
         var resultState = getTestManager().resultsManager.state;
         
-        if (resultState === ResultsManager.STATE_PASS) {
+        if (resultState === ResultsManager.prototype.STATE_PASS) {
             this.displayPassState();
         }
         else {

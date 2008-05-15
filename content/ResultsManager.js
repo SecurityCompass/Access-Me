@@ -92,11 +92,7 @@ ResultsManager.prototype = {
         }
         
         this.extensionManager.finishedTest();
-        if (this.sourceListeners.length === 0 && getTestRunnerContainer().testRunners.length === 0) {
-            dump('\nall results logged now.')
-            this.allResultsLogged = true;
-        }
-        
+
     }
     ,
     evaluate: function(browser, attackRunner){
@@ -573,6 +569,7 @@ ResultsManager.prototype = {
         {
             dump('\nall results now logged');
             this.allResultsLogged = true;
+            this.extensionManager.doneTestSet();
         }
         getTestRunnerContainer().freeTab(attackRunner.tabIndex);
         
