@@ -43,25 +43,25 @@ along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
   color: blue;
 }
 
-toolbox[mode='icons'] #accessme-test-action .toolbarbutton-text,
+toolbox[mode='icons'] #accessme-toolbarbutton-test-action .toolbarbutton-text,
 toolbox[mode='icons'] #accessme-test-status .toolbarbutton-text,
 toolbox[mode='icons'] #accessme-gen-report  .toolbarbutton-text {
   display: none !important;
 }
 
-toolbox[mode='full'] #accessme-test-action .toolbarbutton-text,
+toolbox[mode='full'] #accessme-toolbarbutton-test-action .toolbarbutton-text,
 toolbox[mode='full'] #accessme-test-status .toolbarbutton-text,
 toolbox[mode='full'] #accessme-gen-report  .toolbarbutton-text {
   display: -moz-box !important;
 }
 
-toolbox[mode='text'] #accessme-test-action .toolbarbutton-icon,
+toolbox[mode='text'] #accessme-toolbarbutton-test-action .toolbarbutton-icon,
 toolbox[mode='text'] #accessme-test-status .toolbarbutton-icon,
 toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon {
   display: none !important;
 }
 
-#accessme-test-action.start {
+#accessme-toolbarbutton-test-action.start {
   list-style-image: url('chrome://accessme/skin/media-record.png') !important;
   
 }

@@ -79,9 +79,28 @@ AccessMeOverlay.prototype = {
         }
     }
     ,
+    switchToPauseButton: function(){
+        var caster = document.getElementById('accessme-action');
+        caster.setAttribute('oncommand', 'accessMeOverlay.pause()');
+        caster.setAttribute('label', 'Pause');
+        
+    }
+    ,
+    switchToStartButton: function(){
+        var caster = document.getElementById('accessme-action');
+        caster.setAttribute('oncommand', 'accessMeOverlay.start()');
+        caster.setAttribute('label', 'Resume');
+    }
+    ,
+    pause: function(){
+        this.started = false;
+        this.switchToStartButton();
+    }
+    ,
     start: function() {
         if (this.started === false) {
             this.started = true;
+            this.switchToPauseButton();
             this.runTest();
         }
     }
