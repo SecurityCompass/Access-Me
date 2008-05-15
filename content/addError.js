@@ -33,6 +33,16 @@ function onOk() {
         stringTxtBox.select();
         return false;
     }
+    else {
+        try {
+            var rx = new RegExp(stringTxtBox.value);
+        }
+        catch (e){
+            alert("Please enter a valid regular expression."+e);
+            stringTxtBox.select();
+            return false;
+        }
+    }
     var wasStringAdded = errorStrContainer.addString(stringTxtBox.value, null);
     
     dump('was this string (' + stringTxtBox.value + ') added? ' + 
@@ -40,7 +50,7 @@ function onOk() {
     
     if (wasStringAdded){
         prefController.makeUI(errorStrContainer.getStrings(), prefWindow, 
-                'existingSQLIerrStrings');
+                'errorStrBox');
         return true;
     }
     else{

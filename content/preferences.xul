@@ -68,12 +68,12 @@ tools@securitycompass.com
             </description>
             <label style="visibility:hidden;color: red" value="No error strings, please enter some" id="noerrorslbl" />
             <hbox>
-                <listbox id="existingErrorDetectionRegex" rows="10" seltype="multiple" flex="1">
+                <listbox id="errorStrBox" rows="10" seltype="multiple" flex="1">
                 </listbox>
                 <vbox>
                     <button label="up" oncommand="preferencesController.moveErrorStringUp()"/>
                     <button label="down" oncommand="preferencesController.moveErrorStringDown()"/>
-                    <button label="add" oncommand="window.openDialog('chrome://accessme/content/addError.xul', 'attackstring', 'chrome', errorStringContainer, preferencesController, window)"/>
+                    <button label="add" oncommand="window.openDialog('chrome://accessme/content/addError.xul', 'errorstring', 'chrome', getErrorStringContainer(), preferencesController, window)"/>
                     <button label="remove" oncommand="preferencesController.removeError()"/>
                 </vbox>
             </hbox>

@@ -46,7 +46,7 @@ PreferencesController.prototype = {
         }
         
         if (errorStrings.length){
-            this.makeUI(errorStrings, null, 'existingErrorDetectionRegex');   
+            this.makeUI(errorStrings, null, 'errorStrBox');   
         }
         else {
             var label = document.getElementById('noerrorslbl');
@@ -75,6 +75,10 @@ PreferencesController.prototype = {
                 listitem.setAttribute('value', i);
                 listbox.appendChild(listitem);
         }
+    }
+    ,
+    removeError: function(){
+        return this.removeItem(getErrorStringContainer(), "errorStrBox"); 
     }
     ,
     removeDetectRegEx: function(){
@@ -264,6 +268,15 @@ PreferencesController.prototype = {
         this.makeUI(getErrorStringContainer().getStrings(), window, 'existingSQLIerrStrings');
         return true;
         */
+    }
+    ,
+    moveErrorStringUp:function() {
+        return this.moveItemUp(getErrorStringContainer(), "errorStrBox")
+
+    }
+    ,
+    moveErrorStringDown: function(){
+        return this.moveItemDown(getErrorStringContainer(), "errorStrBox")
     }
     ,
     moveDetectRegExStringUp:function() {
