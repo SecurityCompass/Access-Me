@@ -97,7 +97,7 @@ tools@securitycompass.com
                 <vbox>
                     <button label="up" oncommand="preferencesController.moveDetectRegExStringUp()"/>
                     <button label="down" oncommand="preferencesController.moveDetectRegExStringDown()"/>
-                    <button label="add" oncommand="window.openDialog('chrome://accessme/content/addDetectRegEx.xul', 'DetectRegEx', 'chrome', detectRegExContainer, preferencesController, window)"/>
+                    <button label="add" oncommand="window.openDialog('chrome://accessme/content/addDetectRegEx.xul', 'DetectRegEx', 'chrome', getAttackParamDetectRegexContainer(), preferencesController, window)"/>
                     <button label="remove" oncommand="preferencesController.removeDetectRegEx()"/>
                 </vbox>
             </hbox>

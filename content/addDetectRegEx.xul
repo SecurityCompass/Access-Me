@@ -9,8 +9,8 @@
         buttons="accept,cancel"
         buttonlabelaccept="Set Parameter Detection Regex"
         buttonlabelcancel="Cancel"
-        ondialogaccept="return onOK();"
-        ondialogcancel="return onCancel();">
+        ondialogaccept="return OK();"
+        ondialogcancel="return Cancel();">
 <!-- 
 Copyright 2008 Security Compass
 
@@ -42,4 +42,12 @@ tools@securitycompass.com
 <textbox id="DetectRegExtxtbox" />
 <label value="Your Signature" control="sigtxtbox" />
 <textbox id="sigtxtbox" />
+<script>
+function OK(){
+    return onOk();
+}
+function Cancel(){
+    return onCancel();
+}
+</script>
 </dialog>

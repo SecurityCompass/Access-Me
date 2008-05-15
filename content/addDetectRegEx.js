@@ -21,7 +21,7 @@ tools@securitycompass.com
 */
 
 function onOk() {
-    var stringTxtBox = document.getElementById('attackstringtxtbox');
+    var stringTxtBox = document.getElementById('DetectRegExtxtbox');
     var sigTxtBox = document.getElementById('sigtxtbox');
     var attackParamDetectRegexContainer = window.arguments[0];
     var prefController = window.arguments[1];

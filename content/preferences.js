@@ -77,6 +77,10 @@ PreferencesController.prototype = {
         }
     }
     ,
+    removeDetectRegEx: function(){
+        return this.removeItem(getAttackParamDetectRegexContainer(), "existingAttackParamDetectRegex")
+    }
+    ,
     removeItem: function(container, listboxID){
         var listbox = document.getElementById(listboxID);
         var selectedAttacks = listbox.selectedItems;
@@ -98,7 +102,8 @@ PreferencesController.prototype = {
         this.makeUI(container.getStrings(), window, listboxID);
     }
     ,
-    exportAttacks: function(){/*
+    exportAttacks: function(){
+        /*
         var exportDoc = document.implementation.createDocument("", "", null);
         var root = exportDoc.createElement('exportedattacks');
         var xmlAttacks = exportDoc.createElement('attacks');
@@ -261,6 +266,15 @@ PreferencesController.prototype = {
         */
     }
     ,
+    moveDetectRegExStringUp:function() {
+        return this.moveItemUp(getAttackParamDetectRegexContainer(), "existingAttackParamDetectRegex")
+
+    }
+    ,
+    moveDetectRegExStringDown: function(){
+        return this.moveItemDown(getAttackParamDetectRegexContainer(), "existingAttackParamDetectRegex")
+    }
+    ,
     moveItemUp: function(container, listboxID){
         var listbox = document.getElementById(listboxID);
         
@@ -292,7 +306,7 @@ PreferencesController.prototype = {
         }
         
         if (listbox.selectedItem.value == 
-            (attackStringContainer.getStrings().length - 1) )
+            (container.getStrings().length - 1) )
         {
             alert("sorry, can't move this item up any further");
             return false;

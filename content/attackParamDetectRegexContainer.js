@@ -44,13 +44,13 @@ AttackParamDetectRegexContainer.prototype.init = function (){
         
 };
 AttackParamDetectRegexContainer.prototype.save = function() {
-    this.prefBranch.setCharPref('attacks', JSON.toString(this.strings));
+    this.prefBranch.setCharPref('attackParamDetectRegex', JSON.toString(this.strings));
 }
 
 
 function getAttackParamDetectRegexContainer(){
-    if (typeof(attackParamDetectRegexContainer) === 'undefined' || !attackParamDetectRegexContainer){
-        attackParamDetectRegexContainer = new AttackParamDetectRegexContainer();
+    if (typeof(accessme_attackParamDetectRegexContainer) === 'undefined' || !accessme_attackParamDetectRegexContainer){
+        accessme_attackParamDetectRegexContainer = new AttackParamDetectRegexContainer();
     }
-    return attackParamDetectRegexContainer;
+    return accessme_attackParamDetectRegexContainer;
 }
