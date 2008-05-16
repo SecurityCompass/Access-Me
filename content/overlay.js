@@ -25,8 +25,14 @@ function AccessMeOverlay() {
     //dump('\nAccessMeOverlay::ctor()');
     var self = this;
     this.firstRun = true;
-    this.tabSelectListener = function(event){ dump('\n' + event.target);
-            dump('\n' + event.originalTarget);}
+    this.tabSelectListener =
+            function(event) {
+                dump('\n' + event.target);
+                dump('\n' + event.originalTarget);
+                self.browser.removeProgressListener(self.progressListener);
+                event.target.linkedBrowser.addProgressListener(self.progressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
+                self.browser = event.target.linkedBrowser;
+            }
     
     /**
      * used to listen for requests
@@ -56,9 +62,11 @@ function AccessMeOverlay() {
 
 AccessMeOverlay.prototype = {
     onLoad: function() {
+        var self = this;
         gBrowser.selectedBrowser.addProgressListener(this.progressListener,
                 Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
-        gBrowser.tabContainer.addEventListener('TabSelect', this.tabSelectListener, false);
+        gBrowser.tabContainer.addEventListener('TabSelect',
+                self.tabSelectListener, false);
         this.browser = gBrowser.selectedBrowser;
     }
     ,
