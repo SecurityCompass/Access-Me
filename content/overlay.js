@@ -83,6 +83,7 @@ AccessMeOverlay.prototype = {
             if (this.testManager === null) {
                 this.testManager = getTestManager(this);
             }
+            this.changeStatusToThrobber();
             this.testManager.runTest(this.lastOperation)
         }
     }
@@ -210,6 +211,12 @@ AccessMeOverlay.prototype = {
         var statusIcon = document.getElementById('accessme-test-status');
         statusIcon.className = 'pass';
         statusIcon.label='Passed';
+    }
+    ,
+    changeStatusToThrobber: function() {
+        var statusIcon = document.getElementById('accessme-test-status');
+        statusIcon.className = 'wip';
+        statusIcon.label= 'Testing';
     }
     ,
     showReport: function(){
