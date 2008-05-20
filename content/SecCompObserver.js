@@ -44,7 +44,7 @@ SecCompObserver.prototype = {
     ,
     QueryInterface : function(aIID) {
         if (aIID.equals(Components.interfaces.nsIObserver) ||
-            aIID.equals(Components.interfaces.nsISupports))
+            aIID.equals(Components.interfaces.nsISupports) )
         {
             return this;
         }

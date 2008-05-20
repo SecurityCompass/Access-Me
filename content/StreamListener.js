@@ -52,9 +52,9 @@ StreamListener.prototype = {
             this.context = aContext;
             this.status = aStatus;
             
-            dump('\n---- Here is the raw source of the result:----\n')
-            dump(this.data);
-            dump('\n--- end of raw source ---');
+            //dump('\n---- Here is the raw source of the result:----\n')
+            //dump(this.data);
+            //dump('\n--- end of raw source ---');
             
             this.aFunction(this);
         }

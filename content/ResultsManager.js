@@ -53,6 +53,7 @@ function ResultsManager(extensionManager) {
     
     //this.addSourceEvaluator(fail);
     this.addSourceEvaluator(checkSrcForErrorString);
+    this.addSourceEvaluator(checkSrcForPassString);
     
     /**
      * the current state of the results.

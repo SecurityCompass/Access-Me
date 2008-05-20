@@ -11,7 +11,7 @@ the Free Software Foundation, either version 3 of the License, or
 Access Meis distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GNU General Public Licensefor more details.
 
 You should have received a copy of the GNU General Public License
 along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
@@ -21,45 +21,44 @@ tools@securitycompass.com
 */
 
 /**
- * ErrorStringContainer.js
+ * PassStringContainer.js
  * @requires PreferenceStringContainer.js
  */
-function ErrorStringContainer(){
-    this.prefName = 'errorstrings'
+function PassStringContainer(){
+    this.prefName = 'passstrings'
     this.init();
     this.observePreference();
-        
 }
-ErrorStringContainer.prototype = new PreferenceStringContainer();
-dump('creating... ErrorStringContainer object\n');
-ErrorStringContainer.prototype.init = function (){    
+PassStringContainer.prototype = new PreferenceStringContainer();
+dump('creating... PassStringContainer object\n');
+PassStringContainer.prototype.init = function (){    
         
     var attackStrings;
         
     this.prefBranch = this.prefService.getBranch('extensions.accessme.');
-    attackStrings = this.prefBranch.getCharPref('errorstrings');
+    attackStrings = this.prefBranch.getCharPref('passstrings');
     this.strings = JSON.fromString(attackStrings);
     
 };
 
-ErrorStringContainer.prototype.save = function() {
-        dump('ErrorStringContainer::save this.strings ' +this.strings + '\n');
-        dump('ErrorStringContainer::save typeof(this.strings) ' +typeof( this.strings )+ '\n');
-        this.prefBranch.setCharPref('errorstrings', JSON.toString(this.strings));
+PassStringContainer.prototype.save = function() {
+        dump('PassStringContainer::save this.strings ' +this.strings + '\n');
+        dump('PassStringContainer::save typeof(this.strings) ' +typeof( this.strings )+ '\n');
+        this.prefBranch.setCharPref('passstrings', JSON.toString(this.strings));
 }
 
-ErrorStringContainer.prototype.QueryInterface = function(aIID) {
+PassStringContainer.prototype.QueryInterface = function(aIID) {
     if (aIID.equals(Components.interfaces.nsISupports)){
         return this;
     }
     throw Components.results.NS_ERROR_NO_INTERFACE;
 }
 
-function getErrorStringContainer(){
+function getPassStringContainer(){
     
-    if (typeof(errorStringContainer) === 'undefined' || !errorStringContainer) {
-        errorStringContainer = new ErrorStringContainer();
+    if (typeof(accessme_passStringContainer__) === 'undefined' || !accessme_passStringContainer__) {
+        accessme_passStringContainer__= new PassStringContainer();
     }
     
-    return errorStringContainer;
+    return accessme_passStringContainer__;
 }

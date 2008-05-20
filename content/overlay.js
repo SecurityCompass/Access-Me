@@ -206,11 +206,10 @@ AccessMeOverlay.prototype = {
         statusIcon.label='Errors';
     }
     ,
-    displayPassState: function(){
+    displayPassState: function() {
         var statusIcon = document.getElementById('accessme-test-status');
         statusIcon.className = 'pass';
         statusIcon.label='Passed';
-        
     }
     ,
     showReport: function(){

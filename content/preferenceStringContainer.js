@@ -27,20 +27,25 @@ tools@securitycompass.com
  
 
 /**
- * the PreferenceStringContainer object is a base class for any kind of object 
- * which has deal with an array of strings held in preferences. 
+ * the PreferenceStringContainer object is an abstract  base class for any kind of
+ * object which has deal with an array of strings held in preferences. 
  * (e.g. AttackStringContainer, ResultStringContainer).
  */
 function PreferenceStringContainer() {
+    var self = this;
+    
     this.strings = Array();
     this.prefBranch = null;
     this.prefService = Components.classes['@mozilla.org/preferences-service;1'].
             getService(Components.interfaces.nsIPrefService);
+
 }
+
 dump('creating... preferenceStringContainer object\n');
 PreferenceStringContainer.prototype = {
     /**
-     * init is responsible for reading and loading a preference into 
+     * init is responsible for reading and loading a preference into the
+     * container
      */
     init: function() {
         
@@ -96,7 +101,30 @@ PreferenceStringContainer.prototype = {
         this.save();
         
         return true;
-}
+    }
+    ,
+    observePreference: function() {
+        var self = this;
+        this.observer = new SecCompObserver("nsPref:changed",
+            function(subject, topic, data) {
+                dump("\n--------------\npref changing");
+                dump("\n---------")
+                if(data == self.prefName) {
+                    self.modded = true;
+                    self.init();
+                }
+            });
+        this.prefBranch.
+            QueryInterface(Components.interfaces.nsIPrefBranch2).
+            addObserver("", this.observer, false);
+    }
+    ,
+    unload: function(){
+        dump("\n----------\npref container unloading\n----------")
+        this.prefBranch.
+                QueryInterface(Components.interfaces.nsIPrefBranch2).
+                removeObserver("", this.observer);
+    }
 };
 
 /**

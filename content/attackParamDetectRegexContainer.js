@@ -29,7 +29,10 @@ tools@securitycompass.com
  *this object is responsible for dealing with the Attack Strings.
  */
 function AttackParamDetectRegexContainer() {
+    this.prefName = 'attackParamDetectRegex';
     this.init();
+    this.observePreference();
+
 }
 AttackParamDetectRegexContainer.prototype = new PreferenceStringContainer();
 dump('creating... AttackParamDetectRegexContainer object\n');
@@ -45,6 +48,12 @@ AttackParamDetectRegexContainer.prototype.init = function (){
 };
 AttackParamDetectRegexContainer.prototype.save = function() {
     this.prefBranch.setCharPref('attackParamDetectRegex', JSON.toString(this.strings));
+}
+AttackParamDetectRegexContainer.prototype.QueryInterface = function(aIID) {
+    if (aIID.equals(Components.interfaces.nsISupports)){
+        return this;
+    }
+    throw Components.results.NS_ERROR_NO_INTERFACE;
 }
 
 

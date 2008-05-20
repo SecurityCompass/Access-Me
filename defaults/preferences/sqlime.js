@@ -26,4 +26,6 @@ pref("extensions.accessme.numtabstouse", 6);
 pref("extensions.accessme.reportbuilding.timeout", 1);
 
 pref('extensions.accessme.errorstrings', '[{"string":"welcome,"}]');
+pref('extensions.accessme.passstrings', '[{"string":"welcome,"}]');
 pref("extensions.accessme.attackParamDetectRegex", '[{"string":"ession"}]');
+

@@ -35,6 +35,7 @@ PreferencesController.prototype = {
         
         var attackParamDetectRegexs = getAttackParamDetectRegexContainer().getStrings();
         var errorStrings = getErrorStringContainer().getStrings();
+        var passStrings = getPassStringContainer().getStrings();
         
         if (attackParamDetectRegexs.length) {
             this.makeUI(attackParamDetectRegexs, null,
@@ -50,6 +51,14 @@ PreferencesController.prototype = {
         }
         else {
             var label = document.getElementById('noerrorslbl');
+            label.style.visibility = 'visible';
+        }
+        
+        if (passStrings.length) {
+            this.makeUI(passStrings, null, 'existingPassStringRegex');
+        }
+        else {
+            var label = document.getElementById('nopassstringlbl');
             label.style.visibility = 'visible';
         }
     }
@@ -75,6 +84,10 @@ PreferencesController.prototype = {
                 listitem.setAttribute('value', i);
                 listbox.appendChild(listitem);
         }
+    }
+    ,
+    removePassString: function(){
+        return this.removeItem(getPassStringContainer(), "existingPassStringRegex"); 
     }
     ,
     removeError: function(){
@@ -270,6 +283,14 @@ PreferencesController.prototype = {
         */
     }
     ,
+    movePassStringUp: function(){
+        return this.moveItemUp(getPassStringContainer(), "existingPassStringRegex")
+    }
+    ,
+    movePassStringDown: function(){
+        return this.moveItemDown(getPassStringContainer(), "existingPassStringRegex")
+    }
+    ,
     moveErrorStringUp:function() {
         return this.moveItemUp(getErrorStringContainer(), "errorStrBox")
 
@@ -331,6 +352,11 @@ PreferencesController.prototype = {
         this.makeUI(container.getStrings(), window, listboxID);
         
         return true;
+    }
+    ,
+    unload: function(){
+        getErrorStringContainer().unload();
+        getAttackParamDetectRegexContainer().unload();
     }
 };
 
