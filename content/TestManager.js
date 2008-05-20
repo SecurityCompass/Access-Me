@@ -48,10 +48,11 @@ TestManager.prototype = {
     /**
      * Runs tests on the passed Request.
      * @param aRequest a request
+     * @returns whether tests started
      */
     runTest: function (aRequest) {
         
-        this.runThoroughTest(aRequest);
+        return this.runThoroughTest(aRequest);
     }
     ,
     /**
@@ -173,12 +174,13 @@ TestManager.prototype = {
         var detectorContainer = getAttackParamDetectRegexContainer();
         var detectors = new Array();
         var attackThis = false;
+        var rc = true; 
         
         for each (var detector in detectorContainer.getStrings(true)){
             //if it's a regexp then store it as one, if not then we'll use it
             //as a string
             try {
-                detectors.push(new RegExp(detector.string))
+                detectors.push(new RegExp(detector.string, "gim"))
             }
             catch(e){
                 detectors.push(detector);
@@ -238,9 +240,13 @@ TestManager.prototype = {
                 testRunnerContainer.addTestRunner(attackRunner);
             }
         }
-        if (testRunnerContainer.testRunners.length >0 )
+        if (testRunnerContainer.testRunners.length >0 ){
             testRunnerContainer.start();
-        
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     ,
     /**

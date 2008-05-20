@@ -78,6 +78,10 @@ toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon {
   list-style-image: url('chrome://browser/skin/Throbber.gif') !important;
 }
 
+#accessme-test-status.notest {
+  list-style-image: url('chrome://global/skin/icons/Warning.png') !important;
+}
+
 #accessme-gen-report {
   list-style-image: url('chrome://accessme/skin/edit-select-all.png') !important;
 }

@@ -80,11 +80,15 @@ AccessMeOverlay.prototype = {
     runTest: function(){
         dump('\going to run test...');
         if (this.started === true && this.lastOperation !== null) {
+            var testsStarted;
             if (this.testManager === null) {
                 this.testManager = getTestManager(this);
             }
-            this.changeStatusToThrobber();
-            this.testManager.runTest(this.lastOperation)
+            this.displayWorkInProgressState();
+            testsStarted = this.testManager.runTest(this.lastOperation);
+            if ( testsStarted === false){
+                this.displayNoTestState();
+            }
         }
     }
     ,
@@ -213,10 +217,16 @@ AccessMeOverlay.prototype = {
         statusIcon.label='Passed';
     }
     ,
-    changeStatusToThrobber: function() {
+    displayWorkInProgressState: function() {
         var statusIcon = document.getElementById('accessme-test-status');
         statusIcon.className = 'wip';
         statusIcon.label= 'Testing';
+    }
+    ,
+    displayNoTestState: function(){
+        var statusIcon = document.getElementById('accessme-test-status');
+        statusIcon.className = 'notest';
+        statusIcon.label= 'No Tests';
     }
     ,
     showReport: function(){
