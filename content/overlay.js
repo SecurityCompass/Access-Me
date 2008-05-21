@@ -119,7 +119,7 @@ AccessMeOverlay.prototype = {
     }
     ,
     gotRequest: function (aRequest, aURI) {
-        if (aURI.scheme !== 'http'){
+        if (aURI.scheme.indexOf('http') == -1 ) {
             return; //we don't care about not http
         }
         var self = this;
