@@ -104,34 +104,6 @@ function checkSrcForErrorString(streamListener) {
     return results;
 }
 
-/**
- * Checks the browser for stored error strings.
- */
-function checkForErrorString(browser) {
-
-    var errorContainer = getErrorStringContainer();
-    var results = new Array();
-    var doc = browser.contentDocument.toString();
-    var stringEncoder = getHTMLStringEncoder();
-    dump("\nStart freeze...");
-    for each (var error in errorContainer.getStrings()){
-        var result;
-        
-        if (doc.indexOf(error.string) !== -1) {
-            result = new Result(RESULT_TYPE_ERROR, 100, "Error string found: '" + stringEncoder.encodeString(error.string) + "'");
-        }
-        else {
-            result = new Result(RESULT_TYPE_PASS, 100, "Error string not found: '" + stringEncoder.encodeString(error.string) + "'");
-        }
-        
-        results.push(result);
-    }
-    dump("\nEnd freeze...");
-
-    
-    return results;
-}
-
 function checkForServerResponseCode(nsiHttpChannel){
     var stringEncoder = getHTMLStringEncoder();
     try{
@@ -156,9 +128,4 @@ function checkForServerResponseCode(nsiHttpChannel){
         Components.utils.reportError(err);
         return false;
     }
-}
-
-function fail(streamListener) {
-    
-    return [new Result(RESULT_TYPE_ERROR, 100, 'auto fail')];    
 }
