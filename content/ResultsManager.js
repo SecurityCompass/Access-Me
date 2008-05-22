@@ -69,16 +69,19 @@ ResultsManager.prototype = {
         if (resultsWrapper.results.length === 0) {
             return;
         }
-        var field = resultsWrapper.field;
+        var parameters = resultsWrapper.parameters;
+        var urlTested = parameters.request.URI.prePath +
+                parameters.request.URI.path.
+                substring(0, parameters.request.URI.path.indexOf("?"));
         /* if there is no field array for this form then create it*/
-        if (this.fields[field.formIndex] === undefined){
-            this.fields[field.formIndex] = new Array(); 
+        if (this.fields[urlTested] === undefined) {
+            this.fields[urlTested] = new Object(); 
         }
         
-        if (this.fields[field.formIndex][field.index] === undefined) {
-            this.fields[field.formIndex][field.index] = new FieldResult(field);
+        if (this.fields[urlTested][resultsWrapper.nameParamToAttack] === undefined) {
+            this.fields[urlTested][resultsWrapper.nameParamToAttack] = new FieldResult(parameters, resultsWrapper.nameParamToAttack);
         }
-        this.fields[field.formIndex][field.index].addResults(resultsWrapper.results);
+        this.fields[urlTested][resultsWrapper.nameParamToAttack].addResults(resultsWrapper.results);
         var noErrors = true;
         
         for each(var r in resultsWrapper.results){
@@ -93,7 +96,7 @@ ResultsManager.prototype = {
         }
         
         this.extensionManager.finishedTest();
-
+        
     }
     ,
     evaluate: function(browser, attackRunner){
@@ -296,31 +299,36 @@ ResultsManager.prototype = {
     showFieldResult: function(fieldResult){
         fieldResult.sort();
         var rv ="";
-        var testFieldName;
-        rv += "<div class='result'>";
-        var unamedFieldCounter = 0;
-        var testDataList = fieldResult.getSubmitState();
-        var testedDataKey = null;
+        //var testFieldName;
+        //rv += "<div class='result'>";
+        //var unamedFieldCounter = 0;
+        //var testDataList = fieldResult.getSubmitState();
+        //var testedDataKey = null;
         var stringEncoder = getHTMLStringEncoder();
-        for each(var testData in testDataList) {
-            if (testData.tested ===true){
-                testFieldName = (testData.name !== undefined ? testData.name : "unnamed field");
-                break;
-            }
-        }
-        rv += "<div class='field'>" + (testFieldName?testFieldName:'unnamed field') + "</div>";
-        rv += "<div class='submitted'>";
-        rv += "<b>Submitted Form State:</b><br /><ul>";
-        for (var key in testDataList) {
-            if (testDataList[key].tested === false){
-                rv += "<li>" + (testDataList[key].name ? testDataList[key].name : "unnamed field") + ": " + stringEncoder.encodeString(testDataList[key].data)+ "</li>";
-            }
-            else {
-                testedDataKey = key;
-            }
-        }
-        rv += "</ul></div>";
+        //for each(var testData in testDataList) {
+        //    if (testData.tested ===true){
+        //        testFieldName = (testData.name !== undefined ? testData.name : "unnamed field");
+        //        break;
+        //    }
+        //}
+        //rv += "<div class='field'>" + fieldResult.nameParamToAttack + "::" + fieldResult.urlTested;
+        //
+        //
+        //
+        //rv += "</div>";
+        //rv += "<div class='submitted'>";
+        //rv += "<b>Submitted Form State:</b><br /><ul>";
+        //for (var key in testDataList) {
+        //    if (testDataList[key].tested === false){
+        //        rv += "<li>" + (testDataList[key].name ? testDataList[key].name : "unnamed field") + ": " + stringEncoder.encodeString(testDataList[key].data)+ "</li>";
+        //    }
+        //    else {
+        //        testedDataKey = key;
+        //    }
+        //}
+        //rv += "</ul></div>";
         rv += "<div class='outcome'><b>Results:</b><br />";
+        var parameter = null;
         for each(var result in fieldResult.results) {
             
             switch (result.type){
@@ -334,28 +342,47 @@ ResultsManager.prototype = {
                     rv += "<div class='fail'>";
                     break;
             }
+            rv += "<div class='field'>" + fieldResult.nameParamToAttack + "::" + fieldResult.urlTested + " ";
+            switch (result.typeOfAttack) {
+                case AttackRunner.prototype.Attack_GET:
+                    rv += "(GET)";
+                    break;
+                case AttackRunner.prototype.ATTACK_POST:
+                    rv += "(POST)";
+                    break;
+                case AttackRunner.prototype.ATTACK_COOKIES:
+                    rv += "(COOKIE)";
+                    break;
+            }
+            rv += "</div>";
             rv += result.message+"<br />"
             rv += "Tested value: ";
             unamedFieldCounter = 0;
-            if (testedDataKey) {
-                rv += stringEncoder.encodeString(result.testData[testedDataKey].data);
+            switch (result.typeOfAttack){
+                case AttackRunner.prototype.ATTACK_COOKIES:
+                    parameter = result.parameters.cookies;
+                    break;
+                case AttackRunner.prototype.ATTACK_GET:
+                    parameter = result.parameters.get;
+                    break;
+                case AttackRunner.prototype.ATTACK_POST:
+                    parameters = result.parameters.post;
+                    break;
             }
-            else {
-                for each(var testData in result.testData) {
-                    if (testData.tested === true){
-                        rv += stringEncoder.encodeString(testData.data);
-                        break;
-                    }
-                    else if (testData.name === undefined ) {
-                        unamedFieldCounter++;
-                    }
+            rv += "<ul>"
+            for (var name in parameter) {
+                if (name !== result.nameParamToAttack){
+                    
+                    rv += "<li>" + stringEncoder.encodeString(name) + " = " + stringEncoder.encodeString(parameter[name]) + "</li>";
+                    
                 }
             }
+            rv += "</ul>"
             rv += "</div>"
             
         }
         rv += '</div>';
-        rv += "</div>";
+        //rv += "</div>";
         return rv;
     }
     ,
@@ -364,11 +391,11 @@ ResultsManager.prototype = {
      * @param testManager a reference to the test manager
      * @param errorstr {string} a string with an error message (optional)
      */
-    showResults: function(testManager, errorstr){
+    showResults: function(testManager, errorstr) {
         this.generateTopOfReport(testManager, errorstr);
     }
     ,
-    registerAttack:function(attackRunner){
+    registerAttack:function(attackRunner) {
         this.attacks.push(attackRunner);
     }
     ,
@@ -377,7 +404,7 @@ ResultsManager.prototype = {
      * before the body
      */
     generateTopOfReport: function(testManager, errorstr) {
-         if (this.sourceListeners.length != 0 && errorstr === undefined){
+        if (this.sourceListeners.length != 0 && errorstr === undefined) {
             //there may be no more tests to start but there are still some
             //to finish. Wait until they're all done.
             var self = this;
@@ -552,15 +579,16 @@ ResultsManager.prototype = {
         
         for each(sourceEvaluator in this.sourceEvaluators){
             var results = sourceEvaluator(streamListener);
-            for each (var result in results){
-                result.testData = attackRunner.testData;
-                result.fieldIndex = attackRunner.fieldIndex;
-                result.formIndex = attackRunner.formIndex;
-                
+            for each (var result in results) {
+                result.parameters = attackRunner.parameters;
+                result.nameParamToAttack = attackRunner.nameParamToAttack;
+                result.typeOfAttack = attackRunner.typeOfAttack;
+
             }
             var resultsWrapper = new Object();
             resultsWrapper.results = results;
-            resultsWrapper.field = attackRunner.field;
+            resultsWrapper.parameters = attackRunner.parameters;
+            resultsWrapper.nameParamToAttack = attackRunner.nameParamToAttack;
             this.addResults(resultsWrapper);
         }
         var index = this.sourceListeners.indexOf(streamListener);

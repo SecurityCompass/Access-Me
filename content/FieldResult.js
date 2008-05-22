@@ -28,9 +28,12 @@ tools@securitycompass.com
  * This object is used for sorting.
  * @requires result.js
  */
-function FieldResult(formIndex, fieldIndex){
-    this.fieldIndex = fieldIndex;
-    this.formIndex = formIndex;
+function FieldResult(parameters, nameParamToAttack){
+    var qIndex = parameters.request.URI.path.indexOf("?");
+    this.urlTested = parameters.request.URI.prePath +
+            parameters.request.URI.path.
+            substring(0, qIndex === -1 ? parameters.request.URI.path.length : qIndex);
+    this.nameParamToAttack = nameParamToAttack;
     this.results = new Array();
     this.maxValue = 0;
     this.maxValueType = 0;
@@ -63,7 +66,7 @@ FieldResult.prototype = {
         }
     }
     ,
-    getLength: function(){
+    getLength: function() {
         var numTestsRun = 0; 
         var numPasses = 0; 
         var numWarnings = 0;
@@ -85,8 +88,8 @@ FieldResult.prototype = {
         return [numTestsRun, numFailes, numWarnings, numPasses];
     }
     ,
-    getSubmitState: function(){
-        return this.results[0].testData;
+    getSubmitState: function() {
+        return this.results[0].parameters;
     }
     ,
     sort: function(){
