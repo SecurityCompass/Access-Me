@@ -342,7 +342,7 @@ ResultsManager.prototype = {
                     rv += "<div class='fail'>";
                     break;
             }
-            rv += "<div class='field'>" + fieldResult.nameParamToAttack + "::" + fieldResult.urlTested + " ";
+            rv += "<div class='field'>" + result.nameParamToAttack + "::" + result.urlTested + " ";
             switch (result.typeOfAttack) {
                 case AttackRunner.prototype.Attack_GET:
                     rv += "(GET)";
@@ -494,7 +494,6 @@ ResultsManager.prototype = {
         this.results +="<div class='footer'>";
         var now = new Date();
         this.results += 'Results genenerated on ' + getMonthName(now.getMonth())  + " " + now.getDate() + ", " + now.getFullYear();
-        this.results += ' for ' + this.testPageURL;
         this.results += "</div>"
         this.results+="</body></html>";
         
@@ -576,10 +575,16 @@ ResultsManager.prototype = {
     evaluateSource: function(streamListener){
         
         var attackRunner = streamListener.attackRunner;
-        
+        var qIndex
         for each(sourceEvaluator in this.sourceEvaluators){
             var results = sourceEvaluator(streamListener);
             for each (var result in results) {
+                qIndex = attackRunner.parameters.request.URI.path.indexOf("?");
+                result.urlTested = attackRunner.parameters.request.URI.prePath +
+                        attackRunner.parameters.request.URI.path.
+                        substring(0, qIndex === -1 ?
+                                attackRunner.parameters.request.URI.path.length :
+                                qIndex);
                 result.parameters = attackRunner.parameters;
                 result.nameParamToAttack = attackRunner.nameParamToAttack;
                 result.typeOfAttack = attackRunner.typeOfAttack;

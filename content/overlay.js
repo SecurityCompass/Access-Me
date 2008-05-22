@@ -71,8 +71,15 @@ AccessMeOverlay.prototype = {
     }
     ,
     onUnload: function() {
-        gBrowser.selectedBrowser.removeProgressListener(this.progressListener,
-                Components.interfaces);
+        try {
+            gBrowser.selectedBrowser.removeProgressListener(this.progressListener,
+                    Components.interfaces);
+        }
+        catch(e){
+            Components.utils.
+                    reportError('This sometimes happens... due' +
+                    'to the tab listener unregestring this first.' + e);
+        }
         gBrowser.tabContainer.removeEventListener('TabSelect',
                 this.tabSelectListener, false);
     }
@@ -89,6 +96,9 @@ AccessMeOverlay.prototype = {
             if ( testsStarted === false){
                 this.displayNoTestState();
             }
+        }
+        else {
+            this.displayNoTestState();
         }
     }
     ,
