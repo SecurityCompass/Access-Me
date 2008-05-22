@@ -1,7 +1,7 @@
 /*
 Copyright 2007 Security Compass
 
-This file is part of SQL Inject Me.
+This file is part of Access Me.
 
 Access Meis free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
+along with Access Me.  If not, see <http://www.gnu.org/licenses/>.
 
 If you have any questions regarding Access Meplease contact
 tools@securitycompass.com
@@ -327,7 +327,7 @@ ResultsManager.prototype = {
         //    }
         //}
         //rv += "</ul></div>";
-        rv += "<div class='outcome'><b>Results:</b><br />";
+        rv += "<div class='outcome'>";
         var parameter = null;
         for each(var result in fieldResult.results) {
             
@@ -433,14 +433,14 @@ ResultsManager.prototype = {
         }
         
         this.results += "<div class='stringSummary'>"
-        this.results += "<h2>SQL Injection String Tests Summary ("+numTestsRun+" results recorded)</h2>"
+        this.results += "<h2>Access Me Tests Summary ("+numTestsRun+" results recorded)</h2>"
         if (errorstr !== undefined) this.results += "<div class='withError'>"
         this.results += this.makeResultsGraph(numTestsRun, numFailes, numWarnings, 
                 numPasses);
         if (errorstr !== undefined) this.results += "</div>"
         this.results += "</div>";
         
-        this.results += "<h2>SQL Injection String Test Results</h2>";
+        this.results += "<h2>Access Me String Test Results</h2>";
         if (sortedResults.length) {
             if (errorstr !== undefined) this.results += "<div class='withError'>";
         }
@@ -489,7 +489,7 @@ ResultsManager.prototype = {
             if (errorstr !== undefined) this.results += "<div class='withError'>"
         }
         else {
-            this.results += "<h3>No SQL Injection vulnerabilities found.</h3>"
+            this.results += "<h3>No Access Me vulnerabilities found.</h3>"
         }
         this.results +="<div class='footer'>";
         var now = new Date();
