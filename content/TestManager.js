@@ -391,7 +391,7 @@ TestManager.prototype = {
         }
         catch (e){
             //likely no cookies. That's ok.
-            Components.utils.reportError(e); //just in case.
+            Components.utils.reportError("likely no cookies. That's ok." + e); //just in case.
         }
         
         return rc;

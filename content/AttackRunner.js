@@ -202,6 +202,9 @@ AttackRunner.prototype = {
         
         this.cookieModifyingObserver =
                 new SecCompObserver('http-on-modify-request', ModifyCookies);
+        this.responseCookieRemovingObserver = new
+                SecCompObserver('http-on-examine-response',
+                clearResponseCookieHeaders);
                 
         var observerService = Components.
                 classes["@mozilla.org/observer-service;1"].
@@ -209,6 +212,8 @@ AttackRunner.prototype = {
                 
         observerService.addObserver(this.cookieModifyingObserver,
                 this.cookieModifyingObserver.topic, false);
+        observerService.addObserver(this.responseCookieRemovingObserver,
+                this.responseCookieRemovingObserver.topic, false);
         
         if (postStream){
             this.channel.QueryInterface(Components.interfaces.nsIUploadChannel).
@@ -219,6 +224,10 @@ AttackRunner.prototype = {
         
         this.channel.asyncOpen(streamListener, null);
         
+        
+        /**
+         * used to modify the request's cookies.
+         */
         function ModifyCookies (subject, topic, data) {
             var httpChannel = subject.QueryInterface(Components.interfaces.nsIHttpChannel);
             dump("\ncomparing channel to subject" + self.channel + " " + httpChannel);
@@ -235,6 +244,18 @@ AttackRunner.prototype = {
                 self.channel.setRequestHeader("cookie", cookies, false);
                 observerService.removeObserver(self.cookieModifyingObserver,
                         self.cookieModifyingObserver.topic);
+            }
+        }
+        
+        /**
+         * used to modify the response's cookies
+         */
+        function clearResponseCookieHeaders(subject, topic, data) {
+            var httpChannel = subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+            dump("\ncomparing channel to subject" + self.channel + " " + httpChannel);
+            if (httpChannel && (httpChannel == self.channel)) {
+                httpChannel.setResponseHeader("set-cookie", "", false);
+                observerService.removeObserver(self.responseCookieRemovingObserver, self.responseCookieRemovingObserver.topic);
             }
         }
     }
