@@ -230,38 +230,14 @@ ResultsManager.prototype = {
         var warnings = new Array();
         var warningsWithPasses = new Array();
         var passes = new Array();
-        for each (var form in this.fields){
-            for each(var fieldResult in form) {
-                if (fieldResult.state & fieldresult_has_error &&
-                    !(fieldResult.state & fieldresult_has_warn ||
-                      fieldResult.state & fieldresult_has_pass))
-                {
-                    errors.push(fieldResult);
-                }
-                else if (fieldResult.state & fieldresult_has_error &&
-                         fieldResult.state & fieldresult_has_warn &&
-                         !(fieldResult.state & fieldresult_has_pass))
-                {
-                    errorsWithWarnings.push(fieldResult);
-                }
-                else if (fieldResult.state & fieldresult_has_error &&
-                         fieldResult.state & fieldresult_has_warn &&
-                         fieldResult.state & fieldresult_has_pass)
-                {
-                    errorsWithWarningsAndPasses.push(fieldResult);
-                }
-                else if (fieldResult.state & fieldresult_has_warn &&
-                         !(fieldResult.state & fieldresult_has_pass))
-                {
-                    warnings.push(fieldResult);
-                }
-                else if (fieldResult.state & fieldresult_has_warn &&
-                         fieldResult.state & fieldresult_has_pass)
-                {
-                    warningsWithPasses.push(fieldResult);
+        for each (var url in this.fields){
+            for each(var fieldResult in url ) {
+                for each(var r in fieldResult.results)
+                if (r.type == RESULT_TYPE_PASS){
+                    passes.push(r);
                 }
                 else {
-                    passes.push(fieldResult);
+                    errors.push(r);
                 }
             }
         }
@@ -296,8 +272,7 @@ ResultsManager.prototype = {
 
     }
     ,
-    showFieldResult: function(fieldResult){
-        fieldResult.sort();
+    showFieldResult: function(result){
         var rv ="";
         //var testFieldName;
         //rv += "<div class='result'>";
@@ -329,60 +304,58 @@ ResultsManager.prototype = {
         //rv += "</ul></div>";
         rv += "<div class='outcome'>";
         var parameter = null;
-        for each(var result in fieldResult.results) {
-            
-            switch (result.type){
-                case RESULT_TYPE_PASS:
-                    rv += "<div class='pass'>"
-                    break;
-                case RESULT_TYPE_WARNING:
-                    rv += "<div class='warn'>"
-                    break;
-                case RESULT_TYPE_ERROR:
-                    rv += "<div class='fail'>";
-                    break;
-            }
-            rv += "<div class='field'>" + result.nameParamToAttack + "::" + result.urlTested + " ";
-            switch (result.typeOfAttack) {
-                case AttackRunner.prototype.Attack_GET:
-                    rv += "(GET)";
-                    break;
-                case AttackRunner.prototype.ATTACK_POST:
-                    rv += "(POST)";
-                    break;
-                case AttackRunner.prototype.ATTACK_COOKIES:
-                    rv += "(COOKIE)";
-                    break;
-            }
-            rv += "</div>";
-            rv += result.message+"<br />"
-            rv += "Tested value: ";
-            unamedFieldCounter = 0;
-            switch (result.typeOfAttack){
-                case AttackRunner.prototype.ATTACK_COOKIES:
-                    parameter = result.parameters.cookies;
-                    break;
-                case AttackRunner.prototype.ATTACK_GET:
-                    parameter = result.parameters.get;
-                    break;
-                case AttackRunner.prototype.ATTACK_POST:
-                    parameters = result.parameters.post;
-                    break;
-            }
-            rv += "<ul>"
-            for (var name in parameter) {
-                if (name !== result.nameParamToAttack){
-                    
-                    rv += "<li>" + stringEncoder.encodeString(name) + " = " + stringEncoder.encodeString(parameter[name]) + "</li>";
-                    
-                }
-            }
-            rv += "</ul>"
-            rv += "</div>"
-            
+        
+        switch (result.type){
+            case RESULT_TYPE_PASS:
+                rv += "<div class='pass'>"
+                break;
+            case RESULT_TYPE_WARNING:
+                rv += "<div class='warn'>"
+                break;
+            case RESULT_TYPE_ERROR:
+                rv += "<div class='fail'>";
+                break;
         }
+        rv += "<div class='field'>" + result.nameParamToAttack + "::" + result.urlTested + " ";
+        switch (result.typeOfAttack) {
+            case AttackRunner.prototype.Attack_GET:
+                rv += "(GET)";
+                break;
+            case AttackRunner.prototype.ATTACK_POST:
+                rv += "(POST)";
+                break;
+            case AttackRunner.prototype.ATTACK_COOKIES:
+                rv += "(COOKIE)";
+                break;
+        }
+        rv += "</div>";
+        rv += result.message+"<br />"
+        rv += "Tested value: ";
+        unamedFieldCounter = 0;
+        switch (result.typeOfAttack){
+            case AttackRunner.prototype.ATTACK_COOKIES:
+                parameter = result.parameters.cookies;
+                break;
+            case AttackRunner.prototype.ATTACK_GET:
+                parameter = result.parameters.get;
+                break;
+            case AttackRunner.prototype.ATTACK_POST:
+                parameters = result.parameters.post;
+                break;
+        }
+        rv += "<ul>"
+        for (var name in parameter) {
+            if (name !== result.nameParamToAttack){
+                
+                rv += "<li>" + stringEncoder.encodeString(name) + " = " + stringEncoder.encodeString(parameter[name]) + "</li>";
+                
+            }
+        }
+        rv += "</ul>"
+        rv += "</div>"
+            
         rv += '</div>';
-        //rv += "</div>";
+        
         return rv;
     }
     ,
