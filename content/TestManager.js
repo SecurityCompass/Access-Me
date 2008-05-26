@@ -396,6 +396,10 @@ TestManager.prototype = {
         
         return rc;
     }
+    ,
+    clearResults: function(){
+        this.resultsManager.clearResults();
+    }
 }
 
 /**

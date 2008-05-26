@@ -81,6 +81,9 @@ tools@securitycompass.com
         <broadcaster id='accessme-pause'
                      label='Pause'
                      oncommand='accessMeOverlay.pause()' />
+        <broadcaster id="accessme-clear"
+                     label='Clear Results'
+                     oncommand='accessMeOverlay.clearResults()' />
     </broadcasterset>
   <toolbox id="navigator-toolbox" >
     <toolbar id="accessme-bar" toolbarname='Access Me bar' insertafter="customToolbars">
@@ -96,6 +99,7 @@ tools@securitycompass.com
         <menupopup>
             <menuitem id="accessme-menubutton-test-action" observes="accessme-action" />
             <menuitem observes="accessme-report" />
+            <menuitem observes='accessme-clear' />
             <menuitem label="Options" oncommand="window.openDialog('chrome://accessme/content/preferences.xul')" />
             <menuitem label="About" oncommand="window.openDialog('chrome://accessme/content/about.xul');" />
             <menuitem label="Help" oncommand="window.open('http://securitycompass.com/exploitme.shtml', 'helpwindow', '');" />  

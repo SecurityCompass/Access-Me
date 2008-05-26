@@ -49,7 +49,7 @@ function ResultsManager(extensionManager) {
      *  index of the form. The second dimension is the index of the field that
      *  is being tested
      */
-    this.fields = new Array();
+    this.fields = new Object();
     
     //this.addSourceEvaluator(fail);
     this.addSourceEvaluator(checkSrcForErrorString);
@@ -694,6 +694,15 @@ ResultsManager.prototype = {
     STATE_ERROR: RESULT_TYPE_ERROR
     ,
     STATE_PASS: RESULT_TYPE_PASS
+    ,
+    clearResults: function() {
+        this.fields = null;
+        this.fields = new Object();
+    }
+    ,
+    hasResults: function() {
+        return this.fields.length > 0;
+    }
 };
 
 function generateMoreOfReportBody(resultsManager, sortedResults, errorstr,

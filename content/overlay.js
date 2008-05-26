@@ -120,6 +120,10 @@ AccessMeOverlay.prototype = {
         this.switchToStartButton();
     }
     ,
+    clearResults: function(){
+        this.testManager.clearResults();
+    }
+    ,
     start: function() {
         if (this.started === false) {
             this.started = true;
@@ -241,8 +245,7 @@ AccessMeOverlay.prototype = {
     ,
     showReport: function(){
         if (this.testManager != null &&
-            this.testManager.resultsManager != null &&
-            this.testManager.resultsManager.results != null)
+            this.testManager.resultsManager != null)
         {
             this.testManager.resultsManager.showResults(this.testManager);
         }
