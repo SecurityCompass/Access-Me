@@ -40,17 +40,17 @@ tools@securitycompass.com
                         instantApply="true"
                         type="int" />
         </preferences>
-        <label value="Number of simultaneous attacks" control="txtNumParallellAttacks" />
+        <label value="Number of simultaneous requests" control="txtNumParallellAttacks" />
         <textbox id="txtNumParallellAttacks" preference="prefNumParallellAttacks" />
-        <label value="Wait time between testing" control="txtPauseBetweenTests" />
+        <label value="Wait time between requests" control="txtPauseBetweenTests" />
         <textbox id="txtPauseBetweenTests" preference="prefPauseBetweenTests" />
-        <label value="String how similar does a test page have to be to the original page to not trigger an error"
+        <label value="String Similarity (%)"
                 control="txtSidebarBuildingPause"
                 crop="end" />
 	<textbox id="txtSimilarityFactor" />
     </prefpane>
     <!-- would be nice to have a nice red X icon for here -->
-    <prefpane label="Error Regex's" id="errorstrings">
+    <prefpane label="Error Regexs" id="errorstrings">
         <preferences>
         </preferences>
         <script type="application/x-javascript" src="chrome://accessme/content/json.js" />
@@ -67,9 +67,9 @@ tools@securitycompass.com
             <button label="import" oncommand="preferencesController.importAttacks()" />
         </hbox>
         <groupbox>
-            <caption label="Error Regex" />
+            <caption label="Error Regexs" />
             <description>
-                Error regexs are strings that are found in pages where the result is submitted and signify that the test has FAILED.
+                The error regular expressions signify that a test has failed when they are find a match result page.
             </description>
             <label style="visibility:hidden;color: red" value="No error strings, please enter some" id="noerrorslbl" />
             <hbox>
@@ -94,7 +94,9 @@ tools@securitycompass.com
         </hbox>
         <groupbox>
             <caption label="Attack Parameter Detection RegEx's" />
-            <label value="An error will be generated for these Regexs which are NOT found." />
+            <description>
+                The pass regular expressions signify that a test has failed when they are <xhtml:i>not</xhtml:i> found in the result page.
+            </description>
             <label style="visibility:hidden;color: red" value="No paramregexs, please enter some" id="nopassstringlbl" />
             <hbox>
                 <listbox id="existingPassStringRegex" rows="10" seltype="multiple" flex="1">
@@ -108,7 +110,7 @@ tools@securitycompass.com
             </hbox>
         </groupbox>
     </prefpane>
-    <prefpane label="Params to Attack" id='paramsToAttack'>
+    <prefpane label="Params to Test" id='paramsToAttack'>
         <preferences>
         </preferences>
         <hbox>
@@ -116,8 +118,10 @@ tools@securitycompass.com
             <button label="import" oncommand="preferencesController.importDetectRegEx()" />
         </hbox>
         <groupbox>
-            <caption label="Attack Parameter Detection RegEx's" />
-            <label value="Enter the regex's which will match to the paramters you want to test." />
+            <caption label="Parameters to Test" />
+            <description>
+                The parameter regular expressions used to match the parameters (GET/POST/Cookies) to be tested.
+            </description>
             <label style="visibility:hidden;color: red" value="No paramregexs, please enter some" id="noregexlbl" />
             <hbox>
                 <listbox id="existingAttackParamDetectRegex" rows="10" seltype="multiple" flex="1">
