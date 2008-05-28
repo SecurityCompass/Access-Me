@@ -132,7 +132,6 @@ PreferencesController.prototype = {
     }
     ,
     exportAttacks: function(){
-        /*
         var exportDoc = document.implementation.createDocument("", "", null);
         var root = exportDoc.createElement('exportedattacks');
         var xmlAttacks = exportDoc.createElement('attacks');
@@ -187,7 +186,7 @@ PreferencesController.prototype = {
         foStream.write(xml, xml.length);
         foStream.close();
         return true;
-        */
+        
     }
     ,
     importAttacks: function(){

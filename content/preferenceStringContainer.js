@@ -125,6 +125,132 @@ PreferenceStringContainer.prototype = {
                 QueryInterface(Components.interfaces.nsIPrefBranch2).
                 removeObserver("", this.observer);
     }
+    ,
+    export: function(exportFile){
+        if (exportFile == null)
+            return false;
+        var exportDoc = document.implementation.createDocument("", "", null);
+        var root = exportDoc.createElement(this.getRootElementName());
+        var xmlAttacks = exportDoc.createElement();
+        var strings = this.getStrings();
+        for each (var string in string){
+            var xmlElement = exportDoc.createElement(this.getElementName());
+            var xmlString = exportDoc.createElement('string');
+            var xmlSig = exportDoc.createElement('signature');
+            var txtString = exportDoc.createCDATASection(
+                    encodeXML(string.string));
+            var txtSig = exportDoc.createTextNode(string.sig);
+            xmlString.appendChild(txtString);
+            xmlSig.appendChild(txtSig);
+            xmlAttack.appendChild(xmlString);
+            xmlAttack.appendChild(xmlSig);
+            xmlAttacks.appendChild(xmlAttack);
+        }
+        root.appendChild(xmlAttacks);
+        var serializer = new XMLSerializer();
+        var xml = serializer.serializeToString(exportDoc);
+        dump(xml);dump('\n');
+
+        var foStream = Components.classes["@mozilla.org/network/file-output-stream;1"]
+                .createInstance(Components.interfaces.nsIFileOutputStream);
+
+        foStream.init(exportFile, 0x02 | 0x08 | 0x20, 0666, 0); // write, create, truncate
+        foStream.write(xml, xml.length);
+        foStream.close();
+        return true;
+    }
+    ,
+    import: function(importFile) {
+        
+        var fileContents = FileIO.read(importFile);
+        var domParser = new DOMParser();
+        var dom = domParser.parseFromString(fileContents, "text/xml");
+
+        if(dom.documentElement.nodeName == "parsererror"){
+            alert("error while parsing document, ensure that the document is complete and uncorrupted.");
+            return false;
+        }
+        
+        var rootTags = dom.getElementsByTagName(this.getRootElementName());
+        if (rootTags.length != 1){
+            alert("couldn't find attacks tag. Error while processing document.");
+            return false;
+        }
+        
+        var rootTag = rootTags[0];
+        var childrenTags = new Array();
+        
+        for (var i = 0; i < rootTag.childNodes.length; i++){
+//             alert("'" + (attackTag.firstChild.firstChild.nodeName  == '#text')+"'");
+//            dump("::importAttacks()... (" + attacksTag + "== attacksTag) attacksTag[" + i + "] == " + attacksTag.childNodes[i] + "\n");
+            if (this.getElementName() === attacksTag.childNodes[i].nodeName){
+                attackTags.push(attacksTag.childNodes[i]);
+            }
+        }
+        if (attackTags.length){
+            for each(var attackTag in attackTags){
+                var stringTag = null;
+                var sigTag = null;
+                for each(var tag in attackTag.childNodes){
+                    dump("::importAttacks()... (looking for attackString and sig) " + tag.nodeName +  "\n");
+                    if (tag.nodeName === "attackString"){
+                        dump("got attackString\n");
+                        stringTag = tag;
+                    }
+                    else if (tag.nodeName === "signature"){
+                        dump("got sigString\n");
+                        sigTag = tag;   
+                    }
+                }
+                if (stringTag === null || sigTag === null){
+                    alert("Couldn't import attack. Couldn't find stringAttack or signature tags. Error while processing the document. ");
+                    this.makeUI(attackStringContainer.getStrings(), window); // just in case.
+                    return false;
+                }
+                else{
+                    if (stringTag.childNodes.length !== 0)
+                    {
+                        
+                        attackStringContainer.addString(
+                            decodeXML(stringTag.textContent),
+                            sigTag.firstChild.nodeValue);
+                    }
+                    else {
+                        alert("Couldn't import attack. attackString is empty. Error while processing the document. ");
+                        this.makeUI(attackStringContainer.getStrings(), window); // just in case.
+                        return false;
+                    }
+                }
+            }
+        }
+        else {
+            alert("Couldn't find any attacks. No Attacks imported.");
+            return false;            
+        }
+        
+        var errStrings = dom.getElementsByTagName('results');
+        if (errStrings.length === 1) {
+            var errStrings = errStrings[0];
+            var errTags = new Array();
+            for each(var errTag in errStrings.childNodes){
+                if (errTag.nodeName == 'resultString') {
+                    errTags.push(errTag);
+                }
+            }
+            
+            if (errTags.length) {
+                var errStringContainer = getErrorStringContainer();
+                for each(var errTag in errTags) {
+                    dump('preference.js::importAttacks errTag.textContent == ' + errTag.textContent + '\n');
+                    errStringContainer.addString(decodeXML(errTag.textContent), null);
+                }
+            }
+        }
+        this.makeUI(getAttackStringContainer().getStrings(), window, 'existingSQLIstrings');
+        this.makeUI(getErrorStringContainer().getStrings(), window, 'existingSQLIerrStrings');
+        return true;
+
+    }
 };
 
 /**
