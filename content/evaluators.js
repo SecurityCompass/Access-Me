@@ -43,18 +43,18 @@ function checkSrcForPassString(streamListener) {
         try {
             var regexp = new RegExp(passes.string);
             if (regexp.test(doc)){
-                result = new Result(RESULT_TYPE_PASS, 100, "Error string found: '" + stringEncoder.encodeString(passes.string) + "'");
+                result = new Result(RESULT_TYPE_PASS, 100, "Pass string found: '" + stringEncoder.encodeString(passes.string) + "'");
             }
             else {
-                result = new Result(RESULT_TYPE_ERROR, 100, "Error string not found: '" + stringEncoder.encodeString(passes.string) + "'");
+                result = new Result(RESULT_TYPE_ERROR, 100, "Pass string not found: '" + stringEncoder.encodeString(passes.string) + "'");
             }
         }
         catch (e){
             if (doc.indexOf(passes.string) !== -1) {
-                result = new Result(RESULT_TYPE_PASS, 100, "Error string found: '" + stringEncoder.encodeString(passes.string) + "'");
+                result = new Result(RESULT_TYPE_PASS, 100, "Pass string found: '" + stringEncoder.encodeString(passes.string) + "'");
             }
             else {
-                result = new Result(RESULT_TYPE_ERROR, 100, "Error string not found: '" + stringEncoder.encodeString(passes.string) + "'");
+                result = new Result(RESULT_TYPE_ERROR, 100, "Pass string not found: '" + stringEncoder.encodeString(passes.string) + "'");
             }
         }
         
