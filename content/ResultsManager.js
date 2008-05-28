@@ -459,10 +459,11 @@ ResultsManager.prototype = {
     generateEndOfReport: function (sortedResults, errorstr) {
         
         if (sortedResults.length){
-            if (errorstr !== undefined) this.results += "<div class='withError'>"
+            if (errorstr !== undefined)
+                this.results += "<div class='withError'>";
         }
         else {
-            this.results += "<h3>No Access Me vulnerabilities found.</h3>"
+            this.results += "<h3>No requests have been tested.</h3>";
         }
         this.results +="<div class='footer'>";
         var now = new Date();
