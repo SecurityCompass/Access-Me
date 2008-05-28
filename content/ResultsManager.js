@@ -54,7 +54,7 @@ function ResultsManager(extensionManager) {
     //this.addSourceEvaluator(fail);
     this.addSourceEvaluator(checkSrcForErrorString);
     this.addSourceEvaluator(checkSrcForPassString);
-    
+    this.addSourceEvaluator(checkStringSimilarity);
     /**
      * the current state of the results.
      * This is used to keep track 
@@ -91,7 +91,7 @@ ResultsManager.prototype = {
                 break;
             }
         }
-        if (noErrors){
+        if (noErrors && this.state !== this.STATE_ERROR){
             this.state = this.STATE_PASS;
         }
         

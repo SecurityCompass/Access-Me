@@ -28,4 +28,6 @@ pref("extensions.accessme.reportbuilding.timeout", 1);
 pref('extensions.accessme.errorstrings', '[{"string":"welcome,"}]');
 pref('extensions.accessme.passstrings', '[{"string":"welcome,"}]');
 pref("extensions.accessme.attackParamDetectRegex", '[{"string":"ession"}]');
+pref("extensions.accessme.similarityRating", 80000);
+
 

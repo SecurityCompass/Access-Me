@@ -29,12 +29,15 @@ tools@securitycompass.com
         <preferences>
             <preference id="prefNumParallellAttacks"
                         name="extensions.accessme.numtabstouse"
+                        instantApply="true"
                         type="int"/>
             <preference id="prefPauseBetweenTests"
                         name="extensions.accessme.pausebetweentests"
+                        instantApply="true"
                         type="int" />
             <preference id="prefSimilarityFactor"
-                        name="extensions.accessme.similarityfactor"
+                        name="extensions.accessme.similarityRating"
+                        instantApply="true"
                         type="int" />
         </preferences>
         <label value="Number of simultaneous attacks" control="txtNumParallellAttacks" />
@@ -44,7 +47,7 @@ tools@securitycompass.com
         <label value="String how similar does a test page have to be to the original page to not trigger an error"
                 control="txtSidebarBuildingPause"
                 crop="end" />
-	<textbox id="txtSimilarityFactor" preference="prefSimilarityFactor"/>
+	<textbox id="txtSimilarityFactor" />
     </prefpane>
     <!-- would be nice to have a nice red X icon for here -->
     <prefpane label="Error Regex's" id="errorstrings">

@@ -61,6 +61,18 @@ PreferencesController.prototype = {
             var label = document.getElementById('nopassstringlbl');
             label.style.visibility = 'visible';
         }
+        
+        var similarityFactor = document.getElementById('prefSimilarityFactor');
+        var similarityTxtBox = document.getElementById('txtSimilarityFactor');
+        similarityTxtBox.value = similarityFactor.value/1000
+        
+        function similarityFactorChangeListener(e){
+            var prefService = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefService);
+            var prefBranch = prefService.getBranch('extensions.accessme.');
+            var pref = prefBranch.setIntPref('similarityRating', similarityTxtBox.value*1000);
+
+        }
+        similarityTxtBox.addEventListener('blur', similarityFactorChangeListener, true);
     }
     ,
     makeUI: function(attacks, aWindow, listboxID){

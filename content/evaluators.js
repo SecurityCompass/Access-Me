@@ -129,3 +129,66 @@ function checkForServerResponseCode(nsiHttpChannel){
         return false;
     }
 }
+
+/**
+ * Check for string similarity source evaluator.
+ * This implementation use's dice's coefficent. Alternative options could be
+ * Jaccard Similarity/Jaccard/Tanimoto Coefficient or the q-gram
+ * Great information at http://www.dcs.shef.ac.uk/~sam/stringmetrics.html
+ */
+function checkStringSimilarity(streamListener){
+    var attackedTokenized = streamListener.data.replace("<", " ", "gmi").
+            replace(">", " ", "gmi").split(/\w/);
+    var origTokenized = streamListener.attackRunner.parameters.lastOperation.
+            rawResponse.replace("<", " ", "gmi").replace(">", " ", "gmi").
+            split(/\W/);
+    
+    var uniqueAttackedTokens = new Object(), numAttackedTokensCount = 0;
+    var uniqueOriginalTokens = new Object(), numOrigTokensCount = 0;
+    var allTokens = new Object(), commonCount=0;
+    var prefService = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefService);
+    var prefBranch = prefService.getBranch('extensions.accessme.');
+    var pref = prefBranch.getIntPref('similarityRating')/100000;
+    var rv = null;
+
+    
+    for each (var token in origTokenized) {
+        uniqueOriginalTokens[token] = 1;
+        allTokens[token] = 1;
+    }
+    
+    for each (var token in attackedTokenized) {
+        uniqueAttackedTokens[token] = 1;
+        allTokens[token] = 1;
+    }
+    
+    for (var token in allTokens) {
+        if (uniqueAttackedTokens[token] === 1 &&
+            uniqueOriginalTokens[token] === 1)
+        {
+            commonCount++
+        }
+    }
+    
+    for (var token in uniqueOriginalTokens){
+        numOrigTokensCount++;
+    }
+    
+    for (var token in uniqueAttackedTokens){
+        numAttackedTokensCount++;
+    }
+    
+    
+    var diceCoefficient = (2*commonCount) /
+            (numAttackedTokensCount + numOrigTokensCount);
+    
+    
+    if (diceCoefficient >= pref) {
+        rv = new Result(RESULT_TYPE_ERROR, 100, "The attacked page is dangerously similar to the original page. It is " + diceCoefficient + "% similar");
+    }
+    else {
+        rv = new Result(RESULT_TYPE_PASS, 100, "The attacked page is not very similar to the original page. It is " + diceCoefficient + "% similar");
+    }
+    
+    return [rv];
+}

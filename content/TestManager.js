@@ -241,6 +241,7 @@ TestManager.prototype = {
             }
         }
         if (testRunnerContainer.testRunners.length >0 ){
+            this.resultsManager.state = ResultsManager.prototype.STATE_UNKNOWN;
             testRunnerContainer.start();
             return true;
         }
@@ -325,6 +326,7 @@ TestManager.prototype = {
                 (new Array());
         var rc = new Object();
         rc.request = operation.request;
+        rc.lastOperation=operation;
         
         rc.get = new Object();  
         
