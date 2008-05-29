@@ -317,7 +317,7 @@ ResultsManager.prototype = {
                 rv += "<div class='fail'>";
                 break;
         }
-        rv += "<div class='field'>" + result.nameParamToAttack + "::" + result.urlTested + " ";
+        rv += "<div class='field'>" + (result.nameParamToAttack?result.nameParamToAttack:"Exact Clone") + "::" + result.urlTested + " ";
         switch (result.typeOfAttack) {
             case AttackRunner.prototype.Attack_GET:
                 rv += "(GET)";
@@ -327,6 +327,9 @@ ResultsManager.prototype = {
                 break;
             case AttackRunner.prototype.ATTACK_COOKIES:
                 rv += "(COOKIE)";
+                break;
+            case AttackRunner.prototype.ATTACK_CLONE:
+                rv += "(Verb Attack)"
                 break;
         }
         rv += "</div>";
@@ -341,8 +344,13 @@ ResultsManager.prototype = {
                 parameter = result.parameters.get;
                 break;
             case AttackRunner.prototype.ATTACK_POST:
-                parameters = result.parameters.post;
+                parameter = result.parameters.post;
                 break;
+            case AttackRunner.prototype.ATTACK_CLONE:
+                parameter = new Object();
+                parameter["Verb"]=result.attackRunner.httpMethod;
+                break;
+            
         }
         rv += "<ul>"
         for (var name in parameter) {
@@ -550,7 +558,7 @@ ResultsManager.prototype = {
     evaluateSource: function(streamListener){
         
         var attackRunner = streamListener.attackRunner;
-        var qIndex
+        var qIndex;
         for each(sourceEvaluator in this.sourceEvaluators){
             var results = sourceEvaluator(streamListener);
             for each (var result in results) {
@@ -563,6 +571,7 @@ ResultsManager.prototype = {
                 result.parameters = attackRunner.parameters;
                 result.nameParamToAttack = attackRunner.nameParamToAttack;
                 result.typeOfAttack = attackRunner.typeOfAttack;
+                result.attackRunner = attackRunner;
 
             }
             var resultsWrapper = new Object();
