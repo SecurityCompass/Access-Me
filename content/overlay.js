@@ -86,7 +86,7 @@ AccessMeOverlay.prototype = {
     ,
     runTest: function(){
         dump('\going to run test...');
-        if (this.started === true && this.lastOperation !== null) {
+        if (this.lastOperation !== null) {
             var testsStarted;
             if (this.testManager === null) {
                 this.testManager = getTestManager(this);

@@ -577,7 +577,7 @@ ResultsManager.prototype = {
         {
             dump('\nall results now logged');
             this.allResultsLogged = true;
-            this.extensionManager.doneTestSet();
+            getTestManager().doneTesting();
         }
         getTestRunnerContainer().freeTab(attackRunner.tabIndex);
         
@@ -696,6 +696,9 @@ ResultsManager.prototype = {
     ,
     STATE_PASS: RESULT_TYPE_PASS
     ,
+    /**
+     * clears all the results
+     */
     clearResults: function() {
         this.fields = null;
         this.fields = new Object();

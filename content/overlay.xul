@@ -71,10 +71,10 @@ tools@securitycompass.com
     <broadcasterset id="mainBroadcasterSet">
         <broadcaster id="accessme-start"
                      label="Start"
-                     oncommand="accessMeOverlay.start()" />
+                     oncommand="accessMeOverlay.runTest()" />
         <broadcaster id="accessme-action"
                      label="Start"
-                     oncommand="accessMeOverlay.start()" />
+                     oncommand="accessMeOverlay.runTest()" />
         <broadcaster id='accessme-report'
                      label='Report'
                      oncommand="accessMeOverlay.showReport()" />
