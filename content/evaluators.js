@@ -185,10 +185,10 @@ function checkStringSimilarity(streamListener){
     
     
     if (diceCoefficient >= pref) {
-        rv = new Result(RESULT_TYPE_ERROR, 100, "The attacked page is dangerously similar to the original page. It is " + diceCoefficient + "% similar");
+        rv = new Result(RESULT_TYPE_ERROR, 100, "The attacked page is dangerously similar to the original page. It is " + parseInt(diceCoefficient*100000)/1000 + "% similar");
     }
     else {
-        rv = new Result(RESULT_TYPE_PASS, 100, "The attacked page is not very similar to the original page. It is " + diceCoefficient + "% similar");
+        rv = new Result(RESULT_TYPE_PASS, 100, "The attacked page is not very similar to the original page. It is " + parseInt(diceCoefficient*100000)/1000  + "% similar");
     }
     
     return [rv];
