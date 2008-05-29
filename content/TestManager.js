@@ -206,8 +206,8 @@ TestManager.prototype = {
             }
             
             if (attackThis === true){
-                for each (httpMehtod in httpMethodsToAttack) {
-                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName, this.resultsManager, httpMehtod);
+                for each (httpmethod in httpMethodsToAttack) {
+                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName, this.resultsManager, httpmethod);
                     testRunnerContainer.addTestRunner(attackRunner);
                 }
             }
@@ -223,8 +223,8 @@ TestManager.prototype = {
             }
             
             if (attackThis === true){
-                for each (httpMehtod in httpMethodsToAttack) {
-                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName, this.resultsManager, httpMehtod);
+                for each (httpmethod in httpMethodsToAttack) {
+                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName, this.resultsManager, httpmethod);
                     testRunnerContainer.addTestRunner(attackRunner);
                 }
             }
@@ -241,12 +241,19 @@ TestManager.prototype = {
             }
             
             if (attackThis === true){
-                for each (httpMehtod in httpMethodsToAttack) {
-                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName, this.resultsManager, httpMehtod);
+                for each (httpmethod in httpMethodsToAttack) {
+                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName, this.resultsManager, httpmethod);
                     testRunnerContainer.addTestRunner(attackRunner);
                 }
             }
         }
+        
+        /* Whether or not there's a session we want to attack anyway */
+        for each (httpmethod in httpMethodsToAttack) {
+            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_CLONE, parameters, null, this.resultsManager, httpmethod);
+            testRunnerContainer.addTestRunner(attackRunner);
+        }
+        
         if (testRunnerContainer.testRunners.length >0 ){
             this.resultsManager.state = ResultsManager.prototype.STATE_UNKNOWN;
             testRunnerContainer.start();

@@ -86,11 +86,25 @@ function AttackRunner(typeOfAttack, parameters, nameParamToAttack,
 }
 
 AttackRunner.prototype = {
+    /**
+     * When the attack will affect GET params
+     */
     ATTACK_GET: 1
     ,
+    /**
+     * When the attack will affect POST params
+     */
     ATTACK_POST: 2
     ,
+    /**
+     * When the attack will affect cookie params
+     */
     ATTACK_COOKIES: 3
+    ,
+    /**
+     * When the attack won't affect any params
+     */
+    ATTACK_CLONE: 4
     ,
     submitForm: function(browser, formIndex){
         var forms = browser.webNavigation.document.forms;
@@ -136,38 +150,48 @@ AttackRunner.prototype = {
                 this);
         this.resultsManager.addSourceListener(streamListener);
 
-        // the IO service
         var ioService = Components.classes['@mozilla.org/network/io-service;1']
                 .getService(Components.interfaces.nsIIOService);
+        
+        var moddedURI = null;
         var uri = null;
         var postStream = null;
         var cookies = null;
+        var typeOfAttack = this.typeOfAttack;
+        
+        if (typeOfAttack === this.ATTACK_CLONE){
+            switch(httpChannel.requestMethod.toLowerCase){
+                case "post":
+                    typeOfAttack = this.ATTACK_POST;
+                    break;
+                case "get":
+                default:
+                    typeOfAttack = this.ATTACK_GET;
+                    break;
+                
+                
+            }
+        }
         
         //setup
-        switch (this.typeOfAttack) {
+        switch (typeOfAttack) {
             case this.ATTACK_GET:
-                var moddedURI = httpChannel.URI.prePath +
-                        httpChannel.URI.path.substring(0,
-                        httpChannel.URI.path.indexOf('?'));
+                moddedURI = httpChannel.URI.prePath + httpChannel.URI.path.substring(0, (httpChannel.URI.path.indexOf('?') == -1 ? httpChannel.URI.path.length: httpChannel.URI.path.indexOf('?')));
                 for (var key in this.parameters.get) {
                     if (key == this.nameParamToAttack) {
                         break;
                     }
                     moddedURI += key + "=" + this.parameters.get[key] + "&";
                 }
-                uri = ioService.newURI(moddedURI , null, null);
                 break;
             case this.ATTACK_POST:
-                var moddedURI = httpChannel.URI.prePath +
-                        httpChannel.URI.path.substring(0,
-                        httpChannel.URI.path.indexOf('?'));
+                moddedURI = httpChannel.URI.prePath + httpChannel.URI.path.substring(0, (httpChannel.URI.path.indexOf('?') == -1 ? httpChannel.URI.path.length: httpChannel.URI.path.indexOf('?')));
                 for (var key in this.parameters.post) {
                     if (key == this.nameParamToAttack) {
                         break;
                     }
                     moddedURI += key + "=" + this.parameters.get[key] + "&";
                 }
-                uri = ioService.newURI(moddedURI , null, null);
                 break;
             case this.ATTACK_COOKIES:
                 if (this.parameters.request.requestMethod == 'POST') {
@@ -197,6 +221,10 @@ AttackRunner.prototype = {
                 break;
         }
         
+        if (moddedURI !== null) {
+            uri = ioService.newURI(moddedURI , null, null);
+        }
+
         this.channel = ioService.newChannelFromURI((uri?uri:httpChannel.URI)).
                 QueryInterface(Components.interfaces.nsIHttpChannel);
         

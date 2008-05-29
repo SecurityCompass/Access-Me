@@ -85,8 +85,9 @@ AccessMeOverlay.prototype = {
     }
     ,
     runTest: function(){
-        dump('\going to run test...');
+        
         if (this.lastOperation !== null) {
+            dump('\n going to run test...');
             var testsStarted;
             if (this.testManager === null) {
                 this.testManager = getTestManager(this);
@@ -98,6 +99,7 @@ AccessMeOverlay.prototype = {
             }
         }
         else {
+            dump('\ncan\'t run test');
             this.displayNoTestState();
         }
     }
@@ -146,7 +148,6 @@ AccessMeOverlay.prototype = {
             function(streamListener){
                 dump('\ngot raw data');
                 self.lastOperation.rawResponse = streamListener.data;
-                self.runTest();
             },
             null);
         
