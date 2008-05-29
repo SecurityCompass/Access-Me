@@ -31,7 +31,7 @@ tools@securitycompass.com
  * @class AttackRunner
  */
 function AttackRunner(typeOfAttack, parameters, nameParamToAttack,
-        resultsManager)
+        resultsManager, method)
 {
 
     this.className = "AttackRunner";
@@ -69,6 +69,12 @@ function AttackRunner(typeOfAttack, parameters, nameParamToAttack,
      * cookie modifying Observer
      */
     this.cookieModifyingObserver = null;
+    
+    /**
+     * the http method to use (GET/POST/HEAD/PUT)
+     */
+    this.httpMethod = method;
+    
     
     this.fieldIndex = -1;
     this.field = new Object();
@@ -152,20 +158,16 @@ AttackRunner.prototype = {
                 uri = ioService.newURI(moddedURI , null, null);
                 break;
             case this.ATTACK_POST:
-                postStream = Components.
-                    classes['@mozilla.org/io/string-input-stream;1'].
-                    createInstance(Components.interfaces.nsIStringInputStream);
-                var modifiedPost = "";
-                
+                var moddedURI = httpChannel.URI.prePath +
+                        httpChannel.URI.path.substring(0,
+                        httpChannel.URI.path.indexOf('?'));
                 for (var key in this.parameters.post) {
                     if (key == this.nameParamToAttack) {
-                        continue;
+                        break;
                     }
-                    modifiedPost += key + "=" + this.parameters.post[key] + "&";
+                    moddedURI += key + "=" + this.parameters.get[key] + "&";
                 }
-                
-                postStream.setData(modifiedPost, modifiedPost.length);
-                
+                uri = ioService.newURI(moddedURI , null, null);
                 break;
             case this.ATTACK_COOKIES:
                 if (this.parameters.request.requestMethod == 'POST') {
@@ -214,13 +216,8 @@ AttackRunner.prototype = {
                 this.cookieModifyingObserver.topic, false);
         observerService.addObserver(this.responseCookieRemovingObserver,
                 this.responseCookieRemovingObserver.topic, false);
-        
-        if (postStream){
-            this.channel.QueryInterface(Components.interfaces.nsIUploadChannel).
-                    setUploadStream(postStream, 
-                    'application/x-www-form-urlencoded', -1);
-            this.channel.requestMethod = 'POST';
-        }
+                
+        this.channel.requestMethod = this.httpMethod;
         
         this.channel.asyncOpen(streamListener, null);
         
