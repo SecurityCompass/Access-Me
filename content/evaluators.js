@@ -104,8 +104,9 @@ function checkSrcForErrorString(streamListener) {
     return results;
 }
 
-function checkForServerResponseCode(nsiHttpChannel){
+function checkForServerResponseCode(streamListener){
     var stringEncoder = getHTMLStringEncoder();
+    var nsiHttpChannel = streamListener.attackRunner.channel.QueryInterface(Components.interfaces.nsIHttpChannel);
     try{
         if ((nsiHttpChannel.responseStatus === undefined || nsiHttpChannel.responseStatus === null)){
             return null;   
@@ -113,13 +114,13 @@ function checkForServerResponseCode(nsiHttpChannel){
         else {
             var result;
             var responseCode = nsiHttpChannel.responseStatus;
-            var displayString = "Server Status Code: " + stringEncoder.encodeString(responseCode.toString()) + " " +
+            var displayString = stringEncoder.encodeString(responseCode.toString()) + " " +
                     stringEncoder.encodeString(nsiHttpChannel.responseStatusText);
             if (responseCode == 200){
-                result = new Result(RESULT_TYPE_PASS, 100, displayString );
+                result = new Result(RESULT_TYPE_ERROR, 100, "Got access to a resource that should be protected. Server response code:" + displayString );
             }
             else {
-                result = new Result(RESULT_TYPE_ERROR, 100, displayString);
+                result = new Result(RESULT_TYPE_PASS, 100, "Did not access protected resource. Server response code:" + displayString);
             }
         }
         return [result];

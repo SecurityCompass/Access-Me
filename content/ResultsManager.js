@@ -55,6 +55,7 @@ function ResultsManager(extensionManager) {
     this.addSourceEvaluator(checkSrcForErrorString);
     this.addSourceEvaluator(checkSrcForPassString);
     this.addSourceEvaluator(checkStringSimilarity);
+    this.addSourceEvaluator(checkForServerResponseCode);
     /**
      * the current state of the results.
      * This is used to keep track 
