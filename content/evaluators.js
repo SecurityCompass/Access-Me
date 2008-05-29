@@ -138,7 +138,7 @@ function checkForServerResponseCode(nsiHttpChannel){
  */
 function checkStringSimilarity(streamListener){
     var attackedTokenized = streamListener.data.replace("<", " ", "gmi").
-            replace(">", " ", "gmi").split(/\w/);
+            replace(">", " ", "gmi").split(/\W/);
     var origTokenized = streamListener.attackRunner.parameters.lastOperation.
             rawResponse.replace("<", " ", "gmi").replace(">", " ", "gmi").
             split(/\W/);
