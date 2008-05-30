@@ -63,8 +63,10 @@ function encodeXML(xmlString) {
  */
 function encodeString(str){
     var rv = "";
-    for each(var letter in str){
-        rv += '&#' + letter.charCodeAt() +  ';';
+    for each(var letter in str.toString()){
+        if (typeof(letter) == "string") {
+            rv += '&#' + letter.charCodeAt(0) +  ';';
+        }
     }
     return rv;
 }

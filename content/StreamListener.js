@@ -62,6 +62,7 @@ StreamListener.prototype = {
     ,
     // nsIChannelEventSink
     onChannelRedirect: function (aOldChannel, aNewChannel, aFlags) {
+        
     },
     // nsIInterfaceRequestor
     getInterface: function (aIID) {

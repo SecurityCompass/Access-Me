@@ -68,6 +68,7 @@ AccessMeOverlay.prototype = {
         gBrowser.tabContainer.addEventListener('TabSelect',
                 self.tabSelectListener, false);
         this.browser = gBrowser.selectedBrowser;
+        
     }
     ,
     onUnload: function() {
