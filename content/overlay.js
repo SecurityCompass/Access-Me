@@ -140,6 +140,7 @@ AccessMeOverlay.prototype = {
             return; //we don't care about not http
         }
         var self = this;
+        dump('\ngot request: ' + aURI.prePath + aURI.path);
         this.lastOperation = null;
         this.lastOperation = new Object();
         this.lastOperation.request = aRequest;

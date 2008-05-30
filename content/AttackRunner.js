@@ -89,22 +89,22 @@ AttackRunner.prototype = {
     /**
      * When the attack will affect GET params
      */
-    ATTACK_GET: 1
+    ATTACK_GET: 1<<     0
     ,
     /**
      * When the attack will affect POST params
      */
-    ATTACK_POST: 2
+    ATTACK_POST: 1<<    1
     ,
     /**
      * When the attack will affect cookie params
      */
-    ATTACK_COOKIES: 3
+    ATTACK_COOKIES: 1<< 2
     ,
     /**
-     * When the attack won't affect any params
+     * Attack is based on sending wrong and/or inaccurate HTTP Verbs
      */
-    ATTACK_CLONE: 4
+    ATTACK_VERB: 1<<    3
     ,
     submitForm: function(browser, formIndex){
         var forms = browser.webNavigation.document.forms;
@@ -128,9 +128,6 @@ AttackRunner.prototype = {
     ,
     do_test: function()
     {
-        var mainBrowser = getMainWindow().getBrowser();
-        var currentTab = mainBrowser.selectedTab;
-
         var self = this; //make sure we always have a reference to this object
         var formData = null;
                 
@@ -159,23 +156,11 @@ AttackRunner.prototype = {
         var cookies = null;
         var typeOfAttack = this.typeOfAttack;
         
-        if (typeOfAttack === this.ATTACK_CLONE){
-            switch(httpChannel.requestMethod.toLowerCase){
-                case "post":
-                    typeOfAttack = this.ATTACK_POST;
-                    break;
-                case "get":
-                default:
-                    typeOfAttack = this.ATTACK_GET;
-                    break;
-                
-                
-            }
-        }
-        
-        //setup
-        switch (typeOfAttack) {
-            case this.ATTACK_GET:
+        /* setup the attack.
+         * attack type is based on a combination of bitwise ors so you can have
+         * a POST and VERB attack. THis is also why I don't else here.
+         */
+        if (this.typeOfAttack & this.ATTACK_GET) {
                 moddedURI = httpChannel.URI.prePath + httpChannel.URI.path.substring(0, (httpChannel.URI.path.indexOf('?') == -1 ? httpChannel.URI.path.length: httpChannel.URI.path.indexOf('?')));
                 for (var key in this.parameters.get) {
                     if (key == this.nameParamToAttack) {
@@ -183,8 +168,8 @@ AttackRunner.prototype = {
                     }
                     moddedURI += key + "=" + this.parameters.get[key] + "&";
                 }
-                break;
-            case this.ATTACK_POST:
+        }
+        if (this.tyepOfAttack & this.ATTACK_POST) {
                 moddedURI = httpChannel.URI.prePath + httpChannel.URI.path.substring(0, (httpChannel.URI.path.indexOf('?') == -1 ? httpChannel.URI.path.length: httpChannel.URI.path.indexOf('?')));
                 for (var key in this.parameters.post) {
                     if (key == this.nameParamToAttack) {
@@ -192,8 +177,11 @@ AttackRunner.prototype = {
                     }
                     moddedURI += key + "=" + this.parameters.get[key] + "&";
                 }
-                break;
-            case this.ATTACK_COOKIES:
+        }
+        if (this.typeOfAttack & this.ATTACK_COOKIES) {
+            /* @todo this setup should be rewritten to use bitwise attack type
+             * better
+             */
                 if (this.parameters.request.requestMethod == 'POST') {
                     postStream = Components.
                             classes['@mozilla.org/io/string-input-stream;1'].
@@ -214,11 +202,9 @@ AttackRunner.prototype = {
                     }
                     cookies += key + "=" +this.parameters.cookies[key] + "; ";
                 }
-                break;
-            default:
-                Components.utils.reportError('Unknown type of attack');
-                //@todo reporting is probably not enough here.
-                break;
+        }
+        if (this.typeOfAttack & this.ATTACK_VERB) {
+            
         }
         
         if (moddedURI !== null) {

@@ -206,8 +206,10 @@ TestManager.prototype = {
             }
             
             if (attackThis === true){
+                var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName, this.resultsManager, "GET");
+                testRunnerContainer.addTestRunner(attackRunner);
                 for each (httpmethod in httpMethodsToAttack) {
-                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET, parameters, paramName, this.resultsManager, httpmethod);
+                    attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_GET |  AttackRunner.prototype.ATTACK_VERB, parameters, paramName, this.resultsManager, httpmethod);
                     testRunnerContainer.addTestRunner(attackRunner);
                 }
             }
@@ -223,8 +225,10 @@ TestManager.prototype = {
             }
             
             if (attackThis === true){
+                var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName, this.resultsManager, "POST");
+                testRunnerContainer.addTestRunner(attackRunner);
                 for each (httpmethod in httpMethodsToAttack) {
-                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST, parameters, paramName, this.resultsManager, httpmethod);
+                    attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_POST | AttackRunner.prototype.ATTACK_VERB, parameters, paramName, this.resultsManager, httpmethod);
                     testRunnerContainer.addTestRunner(attackRunner);
                 }
             }
@@ -241,8 +245,10 @@ TestManager.prototype = {
             }
             
             if (attackThis === true){
+                var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName, this.resultsManager, parameters.request.requestMethod);
+                testRunnerContainer.addTestRunner(attackRunner);
                 for each (httpmethod in httpMethodsToAttack) {
-                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES, parameters, paramName, this.resultsManager, httpmethod);
+                    var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_COOKIES | AttackRunner.prototype.ATTACK_VERB, parameters, paramName, this.resultsManager, httpmethod);
                     testRunnerContainer.addTestRunner(attackRunner);
                 }
             }
@@ -250,7 +256,7 @@ TestManager.prototype = {
         
         /* Whether or not there's a session we want to attack anyway */
         for each (httpmethod in httpMethodsToAttack) {
-            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_CLONE, parameters, null, this.resultsManager, httpmethod);
+            var attackRunner = new AttackRunner(AttackRunner.prototype.ATTACK_VERB, parameters, null, this.resultsManager, httpmethod);
             testRunnerContainer.addTestRunner(attackRunner);
         }
         
