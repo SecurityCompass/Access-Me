@@ -52,10 +52,11 @@ function ResultsManager(extensionManager) {
     this.fields = new Object();
     
     //this.addSourceEvaluator(fail);
-    this.addSourceEvaluator(checkSrcForErrorString);
-    this.addSourceEvaluator(checkSrcForPassString);
-    this.addSourceEvaluator(checkStringSimilarity);
+    //this.addSourceEvaluator(checkSrcForErrorString);
+    //this.addSourceEvaluator(checkSrcForPassString);
     this.addSourceEvaluator(checkForServerResponseCode);
+    this.addSourceEvaluator(checkStringSimilarity);
+
     /**
      * the current state of the results.
      * This is used to keep track 
@@ -80,9 +81,12 @@ ResultsManager.prototype = {
         }
         
         if (this.fields[urlTested][resultsWrapper.nameParamToAttack] === undefined) {
-            this.fields[urlTested][resultsWrapper.nameParamToAttack] = new FieldResult(parameters, resultsWrapper.nameParamToAttack);
+            this.fields[urlTested][resultsWrapper.nameParamToAttack] = new Object();
         }
-        this.fields[urlTested][resultsWrapper.nameParamToAttack].addResults(resultsWrapper.results);
+        if (this.fields[urlTested][resultsWrapper.nameParamToAttack][resultsWrapper.results[0].attackRunner.uniqueID] === undefined) {
+            this.fields[urlTested][resultsWrapper.nameParamToAttack][resultsWrapper.results[0].attackRunner.uniqueID] = new FieldResult(parameters, resultsWrapper.nameParamToAttack);
+        }
+        this.fields[urlTested][resultsWrapper.nameParamToAttack][resultsWrapper.results[0].attackRunner.uniqueID].addResults(resultsWrapper.results);
         var noErrors = true;
         
         for each(var r in resultsWrapper.results){
@@ -232,14 +236,39 @@ ResultsManager.prototype = {
         var warningsWithPasses = new Array();
         var passes = new Array();
         for each (var url in this.fields){
-            for each(var fieldResult in url ) {
-                for each(var r in fieldResult.results)
-                if (r.type == RESULT_TYPE_PASS){
-                    passes.push(r);
-                }
-                else {
-                    errors.push(r);
-                }
+            for each(var attack in url ) {
+                for each (var fieldResult in attack) {
+                    if (fieldResult.state & fieldresult_has_error &&
+                        !(fieldResult.state & fieldresult_has_warn ||
+                          fieldResult.state & fieldresult_has_pass))
+                    {
+                        errors.push(fieldResult);
+                    }
+                    else if (fieldResult.state & fieldresult_has_error &&
+                             fieldResult.state & fieldresult_has_warn &&
+                             !(fieldResult.state & fieldresult_has_pass))
+                    {
+                        errorsWithWarnings.push(fieldResult);
+                    }
+                    else if (fieldResult.state & fieldresult_has_error &&
+                             fieldResult.state & fieldresult_has_warn &&
+                             fieldResult.state & fieldresult_has_pass)
+                    {
+                        errorsWithWarningsAndPasses.push(fieldResult);
+                    }
+                    else if (fieldResult.state & fieldresult_has_warn &&
+                             !(fieldResult.state & fieldresult_has_pass))
+                    {
+                        warnings.push(fieldResult);
+                    }
+                    else if (fieldResult.state & fieldresult_has_warn &&
+                             fieldResult.state & fieldresult_has_pass)
+                    {
+                        warningsWithPasses.push(fieldResult);
+                    }
+                    else {
+                        passes.push(fieldResult);
+                }   }
             }
         }
         
@@ -254,59 +283,60 @@ ResultsManager.prototype = {
         var numWarnings = 0;
         var numFailes = 0; 
         for each (var form in this.fields) {
-            for each (var fieldResult in form) {
-                var numTestsRunInField = 0; 
-                var numPassesInField = 0; 
-                var numWarningsInField = 0;
-                var numFailesInField = 0; 
-                [numTestsRunInField, numFailesInField, numWarningsInField, numPassesInField] =
-                        fieldResult.getLength();
-                        
-                numTestsRun += numTestsRunInField; 
-                numPasses += numPassesInField; 
-                numWarnings += numWarningsInField;
-                numFailes += numFailesInField; 
-                        
+            for each (var attack in form) {
+                for each (var fieldResult in attack){
+                    var numTestsRunInField = 0; 
+                    var numPassesInField = 0; 
+                    var numWarningsInField = 0;
+                    var numFailesInField = 0; 
+                    [numTestsRunInField, numFailesInField, numWarningsInField, numPassesInField] =
+                            fieldResult.getLength();
+                            
+                    numTestsRun += numTestsRunInField; 
+                    numPasses += numPassesInField; 
+                    numWarnings += numWarningsInField;
+                    numFailes += numFailesInField; 
+                }
             }
         }
         return [numTestsRun, numFailes, numWarnings, numPasses];
 
     }
     ,
-    showFieldResult: function(result){
+    showFieldResult: function(fieldResult){
+        fieldResult.sort();
         var rv ="";
-        //var testFieldName;
-        //rv += "<div class='result'>";
-        //var unamedFieldCounter = 0;
-        //var testDataList = fieldResult.getSubmitState();
-        //var testedDataKey = null;
-        var stringEncoder = getHTMLStringEncoder();
-        //for each(var testData in testDataList) {
-        //    if (testData.tested ===true){
-        //        testFieldName = (testData.name !== undefined ? testData.name : "unnamed field");
-        //        break;
-        //    }
-        //}
-        //rv += "<div class='field'>" + fieldResult.nameParamToAttack + "::" + fieldResult.urlTested;
-        //
-        //
-        //
-        //rv += "</div>";
-        //rv += "<div class='submitted'>";
-        //rv += "<b>Submitted Form State:</b><br /><ul>";
-        //for (var key in testDataList) {
-        //    if (testDataList[key].tested === false){
-        //        rv += "<li>" + (testDataList[key].name ? testDataList[key].name : "unnamed field") + ": " + stringEncoder.encodeString(testDataList[key].data)+ "</li>";
-        //    }
-        //    else {
-        //        testedDataKey = key;
-        //    }
-        //}
-        //rv += "</ul></div>";
-        rv += "<div class='outcome'>";
-        var parameter = null;
+        var testFieldName = fieldResult.results[0].urlTested + " :: ";
+        var resultState = fieldResult.getResultState();
+        var paramTested = null;
+        var httpMethodTested = null;
+        with (fieldResult.results[0].attackRunner) {
+            if (typeOfAttack & ATTACK_GET) {
+                testFieldName += "GET "
+            }
+            if (typeOfAttack & ATTACK_POST) {
+                typeOfAttack += "POST "
+            }
+            if (typeOfAttack & ATTACK_COOKIES) {
+                testFieldName += "COOKIE "
+            }
+            if (typeOfAttack & ATTACK_VERB) {
+                
+                //if this is a combination verb + session dropping attack...
+                if (typeOfAttack & (~ ATTACK_VERB)) {
+                    testFieldName += "+ "
+                }
+                testFieldName += "FORCED HTTP METHOD "
+                httpMethodTested = httpMethod; 
+                
+            }
+            if (typeOfAttack & (ATTACK_COOKIES|ATTACK_POST|ATTACK_GET)){
+                paramTested = nameParamToAttack;
+            }
+            
+        }
         
-        switch (result.type){
+        switch (resultState.state){
             case RESULT_TYPE_PASS:
                 rv += "<div class='pass'>"
                 break;
@@ -317,54 +347,23 @@ ResultsManager.prototype = {
                 rv += "<div class='fail'>";
                 break;
         }
-        rv += "<div class='field'>" + (result.nameParamToAttack?result.nameParamToAttack:"Exact Clone") + "::" + result.urlTested + " ";
-        switch (result.typeOfAttack) {
-            case AttackRunner.prototype.Attack_GET:
-                rv += "(GET)";
-                break;
-            case AttackRunner.prototype.ATTACK_POST:
-                rv += "(POST)";
-                break;
-            case AttackRunner.prototype.ATTACK_COOKIES:
-                rv += "(COOKIE)";
-                break;
-            case AttackRunner.prototype.ATTACK_CLONE:
-                rv += "(Verb Attack)"
-                break;
+        var unamedFieldCounter = 0;
+        var testDataList = fieldResult.getSubmitState();
+        var testedDataKey = null;
+        var stringEncoder = getHTMLStringEncoder();
+        rv += "<div class='field'>" + (testFieldName?testFieldName:'unnamed field') + "</div>";
+        rv += "<div class='submitted'>";
+        rv += "<b>Attack Details:</b><br /><ul>";
+        if (paramTested !== null) {
+            rv += "<li>Input Parameter: " + paramTested + "</li>";
         }
-        rv += "</div>";
-        rv += result.message+"<br />"
-        rv += "Tested value: ";
-        unamedFieldCounter = 0;
-        switch (result.typeOfAttack){
-            case AttackRunner.prototype.ATTACK_COOKIES:
-                parameter = result.parameters.cookies;
-                break;
-            case AttackRunner.prototype.ATTACK_GET:
-                parameter = result.parameters.get;
-                break;
-            case AttackRunner.prototype.ATTACK_POST:
-                parameter = result.parameters.post;
-                break;
-            case AttackRunner.prototype.ATTACK_CLONE:
-                parameter = new Object();
-                parameter["Verb"]=result.attackRunner.httpMethod;
-                break;
-            
+        if (httpMethodTested !== null){
+            rv += "<li>HTTP Method: " + httpMethodTested + "</li>";
         }
-        rv += "<ul>"
-        for (var name in parameter) {
-            if (name !== result.nameParamToAttack){
-                
-                rv += "<li>" + stringEncoder.encodeString(name) + " = " + stringEncoder.encodeString(parameter[name]) + "</li>";
-                
-            }
-        }
-        rv += "</ul>"
-        rv += "</div>"
-            
+        rv += "</ul></div>";
+        rv += "<div class='outcome'>"+resultState.message;
         rv += '</div>';
-        
+        rv += "</div>";
         return rv;
     }
     ,
@@ -572,6 +571,7 @@ ResultsManager.prototype = {
                 result.nameParamToAttack = attackRunner.nameParamToAttack;
                 result.typeOfAttack = attackRunner.typeOfAttack;
                 result.attackRunner = attackRunner;
+                result.evaluator = sourceEvaluator;
 
             }
             var resultsWrapper = new Object();

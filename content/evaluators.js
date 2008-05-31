@@ -116,8 +116,8 @@ function checkForServerResponseCode(streamListener){
             var responseCode = nsiHttpChannel.responseStatus;
             var displayString = stringEncoder.encodeString(responseCode.toString()) + " " +
                     stringEncoder.encodeString(nsiHttpChannel.responseStatusText);
-            if (responseCode == 200){
-                result = new Result(RESULT_TYPE_ERROR, 100, "Got access to a resource that should be protected. Server response code:" + displayString );
+            if (responseCode == 200) {
+                result = new Result(RESULT_TYPE_WARNING, 100, "Got access to a resource that should be protected. Server response code:" + displayString );
             }
             else {
                 result = new Result(RESULT_TYPE_PASS, 100, "Did not access protected resource. Server response code:" + displayString);

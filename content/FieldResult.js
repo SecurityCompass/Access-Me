@@ -113,4 +113,36 @@ FieldResult.prototype = {
         
         return this.results = errors.concat(warnings, passes);
     }
+    ,
+    getResultState: function(){
+        var stringSimilarityResult = null;
+        var responseCodeResult = null;
+        var rc = 0;
+        var msg = "";
+        for each (var result in this.results) {
+            if (result.evaluator === checkForServerResponseCode) {
+                responseCodeResult = result;
+            }
+            else if (result.evaluator === checkStringSimilarity ) {
+                stringSimilarityResult = result;
+            }
+            else {
+                Components.utils.reportError("got a result with a foreign evalutor.")
+            }
+        }
+        
+        if (stringSimilarityResult.type === RESULT_TYPE_ERROR) {
+            
+            rc++;
+        }
+        if (responseCodeResult.type === RESULT_TYPE_WARNING){
+            rc++;
+        }
+        
+        for each (var result in this.results) {
+                msg += result.message;
+        }
+        
+        return {'state':1<<rc, 'message':msg}; //this will match to RESULT_TYPE_* values right now.
+    }
 }

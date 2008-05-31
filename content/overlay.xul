@@ -70,10 +70,12 @@ tools@securitycompass.com
             src="chrome://accessme/content/overlay.js"/>
     <broadcasterset id="mainBroadcasterSet">
         <broadcaster id="accessme-start"
-                     label="Start"
+                     label="Test This Page"
+                     tooltiptext="Test This Page"
                      oncommand="accessMeOverlay.runTest()" />
         <broadcaster id="accessme-action"
-                     label="Start"
+                     tooltiptext="Test This Page"
+                     label="Test This Page"
                      oncommand="accessMeOverlay.runTest()" />
         <broadcaster id='accessme-report'
                      label='Report'
@@ -85,13 +87,14 @@ tools@securitycompass.com
                      label='Clear Results'
                      oncommand='accessMeOverlay.clearResults()' />
     </broadcasterset>
+  
   <toolbox id="navigator-toolbox" >
     <toolbar id="accessme-bar" toolbarname='Access Me bar' insertafter="customToolbars">
       <toolbarbutton label="Security Compass Access Me" id="logo" image="chrome://accessme/skin/tiny_logo.png" orient="horizontal"/>
       <toolbarbutton id='accessme-toolbarbutton-test-action' class="start" observes='accessme-action' orient="vertical" />
-      <toolbarbutton label="Not Started" id='accessme-test-status' orient="vertical" class="start" disabled='true'/>
+      <toolbarbutton label="Not Started" id='accessme-test-status' orient="vertical" class="start" disabled='true' style="display:none"/>
       <toolbarbutton label="Clear Results" id='accessme-clear-results' orient='vertical' disabled='true' hidden='true' command='accessme-clear'/>
-      <toolbarbutton id='accessme-gen-report' orient='vertical' observes='accessme-report'/>
+      <toolbarbutton id='accessme-gen-report' orient='vertical' observes='accessme-report' style="display:none"/>
     </toolbar>
   </toolbox>
   <menupopup id="menu_ToolsPopup">
