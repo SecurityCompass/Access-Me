@@ -40,15 +40,7 @@ tools@securitycompass.com
                         instantApply="true"
                         type="int" />
         </preferences>
-        <script type="application/x-javascript" src="chrome://accessme/content/json.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/io.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/util.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/SecCompObserver.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/preferenceStringContainer.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/PassStringContainer.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/ErrorStringContainer.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/attackParamDetectRegexContainer.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/preferences.js" />
+                
         <label value="Number of simultaneous requests" control="txtNumParallellAttacks" />
         <textbox id="txtNumParallellAttacks" preference="prefNumParallellAttacks" />
         <label value="Wait time between requests" control="txtPauseBetweenTests" />
@@ -58,62 +50,18 @@ tools@securitycompass.com
                 crop="end" />
 	<textbox id="txtSimilarityFactor" />
     </prefpane>
-    <!-- would be nice to have a nice red X icon for here -->
-    <!--<prefpane label="Error Regexs" id="errorstrings">
-        <preferences>
-        </preferences>
-        <hbox>
-            <button label="export" oncommand="preferencesController.exportAttacks()" />
-            <button label="import" oncommand="preferencesController.importAttacks()" />
-        </hbox>
-        <groupbox>
-            <caption label="Error Regexs" />
-            <description>
-                The error regular expressions signify that a test has failed when they are find a match result page.
-            </description>
-            <label style="visibility:hidden;color: red" value="No error strings, please enter some" id="noerrorslbl" />
-            <hbox>
-                <listbox id="errorStrBox" rows="10" seltype="multiple" flex="1">
-                </listbox>
-                <vbox>
-                    <button label="up" oncommand="preferencesController.moveErrorStringUp()"/>
-                    <button label="down" oncommand="preferencesController.moveErrorStringDown()"/>
-                    <button label="add" oncommand="window.openDialog('chrome://accessme/content/addError.xul', 'errorstring', 'chrome', getErrorStringContainer(), preferencesController, window)"/>
-                    <button label="remove" oncommand="preferencesController.removeError()"/>
-                </vbox>
-            </hbox>
-        </groupbox>
-    </prefpane>
-    would be nice to have a target icon 
-    <prefpane label="Pass Regexs" id='passstrings'>
-        <preferences>
-        </preferences>
-        <hbox>
-            <button label="export" oncommand="preferencesController.exportDetectRegEx()" />
-            <button label="import" oncommand="preferencesController.importDetectRegEx()" />
-        </hbox>
-        <groupbox>
-            <caption label="Attack Parameter Detection RegEx's" />
-            <description>
-                The pass regular expressions signify that a test has failed when they are <xhtml:i>not</xhtml:i> found in the result page.
-            </description>
-            <label style="visibility:hidden;color: red" value="No paramregexs, please enter some" id="nopassstringlbl" />
-            <hbox>
-                <listbox id="existingPassStringRegex" rows="10" seltype="multiple" flex="1">
-                </listbox>
-                <vbox>
-                    <button label="up" oncommand="preferencesController.movePassStringUp()"/>
-                    <button label="down" oncommand="preferencesController.movePassStringDown()"/>
-                    <button label="add" oncommand="window.openDialog('chrome://accessme/content/addPassString.xul', 'PassStringRegex', 'chrome', getPassStringContainer(), preferencesController, window)"/>
-                    <button label="remove" oncommand="preferencesController.removePassString()"/>
-                </vbox>
-            </hbox>
-        </groupbox>
-    </prefpane>
-    -->
     <prefpane label="Params to Test" id='paramsToAttack'>
         <preferences>
         </preferences>
+<script type="application/x-javascript" src="chrome://accessme/content/json.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/io.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/util.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/SecCompObserver.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/preferenceStringContainer.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/PassStringContainer.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/ErrorStringContainer.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/attackParamDetectRegexContainer.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/preferences.js" />
         <hbox>
             <button label="export" oncommand="preferencesController.exportDetectRegEx()" />
             <button label="import" oncommand="preferencesController.importDetectRegEx()" />

@@ -46,22 +46,6 @@ PreferencesController.prototype = {
             label.style.visibility = 'visible';
         }
         
-        if (errorStrings.length){
-            this.makeUI(errorStrings, null, 'errorStrBox');   
-        }
-        else {
-            var label = document.getElementById('noerrorslbl');
-            label.style.visibility = 'visible';
-        }
-        
-        if (passStrings.length) {
-            this.makeUI(passStrings, null, 'existingPassStringRegex');
-        }
-        else {
-            var label = document.getElementById('nopassstringlbl');
-            label.style.visibility = 'visible';
-        }
-        
         var similarityFactor = document.getElementById('prefSimilarityFactor');
         var similarityTxtBox = document.getElementById('txtSimilarityFactor');
         similarityTxtBox.value = similarityFactor.value/1000
