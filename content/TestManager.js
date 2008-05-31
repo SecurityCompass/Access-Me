@@ -196,6 +196,7 @@ TestManager.prototype = {
         }
         
         for (var paramName in parameters.get) {
+            attackThis = false;
             for each (var detector in detectors) {
                 if ((typeof(detector) == "function" && detector.test(paramName)) ||
                     (typeof(detector) == "string" && paramName.indexOf(detector) !== -1))
@@ -215,6 +216,7 @@ TestManager.prototype = {
             }
         }
         for (var paramName in parameters.post) {
+            attackThis = false;
             for each (var detector in detectors) {
                 if ((typeof(detector) == "function" && detector.test(paramName)) ||
                     (typeof(detector) == "string" && paramName.indexOf(detector) !== -1))
@@ -235,6 +237,7 @@ TestManager.prototype = {
         }
         
         for (var paramName in parameters.cookies) {
+            attackThis = false;
             for each (var detector in detectors) {
                 if ((typeof(detector) == "function" && detector.test(paramName)) ||
                     (typeof(detector) == "string" && paramName.indexOf(detector) !== -1))
@@ -399,23 +402,35 @@ TestManager.prototype = {
         
         
         var httpChannel = aRequest.QueryInterface(Components.interfaces.nsIHttpChannel);
+        var requestCookies = new Array();
+        var responseCookies = new Array();
         try {
-            var cookies = httpChannel.getRequestHeader("Cookie").split(";");
-            //according to the Netscape Cookie and rfc 2109 cookie names are ;
-            //seperated. Ofcourse sites can also use other chars which only they
-            //understand. I'm looking at you, Google and your : second delimeter.
-            if (cookies.length > 0) {
-                rc.cookies = new Object();
-                for each (var cookie in cookies){
-                    var [name, value] = cookie.split('=');
-                    rc.cookies[name.replace(" ", "")] = value;
-                }
-            }
+            requestCookies= httpChannel.getRequestHeader("Cookie").split("; ");
         }
         catch (e){
             //likely no cookies. That's ok.
             Components.utils.reportError("likely no cookies. That's ok." + e); //just in case.
         }
+        
+        try {
+            responseCookies = httpChannel.getResponseHeader("Set-Cookie").split("; ");
+        }
+        catch (e){
+            //likely no cookies. That's ok.
+            Components.utils.reportError("likely no cookies. That's ok." + e); //just in case.
+        }
+        
+        //according to the Netscape Cookie and rfc 2109 cookie names are ;
+        //seperated. Ofcourse sites can also use other chars which only they
+        //understand. I'm looking at you, Google and your : second delimeter.
+        if ((requestCookies.length +  responseCookies.length) > 0) {
+            rc.cookies = new Object();
+            for each (var cookie in requestCookies.concat(responseCookies)){
+                var [name, value] = cookie.split('=');
+                rc.cookies[name] = value;
+            }
+        }
+        
         
         return rc;
     }
