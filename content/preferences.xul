@@ -40,6 +40,15 @@ tools@securitycompass.com
                         instantApply="true"
                         type="int" />
         </preferences>
+        <script type="application/x-javascript" src="chrome://accessme/content/json.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/io.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/util.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/SecCompObserver.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/preferenceStringContainer.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/PassStringContainer.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/ErrorStringContainer.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/attackParamDetectRegexContainer.js" />
+        <script type="application/x-javascript" src="chrome://accessme/content/preferences.js" />
         <label value="Number of simultaneous requests" control="txtNumParallellAttacks" />
         <textbox id="txtNumParallellAttacks" preference="prefNumParallellAttacks" />
         <label value="Wait time between requests" control="txtPauseBetweenTests" />
@@ -50,18 +59,9 @@ tools@securitycompass.com
 	<textbox id="txtSimilarityFactor" />
     </prefpane>
     <!-- would be nice to have a nice red X icon for here -->
-    <prefpane label="Error Regexs" id="errorstrings">
+    <!--<prefpane label="Error Regexs" id="errorstrings">
         <preferences>
         </preferences>
-        <script type="application/x-javascript" src="chrome://accessme/content/json.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/io.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/util.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/SecCompObserver.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/preferenceStringContainer.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/PassStringContainer.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/ErrorStringContainer.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/attackParamDetectRegexContainer.js" />
-        <script type="application/x-javascript" src="chrome://accessme/content/preferences.js" />
         <hbox>
             <button label="export" oncommand="preferencesController.exportAttacks()" />
             <button label="import" oncommand="preferencesController.importAttacks()" />
@@ -84,7 +84,7 @@ tools@securitycompass.com
             </hbox>
         </groupbox>
     </prefpane>
-    <!-- would be nice to have a target icon -->
+    would be nice to have a target icon 
     <prefpane label="Pass Regexs" id='passstrings'>
         <preferences>
         </preferences>
@@ -110,6 +110,7 @@ tools@securitycompass.com
             </hbox>
         </groupbox>
     </prefpane>
+    -->
     <prefpane label="Params to Test" id='paramsToAttack'>
         <preferences>
         </preferences>
