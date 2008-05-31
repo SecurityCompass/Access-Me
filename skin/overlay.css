@@ -43,7 +43,7 @@ along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
   color: blue;
 }
 
-toolbox[mode='icons'] #accessme-toolbarbutton-test-action .toolbarbutton-text,
+
 toolbox[mode='icons'] #accessme-test-status .toolbarbutton-text,
 toolbox[mode='icons'] #accessme-gen-report  .toolbarbutton-text {
   display: none !important;

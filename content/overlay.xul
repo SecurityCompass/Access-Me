@@ -91,7 +91,7 @@ tools@securitycompass.com
   <toolbox id="navigator-toolbox" >
     <toolbar id="accessme-bar" toolbarname='Access Me bar' insertafter="customToolbars">
       <toolbarbutton label="Security Compass Access Me" tooltiptext="Check out our other great pen testing add-ons."/>
-      <toolbarbutton id='accessme-toolbarbutton-test-action' class="start" observes='accessme-action'  label="Run Test"/>
+      <toolbarbutton id='accessme-toolbarbutton-test-action' class="start" observes='accessme-action' />
       <toolbarbutton label="Not Started" id='accessme-test-status' class="start" disabled='true' style="display:none"/>
       <toolbarbutton label="Clear Results" id='accessme-clear-results' disabled='true' hidden='true' command='accessme-clear'/>
       <toolbarbutton id='accessme-gen-report' orient='vertical' observes='accessme-report' style="display:none"/>
