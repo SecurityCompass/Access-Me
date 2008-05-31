@@ -281,21 +281,22 @@ ResultsManager.prototype = {
         var numTestsRun = 0; 
         var numPasses = 0; 
         var numWarnings = 0;
-        var numFailes = 0; 
+        var numFailes = 0;
         for each (var form in this.fields) {
             for each (var attack in form) {
                 for each (var fieldResult in attack){
-                    var numTestsRunInField = 0; 
-                    var numPassesInField = 0; 
-                    var numWarningsInField = 0;
-                    var numFailesInField = 0; 
-                    [numTestsRunInField, numFailesInField, numWarningsInField, numPassesInField] =
-                            fieldResult.getLength();
-                            
-                    numTestsRun += numTestsRunInField; 
-                    numPasses += numPassesInField; 
-                    numWarnings += numWarningsInField;
-                    numFailes += numFailesInField; 
+                    numTestsRun++;
+                    switch(fieldResult.getResultState().state) {
+                        case RESULT_TYPE_PASS:
+                            numPasses++;
+                            break;
+                        case RESULT_TYPE_WARNING:
+                            numWarnings++;
+                            break;
+                        case RESULT_TYPE_ERROR:
+                            numFailes++;
+                            break;
+                    }
                 }
             }
         }
