@@ -29,7 +29,12 @@ function AccessMeOverlay() {
             function(event) {
                 dump('\n' + event.target);
                 dump('\n' + event.originalTarget);
-                self.browser.removeProgressListener(self.progressListener);
+                try {
+                    self.browser.removeProgressListener(self.progressListener);
+                }
+                catch(e){
+                    Components.utils.reportError('did removal not work?' +e);
+                }
                 event.target.linkedBrowser.addProgressListener(self.progressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
                 self.browser = event.target.linkedBrowser;
             }
