@@ -1,0 +1,22 @@
+/* Copyright (c) 2006 SecurityCompass
+   See the file LICENSE.txt for licensing information. */
+
+#include "nsISupports.idl"
+
+/**
+ * used to tell the SecCompIGenericPrferenceContainers the specifics of the
+ * preferences they're going to be working on.
+ */
+
+[scriptable, uuid(3b336393-46a3-4a05-bbb8-f88b4efc3064)]
+interface SecCompISpecificPreferenceContainer: nsISupports {
+    /**
+     * The pref name. The last chars of the pref from the last dot (exclusive)
+     */
+    string getPrefName();
+    /**
+     * the branch name. chars from begining to last dot (inclusive).
+     */
+    string getBranchName();
+};
+

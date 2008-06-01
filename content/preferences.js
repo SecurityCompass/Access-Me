@@ -32,10 +32,9 @@ function PreferencesController() {
 
 PreferencesController.prototype = {
     init: function(){
+        var f = new Object()
+        var attackParamDetectRegexs = getAttackParamDetectRegexContainer().wrappedJSObject.getContents(f);
         
-        var attackParamDetectRegexs = getAttackParamDetectRegexContainer().getStrings();
-        var errorStrings = getErrorStringContainer().getStrings();
-        var passStrings = getPassStringContainer().getStrings();
         
         if (attackParamDetectRegexs.length) {
             this.makeUI(attackParamDetectRegexs, null,
@@ -76,7 +75,7 @@ PreferencesController.prototype = {
         
         for(var i = 0; i < attacks.length; i++){
                 var listitem = document.createElement('listitem');
-                listitem.setAttribute('label', attacks[i].string);
+                listitem.setAttribute('label', attacks[i].getProperty("string"));
                 listitem.setAttribute('value', i);
                 listbox.appendChild(listitem);
         }
@@ -87,7 +86,6 @@ PreferencesController.prototype = {
     }
     ,
     removeError: function(){
-        return this.removeItem(getErrorStringContainer(), "errorStrBox"); 
     }
     ,
     removeDetectRegEx: function(){
@@ -97,22 +95,11 @@ PreferencesController.prototype = {
     removeItem: function(container, listboxID){
         var listbox = document.getElementById(listboxID);
         var selectedAttacks = listbox.selectedItems;
-        var strings = container.getStrings();
         var n = 0;
         for (var i = 0; i < selectedAttacks.length; i++){
-            strings[selectedAttacks[i].value] = null;
+            container.remove(selectedAttacks[i].value);
         }
-        while (n < strings.length){
-            if (strings[n] === null){
-                strings.splice(n, 1);
-            }
-            else{
-                n++; //only incrememnt if attacks[n]!==null. Otherwise we'll 
-                     // strings which are adjacent.
-            }
-        }
-        container.save();
-        this.makeUI(container.getStrings(), window, listboxID);
+        this.makeUI(container.getContents({}), window, listboxID);
     }
     ,
     exportAttacks: function(){
@@ -120,7 +107,7 @@ PreferencesController.prototype = {
         var root = exportDoc.createElement('exportedattacks');
         var xmlAttacks = exportDoc.createElement('attacks');
         getAttackStringContainer();
-        var attacks = attackStringContainer.getStrings();
+        var attacks = attackStringContainer.getContents({});
         for each (var attack in attacks){
             var xmlAttack = exportDoc.createElement('attack');
             var xmlString = exportDoc.createElement('attackString');
@@ -136,7 +123,7 @@ PreferencesController.prototype = {
         }
         root.appendChild(xmlAttacks);
         var xmlErrStrings = exportDoc.createElement('results');
-        var errorStrings = getErrorStringContainer().getStrings();
+        var errorStrings //= getErrorStringContainer().getContents({});
         for each (var errStr in errorStrings){
             var xmlError = exportDoc.createElement('resultString');
             var txtString = exportDoc.
@@ -230,7 +217,7 @@ PreferencesController.prototype = {
                 }
                 if (stringTag === null || sigTag === null){
                     alert("Couldn't import attack. Couldn't find stringAttack or signature tags. Error while processing the document. ");
-                    this.makeUI(attackStringContainer.getStrings(), window); // just in case.
+                    this.makeUI(attackStringContainer.getContents({}), window); // just in case.
                     return false;
                 }
                 else{
@@ -243,7 +230,7 @@ PreferencesController.prototype = {
                     }
                     else {
                         alert("Couldn't import attack. attackString is empty. Error while processing the document. ");
-                        this.makeUI(attackStringContainer.getStrings(), window); // just in case.
+                        this.makeUI(attackStringContainer.getContents({}), window); // just in case.
                         return false;
                     }
                 }
@@ -272,8 +259,8 @@ PreferencesController.prototype = {
                 }
             }
         }
-        this.makeUI(getAttackStringContainer().getStrings(), window, 'existingSQLIstrings');
-        this.makeUI(getErrorStringContainer().getStrings(), window, 'existingSQLIerrStrings');
+        this.makeUI(getAttackStringContainer().getContents({}), window, 'existingSQLIstrings');
+        this.makeUI(getErrorStringContainer().getContents({}), window, 'existingSQLIerrStrings');
         return true;
         */
     }
@@ -287,12 +274,12 @@ PreferencesController.prototype = {
     }
     ,
     moveErrorStringUp:function() {
-        return this.moveItemUp(getErrorStringContainer(), "errorStrBox")
+//        return this.moveItemUp(getErrorStringContainer(), "errorStrBox")
 
     }
     ,
     moveErrorStringDown: function(){
-        return this.moveItemDown(getErrorStringContainer(), "errorStrBox")
+//        return this.moveItemDown(getErrorStringContainer(), "errorStrBox")
     }
     ,
     moveDetectRegExStringUp:function() {
@@ -321,7 +308,7 @@ PreferencesController.prototype = {
         container.swap(listbox.selectedItem.value, 
             listbox.selectedItem.previousSibling.value);
         container.save();
-        this.makeUI(container.getStrings(), window, listboxID);
+        this.makeUI(container.getContents({}), window, listboxID);
         
         return true;
     }
@@ -335,7 +322,7 @@ PreferencesController.prototype = {
         }
         
         if (listbox.selectedItem.value == 
-            (container.getStrings().length - 1) )
+            (container.getContents({}).length - 1) )
         {
             alert("sorry, can't move this item up any further");
             return false;
@@ -344,14 +331,14 @@ PreferencesController.prototype = {
         container.swap(listbox.selectedItem.value, 
                 listbox.selectedItem.nextSibling.value);
         container.save();
-        this.makeUI(container.getStrings(), window, listboxID);
+        this.makeUI(container.getContents({}), window, listboxID);
         
         return true;
     }
     ,
     unload: function(){
-        getErrorStringContainer().unload();
-        getAttackParamDetectRegexContainer().unload();
+//        getErrorStringContainer().unload();
+//        getAttackParamDetectRegexContainer().unload();
     }
 };
 

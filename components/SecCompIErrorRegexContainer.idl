@@ -1,0 +1,18 @@
+/* Copyright (c) 2006 SecurityCompass
+   See the file LICENSE.txt for licensing information. */
+
+#include "nsISupports.idl"
+#include "SecCompISpecificPreferenceContainer.idl"
+#include "SecCompIXMLExportable.idl"
+#include "SecCompIPreferenceContainer.idl"
+
+/**
+ * Defines how to store, ace
+ */
+
+[scriptable, uuid(7cd6a244-4528-4c70-9762-138e38a6ecdf)]
+interface SecCompIErrorRegexContainer:nsISupports
+{
+    /* nothing new, just an aggregate for it's ancestors */
+};
+

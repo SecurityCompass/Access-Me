@@ -1,0 +1,24 @@
+/* Copyright (c) 2006 SecurityCompass
+   See the file LICENSE.txt for licensing information. */
+
+#include "nsISupports.idl"
+
+/**
+ * Doesn't know how to Export itself but knows how it would like others to
+ * export it.
+ */
+
+[scriptable, uuid(136da543-3cb0-4621-99f5-26640d4671c9)]
+interface SecCompIXMLExportable: nsISupports {
+    /**
+     * Returns the name of the root tag of a series of XML tag containing
+     * the contents of this object.
+     */
+    string getRootName();
+    /**
+     * Returns the name of a tag signifying open instance of the exported
+     * values.
+     */
+    string getTagName();
+};
+

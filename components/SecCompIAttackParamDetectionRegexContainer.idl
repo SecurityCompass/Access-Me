@@ -1,0 +1,17 @@
+/* Copyright (c) 2006 SecurityCompass
+   See the file LICENSE.txt for licensing information. */
+
+#include "nsISupports.idl"
+#include "SecCompISpecificPreferenceContainer.idl"
+#include "SecCompIXMLExportable.idl"
+#include "SecCompIPreferenceContainer.idl"
+
+/**
+ * Defines how to store, ace
+ */
+
+[scriptable, uuid(1c01607a-a476-4fcb-b98e-1109c182c100)]
+interface SecCompIAttackParamDetectionRegexContainer: nsISupports {
+    /* nothing new, just an aggregate for it's ancestors */
+};
+

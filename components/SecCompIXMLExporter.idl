@@ -1,0 +1,17 @@
+/* Copyright (c) 2006 SecurityCompass
+   See the file LICENSE.txt for licensing information. */
+
+#include "nsISupports.idl"
+#include "nsIFile.idl"
+
+/**
+ * Interface used by components which can export themselves to an XML file and
+ * import from a file.
+ */
+
+[scriptable, uuid(62cf8840-4b2d-4263-8fbf-1675afb64803)]
+interface SecCompIXMLExporter: nsISupports {
+    boolean exportToFile(in nsIFile file);
+    boolean importFromFile(in nsIFile file);
+};
+

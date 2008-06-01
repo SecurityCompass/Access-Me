@@ -52,7 +52,7 @@ function onOk() {
     
     
     if (attackParamDetectRegexContainer.addString(stringTxtBox.value, sigTxtBox.value)){
-        prefController.makeUI(attackParamDetectRegexContainer.getStrings(), prefWindow, 
+        prefController.makeUI(attackParamDetectRegexContainer.getContents({}), prefWindow, 
                 'existingAttackParamDetectRegex');
         return true;
     }

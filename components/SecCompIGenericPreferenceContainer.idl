@@ -1,0 +1,16 @@
+/* Copyright (c) 2006 SecurityCompass.com
+   See the file LICENSE.txt for licensing information. */
+
+#include "nsISupports.idl"
+#include "SecCompISpecificPreferenceContainer.idl"
+
+/** 
+ * Marks an object as knowing how to do operations on preferences but not
+ * knowing how to 
+ */
+
+[scriptable, uuid(20924924-375b-439c-b9d7-5e56f49c7932)]
+interface SecCompIGenericPreferenceContainer: nsISupports {
+    boolean setSetSpecifiPreferenceContainer(in SecCompIGenericPreferenceContainer container);
+};
+

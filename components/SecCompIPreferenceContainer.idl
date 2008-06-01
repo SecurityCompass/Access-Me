@@ -1,0 +1,22 @@
+/* Copyright (c) 2006 SecurityCompass.com
+   See the file LICENSE.txt for licensing information. */
+
+#include "nsISupports.idl"
+#include "nsIFile.idl"
+#include "nsIWritablePropertyBag2.idl"
+
+/**
+ * 
+ */
+
+[scriptable, uuid(5b4ef7bb-b996-4310-9a12-842f454313e3)]
+interface SecCompIPreferenceContainer: nsISupports {
+    void getContents(out unsigned long length, [retval, array, size_is(length)] out nsIWritablePropertyBag2 contents);
+    boolean addString(in string str, in string sig);
+    boolean save();
+    boolean swap(in unsigned long index1, in unsigned long index2);
+    boolean exportToFile(in nsIFile file);
+    boolean importFromFile(in nsIFile file);
+    boolean remove(in long index);
+};
+

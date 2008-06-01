@@ -177,11 +177,11 @@ TestManager.prototype = {
         var attackThis = false;
         var rc = true; 
         
-        for each (var detector in detectorContainer.getStrings(true)){
+        for each (var detector in detectorContainer.getContents({})){
             //if it's a regexp then store it as one, if not then we'll use it
             //as a string
             try {
-                detectors.push(new RegExp(detector.string, "gim"))
+                detectors.push(new RegExp(detector.getProperty("string"), "gim"))
             }
             catch(e){
                 detectors.push(detector);

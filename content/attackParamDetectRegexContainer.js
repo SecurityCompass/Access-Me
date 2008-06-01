@@ -58,8 +58,8 @@ AttackParamDetectRegexContainer.prototype.QueryInterface = function(aIID) {
 
 
 function getAttackParamDetectRegexContainer(){
-    if (typeof(accessme_attackParamDetectRegexContainer) === 'undefined' || !accessme_attackParamDetectRegexContainer){
-        accessme_attackParamDetectRegexContainer = new AttackParamDetectRegexContainer();
-    }
-    return accessme_attackParamDetectRegexContainer;
+    //if (typeof(accessme_attackParamDetectRegexContainer) === 'undefined' || !accessme_attackParamDetectRegexContainer){
+    //    accessme_attackParamDetectRegexContainer = new AttackParamDetectRegexContainer();
+    dump('asdsgsdgewtewetwetwa');
+    return Components.classes["@securitycompass.com/jsAttackDetectionRegExpContainer;1"].getService(Components.interfaces.SecCompIPreferenceContainer);
 }
