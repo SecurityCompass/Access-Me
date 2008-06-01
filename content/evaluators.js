@@ -117,10 +117,10 @@ function checkForServerResponseCode(streamListener){
             var displayString = stringEncoder.encodeString(responseCode.toString()) + " " +
                     stringEncoder.encodeString(nsiHttpChannel.responseStatusText);
             if (responseCode == 200) {
-                result = new Result(RESULT_TYPE_WARNING, 100, "Got access to a resource that should be protected. Server response code:" + displayString );
+                result = new Result(RESULT_TYPE_WARNING, 100, "Got access to a resource that should be protected. Server response code:" + displayString + ". ");
             }
             else {
-                result = new Result(RESULT_TYPE_PASS, 100, "Did not access protected resource. Server response code:" + displayString);
+                result = new Result(RESULT_TYPE_PASS, 100, "Did not access protected resource. Server response code:" + displayString + ". ");
             }
         }
         return [result];
@@ -185,10 +185,10 @@ function checkStringSimilarity(streamListener){
     
     
     if (diceCoefficient >= pref) {
-        rv = new Result(RESULT_TYPE_ERROR, 100, "The attacked page is dangerously similar to the original page. It is " + parseInt(diceCoefficient*100000)/1000 + "% similar");
+        rv = new Result(RESULT_TYPE_ERROR, 100, "The attacked page is dangerously similar to the original page. It is " + parseInt(diceCoefficient*100000)/1000 + "% similar. ");
     }
     else {
-        rv = new Result(RESULT_TYPE_PASS, 100, "The attacked page is not very similar to the original page. It is " + parseInt(diceCoefficient*100000)/1000  + "% similar");
+        rv = new Result(RESULT_TYPE_PASS, 100, "The attacked page is not very similar to the original page. It is " + parseInt(diceCoefficient*100000)/1000  + "% similar. ");
     }
     
     return [rv];
