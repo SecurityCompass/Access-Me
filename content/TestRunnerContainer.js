@@ -33,7 +33,10 @@ function TestRunnerContainer(currentNumTabs){
     this.testManager = null;
     this.keepChecking = true;
     this.tabs = null;
-    
+    var prefService = Components.classes['@mozilla.org/preferences-service;1'].
+        getService(Components.interfaces.nsIPrefService);
+    var branch = prefService.getBranch('extensions.accessme.');
+    this.pauseBetweenTests = branch.getIntPref("pausebetweentests");
 }
 
 TestRunnerContainer.prototype = {
@@ -71,7 +74,7 @@ TestRunnerContainer.prototype = {
             self.start();
         }
         if (this.keepChecking === true) {
-            setTimeout(doAgain, 1);
+            setTimeout(doAgain, this.pauseBetweenTests);
         }
     }
     ,
@@ -94,6 +97,10 @@ TestRunnerContainer.prototype = {
     }
     ,
     setup: function(currentNumTabs, testManager) {
+        var prefService = Components.classes['@mozilla.org/preferences-service;1'].
+            getService(Components.interfaces.nsIPrefService);
+        var branch = prefService.getBranch('extensions.accessme.');
+        this.pauseBetweenTests = branch.getIntPref("pausebetweentests");
         this.baseNumTabs = currentNumTabs
         this.testManager = testManager;
         this.tabs = null;
