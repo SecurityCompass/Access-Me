@@ -196,7 +196,7 @@ TestManager.prototype = {
         }
         
         for (var paramName in parameters.get) {
-            attackThis = false;
+            var attackThis = false;
             for each (var detector in detectors) {
                 if (((typeof(detector) == "function") && detector.test(paramName)) ||
                     ((typeof(detector) == "string") && paramName.indexOf(detector) !== -1))
@@ -216,7 +216,7 @@ TestManager.prototype = {
             }
         }
         for (var paramName in parameters.post) {
-            attackThis = false;
+            var attackThis = false;
             for each (var detector in detectors) {
                 if (((typeof(detector) == "function") && detector.test(paramName)) ||
                     ((typeof(detector) == "string") && paramName.indexOf(detector) !== -1))
@@ -237,7 +237,7 @@ TestManager.prototype = {
         }
         
         for (var paramName in parameters.cookies) {
-            attackThis = false;
+            var attackThis = false;
             for each (var detector in detectors) {
                 if (((typeof(detector) == "function") && detector.test(paramName)) ||
                     ((typeof(detector) == "string") && paramName.indexOf(detector) !== -1))
