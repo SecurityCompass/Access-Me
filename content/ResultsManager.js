@@ -476,7 +476,7 @@ ResultsManager.prototype = {
         }
         this.results +="<div class='footer'>";
         var now = new Date();
-        this.results += 'Results genenerated on ' + getMonthName(now.getMonth())  + " " + now.getDate() + ", " + now.getFullYear();
+        this.results += 'Results generated on ' + getMonthName(now.getMonth())  + " " + now.getDate() + ", " + now.getFullYear();
         this.results += "</div>"
         this.results+="</body></html>";
         
