@@ -308,3 +308,17 @@ function cloneHttpChannel(channel){
     return rv;
 
 }
+
+function createHttpChannelFromSHEntry(nsISHEntry) {
+    var ioService = Components.classes['@mozilla.org/network/io-service;1'].getService(Components.interfaces.nsIIOService);
+    var httpChannel = ioService.newChannelFromURI(nsISHEntry.URI);
+    httpChannel = httpChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
+    
+    if (nsISHEntry.postData){
+        var uploadChannel = httpChannel.QueryInterface(Components.interfaces.nsIUploadChannel);
+        uploadChannel.setUploadStream(nsISHEntry.postData,  'application/x-www-form-urlencoded', -1)
+        httpChannel.requestMethod = "POST";
+    }
+    httpChannel.referrer = nsISHEntry.referrerURI;
+    return httpChannel;
+}

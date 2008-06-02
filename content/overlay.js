@@ -67,13 +67,17 @@ function AccessMeOverlay() {
 
 AccessMeOverlay.prototype = {
     onLoad: function() {
-        var self = this;
-        gBrowser.selectedBrowser.addProgressListener(this.progressListener,
-                Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
-        gBrowser.tabContainer.addEventListener('TabSelect',
-                self.tabSelectListener, false);
         this.browser = gBrowser.selectedBrowser;
         
+    }
+    ,
+    requestTest: function(){
+        var entry = null;
+        with(gBrowser.selectedBrowser.webNavigation){
+            entry = sessionHistory.getEntryAtIndex(sessionHistory.index, false);
+        }
+        var channel = createHttpChannelFromSHEntry(entry);
+        this.gotRequest(channel, channel.URI);
     }
     ,
     onUnload: function() {
@@ -169,12 +173,11 @@ AccessMeOverlay.prototype = {
             function(streamListener){
                 dump('\ngot raw data');
                 self.lastOperation.rawResponse = streamListener.data;
-                
+                self.runTest();
             },
             null);
         
-        var httpChannelCopy = cloneHttpChannel(aRequest);
-        httpChannelCopy.asyncOpen(this.rawResponseListener, httpChannelCopy);
+        aRequest.asyncOpen(this.rawResponseListener, aRequest);
         
         dump('\nchanging lastOp' + aURI);
         

@@ -72,11 +72,11 @@ tools@securitycompass.com
         <broadcaster id="accessme-start"
                      label="Test This Page"
                      tooltiptext="Test This Page"
-                     oncommand="accessMeOverlay.runTest()" />
+                     oncommand="accessMeOverlay.requestTest()" />
         <broadcaster id="accessme-action"
                      tooltiptext="Test This Page"
                      label="Test This Page"
-                     oncommand="accessMeOverlay.runTest()" />
+                     oncommand="accessMeOverlay.requestTest()" />
         <broadcaster id='accessme-report'
                      label='Report'
                      oncommand="accessMeOverlay.showReport()" />
