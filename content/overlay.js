@@ -141,6 +141,10 @@ AccessMeOverlay.prototype = {
         }
     }
     ,
+    openHomePage: function (event){
+        openUILink("http://www.securitycompass.com", event, false, true, null);
+    }
+    ,
     gotRequest: function (aRequest, aURI) {
         if (aURI.scheme.indexOf('http') == -1 ) {
             return; //we don't care about not http

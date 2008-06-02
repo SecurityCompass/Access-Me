@@ -90,7 +90,7 @@ tools@securitycompass.com
   
   <toolbox id="navigator-toolbox" >
     <toolbar id="accessme-bar" toolbarname='Access Me bar' insertafter="customToolbars">
-      <toolbarbutton label="Security Compass Access Me" tooltiptext="Check out our other great pen testing add-ons." style="color: rgb(64, 80, 104)"/>
+      <toolbarbutton  oncommand="accessMeOverlay.openHomePage(event)" onclick="checkForMiddleClick(this, event)" label="Security Compass Access Me" tooltiptext="Check out our other great pen testing add-ons." style="color: rgb(64, 80, 104)"/>
       <toolbarbutton id='accessme-toolbarbutton-test-action' class="start" observes='accessme-action' />
       <toolbarbutton label="Not Started" id='accessme-test-status' class="start" disabled='true' style="display:none"/>
       <toolbarbutton label="Clear Results" id='accessme-clear-results' disabled='true' hidden='true' command='accessme-clear'/>
