@@ -102,7 +102,6 @@ tools@securitycompass.com
         <menupopup>
             <menuitem id="accessme-menubutton-test-action" observes="accessme-action" />
             <menuitem observes="accessme-report" />
-            <menuitem observes='accessme-clear' />
             <menuitem label="Options" oncommand="window.openDialog('chrome://accessme/content/preferences.xul')" />
             <menuitem label="About" oncommand="window.openDialog('chrome://accessme/content/about.xul');" />
             <menuitem label="Help" oncommand="window.open('http://securitycompass.com/exploitme.shtml', 'helpwindow', '');" />  
