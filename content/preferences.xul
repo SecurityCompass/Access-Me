@@ -62,10 +62,6 @@ tools@securitycompass.com
         <script type="application/x-javascript" src="chrome://accessme/content/ErrorStringContainer.js" />
         <script type="application/x-javascript" src="chrome://accessme/content/attackParamDetectRegexContainer.js" />
         <script type="application/x-javascript" src="chrome://accessme/content/preferences.js" />
-        <hbox>
-            <button label="export" oncommand="preferencesController.exportDetectRegEx()" />
-            <button label="import" oncommand="preferencesController.importDetectRegEx()" />
-        </hbox>
         <groupbox>
             <caption label="Parameters to Test" />
             <description>
