@@ -559,7 +559,7 @@ ResultsManager.prototype = {
         
         var attackRunner = streamListener.attackRunner;
         var qIndex;
-        for each(sourceEvaluator in this.sourceEvaluators){
+        for each(var sourceEvaluator in this.sourceEvaluators){
             var results = sourceEvaluator(streamListener);
             for each (var result in results) {
                 qIndex = attackRunner.parameters.request.URI.path.indexOf("?");

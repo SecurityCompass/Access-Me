@@ -95,11 +95,12 @@ AccessMeOverlay.prototype = {
         if (this.lastOperation !== null) {
             dump('\n going to run test...');
             var testsStarted;
+            var attackBasedOnOperation = this.lastOperation
             if (this.testManager === null) {
                 this.testManager = getTestManager(this);
             }
             this.displayWorkInProgressState();
-            testsStarted = this.testManager.runTest(this.lastOperation);
+            testsStarted = this.testManager.runTest(attackBasedOnOperation);
             if ( testsStarted === false){
                 this.displayNoTestState();
             }
@@ -148,6 +149,7 @@ AccessMeOverlay.prototype = {
         dump('\ngot request: ' + aURI.prePath + aURI.path);
         this.lastOperation = null;
         this.lastOperation = new Object();
+        this.lastOperation.uid = Math.floor(Date.now() * Math.random())
         this.lastOperation.request = aRequest;
         this.lastOperation.uri = aURI;
         
@@ -155,6 +157,7 @@ AccessMeOverlay.prototype = {
             function(streamListener){
                 dump('\ngot raw data');
                 self.lastOperation.rawResponse = streamListener.data;
+                
             },
             null);
         
