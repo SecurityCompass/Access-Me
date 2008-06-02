@@ -146,6 +146,14 @@ AccessMeOverlay.prototype = {
             return; //we don't care about not http
         }
         var self = this;
+        try{
+            aRequest.QueryInterface(Components.interfaces.nsIHttpChannel);
+        }
+        catch(e) {
+            alert("This page cannot be tested. This is likely due to Mozilla's bug 436836 (please see our FAQ for details). We will issue an update with the fix as soon as it is available.");
+            Components.utils.reportError("AccessMeOverlay::gotRequest() " + e);
+            return;
+        }
         dump('\ngot request: ' + aURI.prePath + aURI.path);
         this.lastOperation = null;
         this.lastOperation = new Object();
