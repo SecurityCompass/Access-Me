@@ -28,7 +28,7 @@ pref("extensions.accessme.pausebetweentests", 1);
 
 pref('extensions.accessme.errorstrings', '[{"string":"welcome,"}]');
 pref('extensions.accessme.passstrings', '[{"string":"welcome,"}]');
-pref("extensions.accessme.attackParamDetectRegex", '[{"string":"ession"}]');
+pref("extensions.accessme.attackParamDetectRegex", '[{"string":"ession"}, {"string":"token"}, {"string":"sess"}]');
 pref("extensions.accessme.similarityRating", 80000);
 
 
