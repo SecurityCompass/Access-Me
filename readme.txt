@@ -1,4 +1,4 @@
-SQL Inject Me
+Access Me
 =============
 Access Me is a part of the Security Compass Exploit-Me series of tools. 
 Access Me is designed to aid in the detection of unauthenticated access

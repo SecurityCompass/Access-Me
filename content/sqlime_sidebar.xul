@@ -3,13 +3,13 @@
 <?xml-stylesheet href="chrome://accessme/skin/accessme_sidebar.css" type="text/css"?>
 <window
     id="sidebar"
-    title="SQL Inject Me"
+    title="Access Me"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     xmlns:html="http://www.w3.org/1999/xhtml" >
     <!-- 
 Copyright 2007 Security Compass
 
-This file is part of SQL Inject Me.
+This file is part of Access Me.
 
 Access Meis free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with SQL Inject Me.  If not, see <http://www.gnu.org/licenses/>.
+along with Access Me.  If not, see <http://www.gnu.org/licenses/>.
 
 If you have any questions regarding Access Meplease contact
 tools@securitycompass.com
@@ -76,7 +76,7 @@ tools@securitycompass.com
         <command id="accessme_do_test" oncommand="accessmeExtension.run_tests(event)" />
     </commandset>
     <box><image src="chrome://accessme/skin/small_logo_sc.png" /> </box>
-    <label style="font-size: xx-large" class="title">SQL Inject Me</label>
+    <label style="font-size: xx-large" class="title">Access Me</label>
     <vbox style="overflow:auto;" flex="1">
         <description>
             Access Melets you test the page you're viewing for SQL Injection vulnerabilities.
