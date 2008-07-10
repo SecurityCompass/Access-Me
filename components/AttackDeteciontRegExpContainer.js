@@ -27,22 +27,22 @@ var AttackDetectionRegExpContainerModule = new Object();
 const AttackDetectionRegExpContainer_CONTRACTID     = "@securitycompass.com/jsAttackDetectionRegExpContainer;1";
 const AttackDetectionRegExpContainer_CID        = Components.ID("{532eee66-f87f-4993-885f-c9ab52b7f4c4}");
 const Ci = Components.interfaces;
+const Cc = Components.classes;
 
-function AttackDetectionRegExpContainer()
-{
-    this.prefContainer = Components.
-            classes["@SecurityCompass/jsPreferenceContainer;1"].
+function AttackDetectionRegExpContainer() {
+    this.prefContainer = Cc["@SecurityCompass/jsPreferenceContainer;1"].
             createInstance(Ci.SecCompIPreferenceContainer);
     this.prefContainer.QueryInterface(Ci.SecCompIGenericPreferenceContainer).
             setSetSpecifiPreferenceContainer(this);
     this.wrappedJSObject = this;
 }
+
 AttackDetectionRegExpContainer.prototype = {
 
-    getContents: function(foo) {
-        var rv = this.prefContainer.getContents(foo);
-        dump(typeof(rv)+ " " + typeof(rv.length) + " " + rv.length);
-        return rv; 
+    getContents: function() {
+        dump("entering AttackDetectionRegExpContainer::getContents\n")
+        dump("returning from AttackDetectionRegExpContainer::getContents\n")
+        return this.prefContainer.getContents();
     }
     ,
     addString: function(str, sig){
@@ -120,9 +120,10 @@ function (outer, iid) {try {
 
     if (outer != null)
         throw Components.results.NS_ERROR_NO_AGGREGATION;
-
+    dump("\n pre instantiating AttackDetectionRegxpContainer");
     if (foo === null)
         foo = new AttackDetectionRegExpContainer();
+    dump("\n post instantiating AttackDetectionRegxpContainer");
     return foo.QueryInterface(iid);
 }
 catch(e){

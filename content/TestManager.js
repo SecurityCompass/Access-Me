@@ -171,13 +171,13 @@ TestManager.prototype = {
         var parameters = this.analyzeRequest(aRequest);
         
         var testRunnerContainer = getTestRunnerContainer(1, this);
-        var detectorContainer = getAttackParamDetectRegexContainer();
+        var detectorContainerContents = getAttackParamDetectRegexContainer().getContents({});
         var httpMethodsToAttack = ['HEAD', 'SECCOMP'];
         var detectors = new Array();
         var attackThis = false;
         var rc = true; 
         
-        for each (var detector in detectorContainer.getContents({})){
+        for each (var detector in detectorContainerContents) {
             //if it's a regexp then store it as one, if not then we'll use it
             //as a string
             try {

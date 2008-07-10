@@ -152,6 +152,7 @@ function PreferenceContainer() {
 }
 PreferenceContainer.prototype = {
     load: function(){
+        dump('starting SecCompPreferenceContainer::load\n');
         if (this.specificContainer !== null){
             var branch = this.specificContainer.getBranchName();
             var pref = this.specificContainer.getPrefName();
@@ -161,7 +162,7 @@ PreferenceContainer.prototype = {
             }
             rawPref = this.prefBranch.getCharPref(pref);
             dump(rawPref);
-            prefsArray = this.JSON.fromString(rawPref);
+            var prefsArray = this.JSON.fromString(rawPref);
             this.prefData = new Array();
             for each (var pref in prefsArray) {
                 var bag = Cc['@mozilla.org/hash-property-bag;1'].createInstance(Ci.nsIWritablePropertyBag2);
@@ -171,6 +172,7 @@ PreferenceContainer.prototype = {
             }
             dump("prefData.length=="+this.prefData.length)
         }
+        dump('returning from SecCompPreferenceContainer::load\n');
     }
     ,
     setSetSpecifiPreferenceContainer: function (specificContainer) {
@@ -180,11 +182,12 @@ PreferenceContainer.prototype = {
         return true;
     }
     ,
-    getContents: function(foo) {
-        if (this.prefData === null){
+    getContents: function() {
+        dump('starting SecCompPreferenceContainer::getContents\n');
+        if (this.prefData == null){
             this.load();
         }
-        foo.value = this.prefData.length;
+        dump('returning from SecCompPreferenceContainer::getContents\n');
         return this.prefData;
     }
     ,
@@ -287,8 +290,10 @@ PreferenceContainerFactory.createInstance =
 function (outer, iid) {
     if (outer != null)
         throw Components.results.NS_ERROR_NO_AGGREGATION;
-
-    return (new PreferenceContainer()).QueryInterface(iid);
+    dump("\n pre instantiating SecCompPrefContainer");
+    var rv = new PreferenceContainer();
+    dump("\n postinstantiating SecCompPrefContainer");
+    return rv.QueryInterface(iid);;
 }
 
 /* entrypoint */

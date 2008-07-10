@@ -23,19 +23,57 @@ tools@securitycompass.com
 #include "nsISupports.idl"
 #include "nsIFile.idl"
 #include "nsIWritablePropertyBag2.idl"
+#include "nsIVariant.idl"
 
 /**
- * 
+ * A generic container for more complex prefernces (generally lists)
+ * Note that save()'s use is deprecated and all operations which change the
+ * state of the container should save() automatically before returning.
  */
-
 [scriptable, uuid(5b4ef7bb-b996-4310-9a12-842f454313e3)]
 interface SecCompIPreferenceContainer: nsISupports {
-    void getContents(out unsigned long length, [retval, array, size_is(length)] out nsIWritablePropertyBag2 contents);
+    /**
+     * Get the preferences contained
+     * @returns an array of preferences
+     */
+    nsIVariant getContents();
+    
+    /**
+     * adds a prferences string with a signature (often optional)
+     * @param str the pref string
+     * @param sig the signature
+     * @returns true on success
+     */
     boolean addString(in string str, in string sig);
+    
+    /**
+     * Save the preferences to the system
+     * @deprecated
+     * @returns true on success
+     */
     boolean save();
+    
+    /**
+     * swap two preferences at two index
+     * @returns true on success
+     */
     boolean swap(in unsigned long index1, in unsigned long index2);
+    
+    /**
+     * exports the preferences contained to a file
+     * @returns true on success
+     */
     boolean exportToFile(in nsIFile file);
+    
+    /**
+     * imports prefs from a file
+     * @returns true on success
+     */
     boolean importFromFile(in nsIFile file);
+    
+    /**
+     * removes a preference from the container
+     */
     boolean remove(in long index);
 };
 
