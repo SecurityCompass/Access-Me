@@ -4,7 +4,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>accessme@security.compass</em:id>
     <em:name>Access Me</em:name>
-    <em:version>0.1.0</em:version>
+    <em:version>trunk</em:version>
     <em:creator>Security Compass</em:creator>
     <em:description>An extension to test for page access vulnerabilities (session tampering).</em:description>
     <em:optionsURL>chrome://accessme/content/preferences.xul</em:optionsURL>
