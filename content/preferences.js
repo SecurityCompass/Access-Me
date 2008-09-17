@@ -293,46 +293,53 @@ PreferencesController.prototype = {
     ,
     moveItemUp: function(container, listboxID){
         var listbox = document.getElementById(listboxID);
-        
-
+        var selectedIndex = listbox.selectedIndex;
+        var selectedItemValue = listbox.selectedItem.value
+        var selectedItemLabel = listbox.selectedItem.label;
+        var newValue = listbox.selectedItem.previousSibling.value;
         if (listbox.selectedItems.length != 1){
             alert("sorry, only one item can be moved at a time");
             return false;
         }
-        
-        if (listbox.selectedItem.value == 0){
-            alert("sorry, can't move this item up any further");
-            return false;
-        }
-        
+
         container.swap(listbox.selectedItem.value, 
             listbox.selectedItem.previousSibling.value);
         container.save();
-        this.makeUI(container.getContents({}), window, listboxID);
         
+        listbox.ensureIndexIsVisible(selectedIndex  - 1);
+        
+        listbox.selectedItem.previousSibling.value = selectedItemValue
+        
+        listbox.removeItemAt(selectedIndex)
+        listbox.insertItemAt(selectedIndex-1, selectedItemLabel, newValue)
+        
+        listbox.selectedIndex = selectedIndex - 1;
         return true;
     }
     ,
     moveItemDown: function(container, listboxID) {
-        var listbox = document.getElementById(listboxID);
-
+ var listbox = document.getElementById(listboxID);
+        var selectedIndex = listbox.selectedIndex;
+        var selectedItemValue = listbox.selectedItem.value
+        var selectedItemLabel = listbox.selectedItem.label;
+        var newValue = listbox.selectedItem.nextSibling.value;
         if (listbox.selectedItems.length != 1){
             alert("sorry, only one item can be moved at a time");
             return false;
         }
-        
-        if (listbox.selectedItem.value == 
-            (container.getContents({}).length - 1) )
-        {
-            alert("sorry, can't move this item up any further");
-            return false;
-        }
-        
+
         container.swap(listbox.selectedItem.value, 
-                listbox.selectedItem.nextSibling.value);
+            listbox.selectedItem.nextSibling.value);
         container.save();
-        this.makeUI(container.getContents({}), window, listboxID);
         
+        listbox.ensureIndexIsVisible(selectedIndex  + 1);
+        
+        listbox.selectedItem.nextSibling.value = selectedItemValue
+        
+        listbox.removeItemAt(selectedIndex)
+        listbox.insertItemAt(selectedIndex+1, selectedItemLabel, newValue)
+        
+        listbox.selectedIndex = selectedIndex + 1;
         return true;
     }
     ,
