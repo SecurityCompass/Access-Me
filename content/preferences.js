@@ -102,36 +102,23 @@ PreferencesController.prototype = {
         this.makeUI(container.getContents({}), window, listboxID);
     }
     ,
-    exportAttacks: function(){
+    exportDetectionRegexs: function() {
         var exportDoc = document.implementation.createDocument("", "", null);
-        var root = exportDoc.createElement('exportedattacks');
-        var xmlAttacks = exportDoc.createElement('attacks');
-        getAttackStringContainer();
-        var attacks = attackStringContainer.getContents({});
-        for each (var attack in attacks){
-            var xmlAttack = exportDoc.createElement('attack');
-            var xmlString = exportDoc.createElement('attackString');
+        var root = exportDoc.createElement('exportedDetectionRegexStrings');
+        var detectorContainer = getAttackParamDetectRegexContainer()
+        for each (var detector in detectorContainer.getContents()) {
+            var xmlAttack = exportDoc.createElement('detectionString');
             var xmlSig = exportDoc.createElement('signature');
+            var xmlString = exportDoc.createElement("string");
             var txtString = exportDoc.createCDATASection(
-                    encodeXML(attack.string));
-            var txtSig = exportDoc.createTextNode(attack.sig);
+                    encodeXML(detector.getProperty("string")));
+            var txtSig = exportDoc.createTextNode(detector.getProperty("sig"));
             xmlString.appendChild(txtString);
             xmlSig.appendChild(txtSig);
-            xmlAttack.appendChild(xmlString);
-            xmlAttack.appendChild(xmlSig);
-            xmlAttacks.appendChild(xmlAttack);
+            root.appendChild(xmlString);
+            root.appendChild(xmlSig);
+            root.appendChild(xmlAttack);
         }
-        root.appendChild(xmlAttacks);
-        var xmlErrStrings = exportDoc.createElement('results');
-        var errorStrings //= getErrorStringContainer().getContents({});
-        for each (var errStr in errorStrings){
-            var xmlError = exportDoc.createElement('resultString');
-            var txtString = exportDoc.
-                    createCDATASection(encodeXML(errStr.string));
-            xmlError.appendChild(txtString);
-            xmlErrStrings.appendChild(xmlError);
-        }
-        root.appendChild(xmlErrStrings);
         exportDoc.appendChild(root);
         var serializer = new XMLSerializer();
         var xml = serializer.serializeToString(exportDoc);
