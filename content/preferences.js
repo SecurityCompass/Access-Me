@@ -32,7 +32,7 @@ function PreferencesController() {
 
 PreferencesController.prototype = {
     init: function(){
-        var f = new Object()
+        var f = new Object();
         var attackParamDetectRegexs = getAttackParamDetectRegexContainer().wrappedJSObject.getContents(f);
         
         
@@ -47,7 +47,7 @@ PreferencesController.prototype = {
         
         var similarityFactor = document.getElementById('prefSimilarityFactor');
         var similarityTxtBox = document.getElementById('txtSimilarityFactor');
-        similarityTxtBox.value = similarityFactor.value/1000
+        similarityTxtBox.value = similarityFactor.value/1000;
         
         function similarityFactorChangeListener(e){
             var prefService = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefService);
@@ -58,8 +58,14 @@ PreferencesController.prototype = {
         similarityTxtBox.addEventListener('blur', similarityFactorChangeListener, true);
     }
     ,
-    makeUI: function(attacks, aWindow, listboxID){
-        var theWindow
+    /**
+     * Regenerates the User Interfaces
+     * @param prefs an array of prefs
+     * @param aWindow window in which to display the prefs
+     * @param listboxID list box 
+     */
+    makeUI: function(prefs, aWindow, listboxID){
+        var theWindow;
         if (typeof(aWindow) === 'undefined' || aWindow === null || !aWindow){
             theWindow = window;
         }
@@ -69,15 +75,15 @@ PreferencesController.prototype = {
         
         var listbox = theWindow.document.getElementById(listboxID);
         
-        while(listbox.hasChildNodes()){
+        while (listbox.hasChildNodes()) {
             listbox.removeChild(listbox.firstChild);
         }
         
-        for(var i = 0; i < attacks.length; i++){
-                var listitem = document.createElement('listitem');
-                listitem.setAttribute('label', attacks[i].getProperty("string"));
-                listitem.setAttribute('value', i);
-                listbox.appendChild(listitem);
+        for (var i = 0; i < prefs.length; i++){
+            var listitem = document.createElement('listitem');
+            listitem.setAttribute('label', prefs[i].getProperty("string"));
+            listitem.setAttribute('value', i);
+            listbox.appendChild(listitem);
         }
     }
     ,
@@ -89,7 +95,7 @@ PreferencesController.prototype = {
     }
     ,
     removeDetectRegEx: function(){
-        return this.removeItem(getAttackParamDetectRegexContainer(), "existingAttackParamDetectRegex")
+        return this.removeItem(getAttackParamDetectRegexContainer(), "existingAttackParamDetectRegex");
     }
     ,
     removeItem: function(container, listboxID){
@@ -105,9 +111,9 @@ PreferencesController.prototype = {
     exportDetectionRegexs: function() {
         var exportDoc = document.implementation.createDocument("", "", null);
         var root = exportDoc.createElement('exportedDetectionRegexStrings');
-        var detectorContainer = getAttackParamDetectRegexContainer()
+        var detectorContainer = getAttackParamDetectRegexContainer();
         for each (var detector in detectorContainer.getContents()) {
-            var xmlAttack = exportDoc.createElement('detectionString');
+            var objectXMLTag = exportDoc.createElement('detectionString');
             var xmlSig = exportDoc.createElement('signature');
             var xmlString = exportDoc.createElement("string");
             var txtString = exportDoc.createCDATASection(
@@ -115,9 +121,9 @@ PreferencesController.prototype = {
             var txtSig = exportDoc.createTextNode(detector.getProperty("sig"));
             xmlString.appendChild(txtString);
             xmlSig.appendChild(txtSig);
-            root.appendChild(xmlString);
-            root.appendChild(xmlSig);
-            root.appendChild(xmlAttack);
+            objectXMLTag.appendChild(xmlString);
+            objectXMLTag.appendChild(xmlSig);
+            root.appendChild(objectXMLTag);
         }
         exportDoc.appendChild(root);
         var serializer = new XMLSerializer();
@@ -147,8 +153,7 @@ PreferencesController.prototype = {
         
     }
     ,
-    importAttacks: function(){
-        /*
+    importDetectionRegexs: function(){
         var nsIFilePicker = Components.interfaces.nsIFilePicker;
         var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
         picker.init(window, "Select File To Import From", nsIFilePicker.modeOpen);
@@ -170,54 +175,50 @@ PreferencesController.prototype = {
             return false;
         }
         
-        var attacksTags = dom.getElementsByTagName("attacks");
-        if (attacksTags.length != 1){
-            alert("couldn't find attacks tag. Error while processing document.");
+        var parentTags = dom.getElementsByTagName("exportedDetectionRegexStrings");
+        if (parentTags.length != 1) {
+            alert("couldn't find parents tag. Error while processing document.");
             return false;
         }
         
-        var attacksTag = attacksTags[0];
-        var attackTags = new Array();
-        var attackStringContainer = getAttackStringContainer();
+        var parentTag = parentTags[0];
+        var tags = new Array();
+        var detectorContainer = getAttackParamDetectRegexContainer();
         
-        for (var i = 0; i < attacksTag.childNodes.length; i++){
-//             alert("'" + (attackTag.firstChild.firstChild.nodeName  == '#text')+"'");
-            dump("::importAttacks()... (" + attacksTag + "== attacksTag) attacksTag[" + i + "] == " + attacksTag.childNodes[i] + "\n");
-            if ("attack" === attacksTag.childNodes[i].nodeName){
-                attackTags.push(attacksTag.childNodes[i]);
+        for (var i = 0; i < parentTag.childNodes.length; i++) {
+            if ("detectionString" === parentTag.childNodes[i].nodeName){
+                tags.push(parentTag.childNodes[i]);
             }
         }
-        if (attackTags.length){
-            for each(var attackTag in attackTags){
+        
+        if (tags.length) {
+            for each(var tag in tags) {
                 var stringTag = null;
                 var sigTag = null;
-                for each(var tag in attackTag.childNodes){
-                    dump("::importAttacks()... (looking for attackString and sig) " + tag.nodeName +  "\n");
-                    if (tag.nodeName === "attackString"){
-                        dump("got attackString\n");
+                for each(var tag in tag.childNodes) {
+                    if (tag.nodeName == "string") {
                         stringTag = tag;
                     }
-                    else if (tag.nodeName === "signature"){
-                        dump("got sigString\n");
+                    else if (tag.nodeName === "signature") {
                         sigTag = tag;   
                     }
                 }
-                if (stringTag === null || sigTag === null){
+                
+                if (stringTag == null) {
+                    /* @todo it would be nice to fail a bit more gracefully
+                     * than this */
                     alert("Couldn't import attack. Couldn't find stringAttack or signature tags. Error while processing the document. ");
-                    this.makeUI(attackStringContainer.getContents({}), window); // just in case.
+                    this.makeUI(detectorContainer.getContents(), window); // just in case.
                     return false;
                 }
-                else{
-                    if (stringTag.childNodes.length !== 0)
-                    {
-                        
-                        attackStringContainer.addString(
-                            decodeXML(stringTag.textContent),
-                            sigTag.firstChild.nodeValue);
+                else {
+                    if (stringTag.childNodes.length !== 0) {
+                        detectorContainer.addString(
+                                decodeXML(stringTag.textContent), (sigTag?sigTag.textContent:""));
                     }
                     else {
                         alert("Couldn't import attack. attackString is empty. Error while processing the document. ");
-                        this.makeUI(attackStringContainer.getContents({}), window); // just in case.
+                        this.makeUI(detectorContainer.getContents(), window); // just in case.
                         return false;
                     }
                 }
@@ -227,29 +228,9 @@ PreferencesController.prototype = {
             alert("Couldn't find any attacks. No Attacks imported.");
             return false;            
         }
-        
-        var errStrings = dom.getElementsByTagName('results');
-        if (errStrings.length === 1) {
-            var errStrings = errStrings[0];
-            var errTags = new Array();
-            for each(var errTag in errStrings.childNodes){
-                if (errTag.nodeName == 'resultString') {
-                    errTags.push(errTag);
-                }
-            }
-            
-            if (errTags.length) {
-                var errStringContainer = getErrorStringContainer();
-                for each(var errTag in errTags) {
-                    dump('preference.js::importAttacks errTag.textContent == ' + errTag.textContent + '\n');
-                    errStringContainer.addString(decodeXML(errTag.textContent), null);
-                }
-            }
-        }
-        this.makeUI(getAttackStringContainer().getContents({}), window, 'existingSQLIstrings');
-        this.makeUI(getErrorStringContainer().getContents({}), window, 'existingSQLIerrStrings');
+
+        this.makeUI(detectorContainer.getContents(), window, 'existingAttackParamDetectRegex');
         return true;
-        */
     }
     ,
     movePassStringUp: function(){
