@@ -45,7 +45,7 @@ tools@securitycompass.com
         <textbox id="txtNumParallellAttacks" preference="prefNumParallellAttacks" />
         <label value="Wait time between requests" control="txtPauseBetweenTests" />
         <textbox id="txtPauseBetweenTests" preference="prefPauseBetweenTests" />
-        <label value="String Similarity (%)"
+        <label value="Similarity Threshold (%)"
                 control="txtSidebarBuildingPause"
                 crop="end" />
 	<textbox id="txtSimilarityFactor" />
