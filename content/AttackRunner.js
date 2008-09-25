@@ -71,7 +71,7 @@ function AttackRunner(typeOfAttack, parameters, nameParamToAttack,
     this.cookieModifyingObserver = null;
     
     /**
-     * the http method to use (GET/POST/HEAD/PUT)
+     * the http method to use (Get/Post/Head/etc)
      */
     this.httpMethod = method;
     

@@ -45,7 +45,7 @@ tools@securitycompass.com
         <textbox id="txtNumParallellAttacks" preference="prefNumParallellAttacks" />
         <label value="Wait time between requests" control="txtPauseBetweenTests" />
         <textbox id="txtPauseBetweenTests" preference="prefPauseBetweenTests" />
-        <label value="Similarity Threshold (%)"
+        <label value="Similarity threshold (%)"
                 control="txtSidebarBuildingPause"
                 crop="end" />
 	<textbox id="txtSimilarityFactor" />
@@ -65,7 +65,7 @@ tools@securitycompass.com
         <groupbox>
             <caption label="Parameters to Test" />
             <description>
-                The parameter regular expressions used to match the parameters (GET/POST/Cookies) to be tested.
+                Regular Expressions used to match the (Get/Post/Cookie) parameters to be dropped during testing.
             </description>
             <label style="visibility:hidden;color: red" value="No paramregexs, please enter some" id="noregexlbl" />
             <hbox>

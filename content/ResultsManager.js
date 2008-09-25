@@ -313,13 +313,13 @@ ResultsManager.prototype = {
         var httpMethodTested = null;
         with (fieldResult.results[0].attackRunner) {
             if (typeOfAttack & ATTACK_GET) {
-                testFieldName += "GET "
+                testFieldName += "Get "
             }
             if (typeOfAttack & ATTACK_POST) {
-                typeOfAttack += "POST "
+                typeOfAttack += "Post "
             }
             if (typeOfAttack & ATTACK_COOKIES) {
-                testFieldName += "COOKIE "
+                testFieldName += "Cookie "
             }
             if (typeOfAttack & ATTACK_VERB) {
                 
@@ -327,7 +327,7 @@ ResultsManager.prototype = {
                 if (typeOfAttack & (~ ATTACK_VERB)) {
                     testFieldName += "+ "
                 }
-                testFieldName += "FORCED HTTP METHOD "
+                testFieldName += "HTTP Method "
                 httpMethodTested = httpMethod; 
                 
             }
@@ -416,7 +416,7 @@ ResultsManager.prototype = {
         }
         
         this.results += "<div class='stringSummary'>"
-        this.results += "<h2>Access Me Tests Summary ("+numTestsRun+" results recorded)</h2>"
+        this.results += "<h2>Access Me Test Summary ("+numTestsRun+" results recorded)</h2>"
         if (errorstr !== undefined) this.results += "<div class='withError'>"
         this.results += this.makeResultsGraph(numTestsRun, numFailes, numWarnings, 
                 numPasses);
