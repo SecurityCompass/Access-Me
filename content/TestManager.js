@@ -246,8 +246,7 @@ TestManager.prototype = {
         }
         dump('\ndone now.')
         getTestRunnerContainer().clearWorkTabs();
-        //this.controller.generatingReport();
-        //this.resultsManager.clearResults();
+        this.controller.doneTestSet();
         
     }
     ,

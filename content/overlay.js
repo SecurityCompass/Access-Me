@@ -248,7 +248,7 @@ AccessMeOverlay.prototype = {
     }
     ,
     finishedTest: function() {
-
+        
     }
     ,
     doneTestSet: function() {
@@ -261,6 +261,8 @@ AccessMeOverlay.prototype = {
         else {
             this.displayerErrorState();
         }
+        
+        this.resultsManager.state = this.resultsManager.STATE_UNKNOWN;
     }
     ,
     displayerErrorState: function(){
