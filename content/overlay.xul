@@ -100,14 +100,14 @@ tools@securitycompass.com
       <toolbarbutton  oncommand="accessMeOverlay.openHomePage(event)" onclick="checkForMiddleClick(this, event)" label="Security Compass Access Me" tooltiptext="Check out our other great pen testing add-ons." style="color: rgb(64, 80, 104)"/>
       <toolbarbutton id='accessme-toolbarbutton-test-action' class="start" observes='accessme-start' />
       <toolbarbutton label="Not Started" id='accessme-test-status' class="start" disabled='true' style="display:none"/>
-      <toolbarbutton label="Clear Results" id='accessme-clear-results' disabled='true' hidden='true' command='accessme-clear'/>
+      <toolbarbutton label="Clear Results" id='accessme-clear-results' command='accessme-clear'/>
       <toolbarbutton id='accessme-gen-report' orient='vertical' observes='accessme-report' />
     </toolbar>
   </toolbox>
   <menupopup id="menu_ToolsPopup">
     <menu id="accesme-tools" label="Access Me"  insertafter="devToolsSeparator" accesskey="a">
         <menupopup>
-            <menuitem id="accessme-menubutton-test-action" observes="accessme-action" />
+            <menuitem id="accessme-menubutton-test-action" observes="accessme-start" />
             <menuitem observes="accessme-report" />
             <menuitem label="Options" oncommand="window.openDialog('chrome://accessme/content/preferences.xul')" />
             <menuitem label="About" oncommand="window.openDialog('chrome://accessme/content/about.xul');" />

@@ -148,7 +148,7 @@ AccessMeOverlay.prototype = {
     }
     ,
     clearResults: function(){
-        this.testManager.clearResults();
+        this.resultsManager.clearResults();
     }
     ,
     start: function() {
