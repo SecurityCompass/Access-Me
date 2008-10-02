@@ -110,51 +110,6 @@ TestManager.prototype = {
     }
     ,
     /**
-     * Runs the heuristic tests.
-     * @param testType the type of test.
-     * @param fieldsToTest the fields to test.
-     */
-    runHeuristicTest: function(testType, fieldsToTest) {
-        
-        var testChars = this.controller.getHeuristicTestChars();
-        var self = this;
-        var testRunnerContainer = getTestRunnerContainer();
-        
-        testRunnerContainer.clear();
-        
-        for each (var c in testChars) {
-            
-            for each (var field in fieldsToTest) {
-                
-                var testRunner = new AttackRunner();
-                
-                var testData = new Object();
-                testData.string = testRunner.uniqueID.toString() + c.toString();
-                
-                this.resultsStillExpected++;
-                
-                testRunnerContainer.addTestRunner(testRunner,
-                        null,
-                        field.formIndex,
-                        field,
-                        testData,
-                        self);
-                
-            }
-        }
-        
-        getTestRunnerContainer(getMainWindow().document.
-                getElementById('content').mTabs.length, self);
-        
-        if (testRunnerContainer.keepChecking === false) {
-            testRunnerContainer.keepChecking = true;
-        }
-        
-        testRunnerContainer.start();
-        
-    }
-    ,
-    /**
      * called when a set of tests is finished but testing is not done. E.g.
      * after a page has been tested but the browser is still in testing mode
      */
@@ -169,7 +124,6 @@ TestManager.prototype = {
     runThoroughTest: function(aRequest) {
         
         var parameters = this.analyzeRequest(aRequest);
-        
         var testRunnerContainer = getTestRunnerContainer(1, this);
         var detectorContainerContents = getAttackParamDetectRegexContainer().getContents({});
         var httpMethodsToAttack = ['HEAD', 'SECCOMP'];
@@ -292,9 +246,8 @@ TestManager.prototype = {
         }
         dump('\ndone now.')
         getTestRunnerContainer().clearWorkTabs();
-        this.controller.generatingReport();
-        this.resultsManager.showResults(this);
-        this.resultsManager.clearResults();
+        //this.controller.generatingReport();
+        //this.resultsManager.clearResults();
         
     }
     ,
@@ -443,7 +396,7 @@ TestManager.prototype = {
 /**
  * The getInstance method for the TestManager singleton
  */
-function getTestManager(controller) {
+function getTestManager(controller, resultsManager) {
     if (typeof(xssme__testmanager__) == 'undefined' ||
         !xssme__testmanager__)
     {
@@ -452,6 +405,10 @@ function getTestManager(controller) {
     // @todo: there has to be a better way...
     if (controller) {
         xssme__testmanager__.controller = controller;
+    }
+    
+    if (resultsManager) {
+        xssme__testmanager__.resultsManager = resultsManager;
     }
     
     return xssme__testmanager__;

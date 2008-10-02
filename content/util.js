@@ -309,6 +309,10 @@ function cloneHttpChannel(channel){
 
 }
 
+/**
+ * Creates a new http channel from a session history entry. Including POST data.
+ * @param nsISHEntry an nsISHistoryEntry
+ */
 function createHttpChannelFromSHEntry(nsISHEntry) {
     var ioService = Components.classes['@mozilla.org/network/io-service;1'].getService(Components.interfaces.nsIIOService);
     var httpChannel = ioService.newChannelFromURI(nsISHEntry.URI);
@@ -319,6 +323,55 @@ function createHttpChannelFromSHEntry(nsISHEntry) {
         uploadChannel.setUploadStream(nsISHEntry.postData,  'application/x-www-form-urlencoded', -1)
         httpChannel.requestMethod = "POST";
     }
+    
     httpChannel.referrer = nsISHEntry.referrerURI;
+    return httpChannel;
+}
+
+/**
+ * Creates an exact copy of a Request including a copy of the POST
+ * data (if available)
+ * @param origRequest the request we're copying
+ * @param origURI optional. If the request is missing the URI then this URI
+ *                will be used.
+ */
+function createHttpChannelFromHttpChannel(origRequest, origURI) {
+    var ioService = Components.classes['@mozilla.org/network/io-service;1'].getService(Components.interfaces.nsIIOService);
+    var uriToCloneFrom = origRequest.originalURI == null? origRequest.URI :origRequest.originalURI;
+    var httpChannel;
+    if (uriToCloneFrom != null) {
+        httpChannel = ioService.newChannelFromURI(uriToCloneFrom);
+    }
+    else {
+        httpChannel = ioService.newChannelFromURI(origURI);
+    }
+    
+    httpChannel = httpChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
+    
+    if (origRequest.requestMethod == "POST") {
+        var uploadChannel = origRequest.QueryInterface(Components.interfaces.nsIUploadChannel);
+        var uploadStream = uploadChannel.uploadStream.QueryInterface(Components.interfaces.nsIScriptableInputStream);
+        var uploadStreamAsSeekable = uploadStream.
+                QueryInterface(Components.interfaces.nsISeekableStream);
+        var origUploadStreamLocation = uploadStreamAsSeekable.tell();
+        var clonedUploadStream =Components.
+                classes['@mozilla.org/io/string-input-stream;1'].
+                createInstance(Components.interfaces.nsIStringInputStream);
+        var lengthOfUploadStream;
+        var newUploadChannel = httpChannel.QueryInterface(Components.interfaces.nsIUploadChannel);
+                
+        uploadStreamAsSeekable.
+                seek(Components.interfaces.nsISeekableStream.NS_SEEK_SET, 0);
+        lengthOfUploadStream = uploadStream.available();
+                
+        clonedUploadStream.setData(uploadStream.read(uploadStream.available()));
+        
+        uploadStreamAsSeekable.seek(Components.interfaces.nsISeekableStream.NS_SEEK_SET, origUploadStreamLocation);
+        
+        newUploadChannel.setUploadStream(clonedUploadStream, 'application/x-www-form-urlencoded', -1);
+        
+        httpChannel.requestMethod = "POST";
+    }
+    
     return httpChannel;
 }

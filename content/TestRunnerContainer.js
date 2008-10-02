@@ -45,7 +45,7 @@ TestRunnerContainer.prototype = {
         this.testRunners.push(testRunner);
     }
     ,
-    start: function(){
+    start: function() {
         var self = this;
         var mainWindow = getMainWindow();
         var tabBrowser = mainWindow.document.getElementById('content');
@@ -53,13 +53,14 @@ TestRunnerContainer.prototype = {
         var firstEmptyIndex = 0;
         var hasEmptyIndex = false;
         for (var index in this.tabs) {
-                if (this.tabs[index] === null) {
-                    hasEmptyIndex= true;
-                    firstEmptyIndex = parseInt(index);
-                    this.tabs[index] = true;
-                    break;
-                }
+            if (this.tabs[index] === null) {
+                hasEmptyIndex= true;
+                firstEmptyIndex = parseInt(index);
+                this.tabs[index] = true;
+                break;
+            }
         }
+        
         if (hasEmptyIndex === true && this.testRunners.length !== 0) {
             var testRunner = this.testRunners.pop()
             testRunner.do_test();
@@ -105,7 +106,7 @@ TestRunnerContainer.prototype = {
         this.testManager = testManager;
         this.tabs = null;
         this.tabs = new Array();
-        for (var i = 0; i < this.getNumWorkTabs(); i++){
+        for (var i = 0; i < this.getNumWorkTabs(); i++) {
             this.tabs[i] = null;
         }
     }

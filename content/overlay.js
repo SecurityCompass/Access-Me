@@ -29,23 +29,31 @@ function AccessMeOverlay() {
             function(event) {
                 dump('\n' + event.target);
                 dump('\n' + event.originalTarget);
-                try {
-                    self.browser.removeProgressListener(self.progressListener);
+                if (self.started) {
+                    try {
+                        self.browser.removeProgressListener(self.progressListener);
+                    }
+                    catch(e){
+                        Components.utils.reportError('did removal not work?' +e);
+                    }
+                    event.target.linkedBrowser.addProgressListener(self.progressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
+                    self.browser = event.target.linkedBrowser;
+                    self.requestTest();
                 }
-                catch(e){
-                    Components.utils.reportError('did removal not work?' +e);
-                }
-                event.target.linkedBrowser.addProgressListener(self.progressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
-                self.browser = event.target.linkedBrowser;
             }
     
     /**
      * used to listen for requests
      */
     this.progressListener = new SecCompProgressListener(
-            function(aRequest, aURI){self.gotRequest(aRequest, aURI)},
-            Components.interfaces.nsIWebProgressListener.STATE_START,
-            // we could use stop, but earlier is faster :grin:
+            function(aRequest, aURI) {
+                if (self.started) {
+                    if (aURI.scheme.indexOf('http') != -1) {
+                        self.gotRequest(createHttpChannelFromHttpChannel(aRequest, aURI), aURI)
+                    }
+                }
+            },
+            Components.interfaces.nsIWebProgressListener.STATE_STOP,
             Components.interfaces.nsIWebProgressListener.STATE_IS_DOCUMENT |
             Components.interfaces.nsIWebProgressListener.STATE_IS_NETWORK |
             Components.interfaces.nsIWebProgressListener.STATE_IS_REQUEST |
@@ -63,18 +71,23 @@ function AccessMeOverlay() {
     this.lastOperation = null;
     
     this.testManager = null;
+    this.resultsManager = new ResultsManager(this);
 }
 
 AccessMeOverlay.prototype = {
     onLoad: function() {
         this.browser = gBrowser.selectedBrowser;
+        gBrowser.tabContainer.addEventListener('TabSelect',
+                this.tabSelectListener, false);
         
     }
     ,
     requestTest: function(){
         var entry = null;
         with(gBrowser.selectedBrowser.webNavigation){
+            Components.utils.reportError("index is" + sessionHistory.index)
             entry = sessionHistory.getEntryAtIndex(sessionHistory.index, false);
+            Components.utils.reportError("entry is: " + entry)
         }
         var channel = createHttpChannelFromSHEntry(entry);
         this.gotRequest(channel, channel.URI);
@@ -101,11 +114,11 @@ AccessMeOverlay.prototype = {
             var testsStarted;
             var attackBasedOnOperation = this.lastOperation
             if (this.testManager === null) {
-                this.testManager = getTestManager(this);
+                this.testManager = getTestManager(this, this.resultsManager);
             }
             this.displayWorkInProgressState();
             testsStarted = this.testManager.runTest(attackBasedOnOperation);
-            if ( testsStarted === false){
+            if (testsStarted === false) {
                 this.displayNoTestState();
             }
         }
@@ -115,22 +128,23 @@ AccessMeOverlay.prototype = {
         }
     }
     ,
-    switchToPauseButton: function(){
-        var caster = document.getElementById('accessme-action');
-        caster.setAttribute('oncommand', 'accessMeOverlay.pause()');
-        caster.setAttribute('label', 'Pause');
+    switchToPauseButton: function() {
+        document.getElementById("accessme-toolbarbutton-test-action").
+            observes = "accessme-stop";
         
     }
     ,
     switchToStartButton: function(){
-        var caster = document.getElementById('accessme-action');
-        caster.setAttribute('oncommand', 'accessMeOverlay.start()');
-        caster.setAttribute('label', 'Resume');
+        document.getElementById("accessme-toolbarbutton-test-action").
+            observes = "accessme-start";
     }
     ,
     pause: function(){
-        this.started = false;
-        this.switchToStartButton();
+        if (this.started) {
+            this.started = false;
+            this.switchToStartButton();
+            this.browser.removeProgressListener(this.progressListener);
+        }
     }
     ,
     clearResults: function(){
@@ -138,10 +152,14 @@ AccessMeOverlay.prototype = {
     }
     ,
     start: function() {
-        if (this.started === false) {
+        if (this.started == false) {
             this.started = true;
             this.switchToPauseButton();
-            this.runTest();
+            gBrowser.selectedBrowser.addProgressListener(this.progressListener,
+                    Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
+            this.browser = gBrowser.selectedBrowser;
+            
+            this.requestTest();
         }
     }
     ,
@@ -273,7 +291,8 @@ AccessMeOverlay.prototype = {
         if (this.testManager != null &&
             this.testManager.resultsManager != null)
         {
-            this.testManager.resultsManager.showResults(this.testManager);
+            var reportGenerator = new SecCompReportGenerator(this.resultsManager);
+            reportGenerator.showResults(this.testManager);
         }
         else {
             var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
@@ -284,6 +303,7 @@ AccessMeOverlay.prototype = {
 };
 
 var accessMeOverlay = new AccessMeOverlay();
+Components.utils.reportError("here is the overlay:" + accessMeOverlay);
 
 window.addEventListener('load', function(){accessMeOverlay.onLoad()}, false);
 window.addEventListener('unload', function(){accessMeOverlay.onUnload()}, false);
