@@ -86,12 +86,14 @@ tools@securitycompass.com
                      oncommand="accessMeOverlay.requestTest()" />
         <broadcaster id='accessme-report'
                      label='Report'
+                     tooltiptext="Generate a report of all findings"
                      oncommand="accessMeOverlay.showReport()" />
         <broadcaster id='accessme-pause'
                      label='Pause'
                      oncommand='accessMeOverlay.pause()' />
         <broadcaster id="accessme-clear"
                      label='Clear Results'
+                     tooltiptext="Clear all recorded results"
                      oncommand='accessMeOverlay.clearResults()' />
     </broadcasterset>
   
@@ -100,8 +102,9 @@ tools@securitycompass.com
       <toolbarbutton  oncommand="accessMeOverlay.openHomePage(event)" onclick="checkForMiddleClick(this, event)" label="Security Compass Access Me" tooltiptext="Check out our other great pen testing add-ons." style="color: rgb(64, 80, 104)"/>
       <toolbarbutton id='accessme-toolbarbutton-test-action' class="start" observes='accessme-start' />
       <toolbarbutton label="Not Started" id='accessme-test-status' class="start" disabled='true'/>
-      <toolbarbutton label="Clear Results" id='accessme-clear-results' command='accessme-clear'/>
       <toolbarbutton id='accessme-gen-report' orient='vertical' observes='accessme-report' />
+      <separator orient="vertical"/>
+      <toolbarbutton id='accessme-clear-results' command='accessme-clear'/>
     </toolbar>
   </toolbox>
   <menupopup id="menu_ToolsPopup">

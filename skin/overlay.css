@@ -45,25 +45,33 @@ along with Access Me.  If not, see <http://www.gnu.org/licenses/>.
 
 
 toolbox[mode='icons'] #accessme-test-status .toolbarbutton-text,
-toolbox[mode='icons'] #accessme-gen-report  .toolbarbutton-text {
+toolbox[mode='icons'] #accessme-gen-report  .toolbarbutton-text,
+toolbox[mode='icons'] #accessme-clear-results .toolbarbutton-text
+{
   display: none !important;
 }
 
 toolbox[mode='full'] #accessme-toolbarbutton-test-action .toolbarbutton-text,
 toolbox[mode='full'] #accessme-test-status .toolbarbutton-text,
-toolbox[mode='full'] #accessme-gen-report  .toolbarbutton-text {
+toolbox[mode='full'] #accessme-gen-report  .toolbarbutton-text,
+toolbox[mode='full'] #accessme-clear-results .toolbarbutton-text
+{
   display: -moz-box !important;
 }
 
 toolbox[mode='text'] #accessme-toolbarbutton-test-action .toolbarbutton-icon,
 toolbox[mode='text'] #accessme-test-status .toolbarbutton-icon,
-toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon {
+toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon
+toolbox[mode='text'] #accessme-clear-results .toolbarbutton-icon
+{
   display: none !important;
 }
 
-#accessme-gen-report .toolbarbutton-icon {
+#accessme-gen-report .toolbarbutton-icon,
+#accessme-test-status .toolbarbutton-icon,
+#accessme-clear-results .toolbarbutton-icon {
   height: 16px !important;
-  widht: 16px !important;
+  width: 16px !important;
 }
 
 #accessme-toolbarbutton-test-action.start {
@@ -89,4 +97,9 @@ toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon {
 
 #accessme-gen-report {
   list-style-image: url('chrome://accessme/skin/edit-select-all.png') !important;
+}
+
+#accessme-clear-results {
+   list-style-image: url('chrome://console2/skin/import/console-toolbar.png') !important;
+   -moz-image-region: rect(0px, 120px, 24px, 96px);
 }
