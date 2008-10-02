@@ -61,6 +61,11 @@ toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon {
   display: none !important;
 }
 
+#accessme-gen-report .toolbarbutton-icon {
+  height: 16px !important;
+  widht: 16px !important;
+}
+
 #accessme-toolbarbutton-test-action.start {
   list-style-image: url('chrome://accessme/skin/media-record.png') !important;
   
