@@ -46,7 +46,8 @@ along with Access Me.  If not, see <http://www.gnu.org/licenses/>.
 
 toolbox[mode='icons'] #accessme-test-status .toolbarbutton-text,
 toolbox[mode='icons'] #accessme-gen-report  .toolbarbutton-text,
-toolbox[mode='icons'] #accessme-clear-results .toolbarbutton-text
+toolbox[mode='icons'] #accessme-clear-results .toolbarbutton-text,
+toolbox[mode='icons'] #accessme-toolbarbutton-test-action .toolbarbutton-text
 {
   display: none !important;
 }
@@ -61,7 +62,7 @@ toolbox[mode='full'] #accessme-clear-results .toolbarbutton-text
 
 toolbox[mode='text'] #accessme-toolbarbutton-test-action .toolbarbutton-icon,
 toolbox[mode='text'] #accessme-test-status .toolbarbutton-icon,
-toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon
+toolbox[mode='text'] #accessme-gen-report  .toolbarbutton-icon,
 toolbox[mode='text'] #accessme-clear-results .toolbarbutton-icon
 {
   display: none !important;
@@ -100,6 +101,5 @@ toolbox[mode='text'] #accessme-clear-results .toolbarbutton-icon
 }
 
 #accessme-clear-results {
-   list-style-image: url('chrome://console2/skin/import/console-toolbar.png') !important;
-   -moz-image-region: rect(0px, 120px, 24px, 96px);
+   list-style-image: url('chrome://accessme/skin/emblem-unreadable.png') !important;
 }
