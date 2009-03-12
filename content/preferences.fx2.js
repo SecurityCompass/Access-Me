@@ -315,7 +315,7 @@ PreferencesController.prototype = {
         listbox.selectedItem.nextSibling.value = selectedItemValue
         
         listbox.removeItemAt(selectedIndex)
-        if (selectedIndex + 1 >= listbox.getRowCount()) { 
+        if (selectedIndex + 2 >= listbox.getRowCount()) { 
              
             listbox.appendChild(selectedItem) 
             listbox.selectedIndex = selectedIndex = listbox.getRowCount()-1; 
