@@ -3,3 +3,7 @@ locale	accessme    en-US       locale/en-US/
 skin	accessme    classic/1.0	skin/
 overlay	chrome://browser/content/browser.xul	chrome://accessme/content/overlay.xul
 style	chrome://global/content/customizeToolbar.xul	chrome://accessme/skin/overlay.css
+#Firefox 2 and Firefox 3
+override chrome://accessme/content/preferences.js chrome://accessme/content/preferences.fx2.js appversion<3.0
+override chrome://accessme/content/preferences.js chrome://accessme/content/preferences.fx3.js appversion>=3.0
+

@@ -263,7 +263,10 @@ PreferencesController.prototype = {
         var listbox = document.getElementById(listboxID);
         var selectedIndex = listbox.selectedIndex;
         var selectedItemValue = listbox.selectedItem.value
-        var selectedItemLabel = listbox.selectedItem.label;
+        var selectedItemLabel = listbox.selectedItem.label
+        if (listbox.selectedItem.previousSibling == null) { 
+            return false; 
+        } 
         var newValue = listbox.selectedItem.previousSibling.value;
         if (listbox.selectedItems.length != 1){
             alert("sorry, only one item can be moved at a time");
@@ -286,8 +289,19 @@ PreferencesController.prototype = {
     }
     ,
     moveItemDown: function(container, listboxID) {
- var listbox = document.getElementById(listboxID);
+        var listbox = document.getElementById(listboxID);
         var selectedIndex = listbox.selectedIndex;
+        var selectedItem = listbox.selectedItem; 
+ 
+        if (selectedIndex + 1 >= listbox.getRowCount()) { 
+            return true; 
+        }         
+                 var selectedItem = listbox.selectedItem; 
+ 
+        if (selectedIndex + 1 >= listbox.getRowCount()) { 
+            return true; 
+        }         
+         
         var selectedItemValue = listbox.selectedItem.value
         var selectedItemLabel = listbox.selectedItem.label;
         var newValue = listbox.selectedItem.nextSibling.value;
@@ -305,9 +319,20 @@ PreferencesController.prototype = {
         listbox.selectedItem.nextSibling.value = selectedItemValue
         
         listbox.removeItemAt(selectedIndex)
-        listbox.insertItemAt(selectedIndex+1, selectedItemLabel, newValue)
-        
-        listbox.selectedIndex = selectedIndex + 1;
+        if (selectedIndex + 1 >= listbox.getRowCount()) { 
+             
+            listbox.selectedItem = listbox.getItemAtIndex(listbox.getRowCount() -1) 
+            this.moveItemUp(container, listboxID) 
+            listbox.selectedIndex = listbox.getRowCount() -1 
+             
+        } 
+        else { 
+            listbox.insertItemAt(selectedIndex+1, selectedItemLabel, newValue) 
+            listbox.selectedIndex = ++selectedIndex ; 
+        } 
+         
+        listbox.ensureIndexIsVisible(selectedIndex ); 
+         
         return true;
     }
     ,

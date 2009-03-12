@@ -39,6 +39,9 @@ tools@securitycompass.com
                         name="extensions.accessme.similarityRating"
                         instantApply="true"
                         type="int" />
+            <preference id="prefReportBuildingShowPass" 
+                        name="extensions.xssme.reportbuilding.showPass" 
+                        type="bool" /> 
         </preferences>
                 
         <label value="Number of simultaneous requests" control="txtNumParallellAttacks" />
